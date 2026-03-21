@@ -1,0 +1,190 @@
+%==============================================================================
+% Appendix D: Mass Splitting Formulae in the Spin-2 Sector
+%==============================================================================
+\section{Mass Splitting Formulae in the Spin-2 Sector}
+\label{app:D}
+
+This appendix collects the residual $SO(2)$ splitting, the closed-form Hessians
+for all spin-2 modes, and the phase information of the spin-2 sector.
+
+\subsection{Residual $SO(2)$ Decomposition}
+
+Under a positive-$\varepsilon$ squash background, $SO(3)\to SO(2)$ and the
+spin-2 quintet splits as follows.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+Mode & Basis & Residual charge \\
+\midrule
+Singlet  & $T_1$          & $m=0$ \\
+Doublet  & $(T_2, T_3)$   & $m=\pm 2$ \\
+Doublet  & $(T_4, T_5)$   & $m=\pm 1$ \\
+\bottomrule
+\end{tabular}
+\caption{Residual $SO(2)$ decomposition of the spin-2 quintet.}
+\end{table}
+
+\subsection{Isotropic Point}
+
+At the isotropic point Schur's lemma gives
+\begin{equation}
+  H_{AB} = 2\lambda\,\delta_{AB},
+  \qquad
+  \mu_q^2 = 48\pi^2,
+\end{equation}
+with all five components fully degenerate.
+
+\subsection{Local Splitting around the Isotropic Point}
+
+On the axisymmetric slice $s=0$ the three representative branches are tracked as
+\begin{equation}
+  \mu^2_{m=0} \equiv \mu^2_\varepsilon,
+  \qquad
+  \mu^2_{m=\pm 2} \equiv \mu^2_s,
+  \qquad
+  \mu^2_{m=\pm 1} \equiv \mu^2_\delta.
+\end{equation}
+From a numerical scan near the isotropic point, the local linear splittings are
+approximately
+\begin{align}
+  \mu^2_{m=0}(\varepsilon)   &\approx 48\pi^2 - 1.37\times10^3\,\varepsilon + O(\varepsilon^2), \\
+  \mu^2_{m=\pm2}(\varepsilon) &\approx 48\pi^2 + 7.95\times10^2\,\varepsilon + O(\varepsilon^2), \\
+  \mu^2_{m=\pm1}(\varepsilon) &\approx 48\pi^2 - 3.0\times10^2\,\varepsilon  + O(\varepsilon^2).
+\end{align}
+The coefficients are local slopes obtained from numerical data at $|\varepsilon|
+\lesssim 0.1$ and serve as a practical summary of the branch ordering near the
+isotropic point, not as exact closed-form results.
+
+The direction of splitting is:
+\begin{itemize}
+  \item For positive $\varepsilon$, the $m=0$ singlet softens most rapidly.
+  \item The $m=\pm 2$ doublet hardens in the same region and plays no role in the
+        positive-side instability.
+  \item The $m=\pm 1$ doublet lies between them and remains massive near the
+        critical point.
+\end{itemize}
+This is consistent with the description in \S\ref{sec:spin2}.
+
+\subsection{Closed-Form Hessians for All Spin-2 Modes}
+
+The following closed-form expressions for $H_{ii}^q$ of the three representative
+modes use the parameter $a=(1+\varepsilon)^{1/3}$ (physical parameters: $\eta=L
+=\kappa=1$, $\alpha=\theta_\NY=0$, MX mode).
+
+\paragraph{$T_1$ ($m=0$ squash singlet):}
+\begin{equation}
+  H_{11}^q(a,r) = \frac{-160\pi^2 a^6 r + 352\pi^2 r}{3a^8},
+  \qquad a = (1+\varepsilon)^{1/3}.
+\end{equation}
+
+\paragraph{$T_2$ ($m=\pm 2$ shear doublet):}
+\begin{equation}
+  H_{22}^q(a,r) = \frac{128\pi^2 a^6 r - 64\pi^2 r}{a^2},
+  \qquad a = (1+\varepsilon)^{1/3}.
+\end{equation}
+
+\paragraph{$T_4$ ($m=\pm 1$ off-diagonal doublet):}
+\begin{equation}
+  H_{44}^q(f,r) = \frac{32\pi^2 f^{12} r - 48\pi^2 f^6 r + 32\pi^2 f^3 r
+                        + 48\pi^2 r}{f^8},
+  \qquad f = (1+\varepsilon)^{2/3} = a^2.
+\end{equation}
+
+At the isotropic point $\varepsilon=0$ ($a=f=1$), Schur's lemma gives
+\begin{equation}
+  H_{11}^q = H_{22}^q = H_{44}^q = 64\pi^2 r_0,
+\end{equation}
+consistent with \S\ref{sec:spin2} and confirmed numerically by the scripts.
+
+The exact critical points (both independent of $r_0$, derived from the
+closed-form expressions):
+\begin{align}
+  H_{22}^q = 0 &\;\iff\; 2a^6 = 1
+  \;\Rightarrow\;
+  \varepsilon_{c-} = \frac{1}{\sqrt{2}} - 1 \approx -0.292893 \quad\text{(exact)}, \\
+  H_{11}^q = 0 &\;\iff\; 5a^6 = 11
+  \;\Rightarrow\;
+  \varepsilon_{c+} = \sqrt{\frac{11}{5}} - 1 \approx 0.48324 \quad\text{(exact)}.
+\end{align}
+
+Script references: \texttt{paper03/spin2\_diagonal\_hessians.py}
+($H_{11}$, $H_{22}$ closed forms);
+\texttt{paper03/spin2\_offdiag\_hessian.py}
+($H_{44}$ closed form; Method~2 rationalisation).
+
+\subsection{Representative Spectrum Values}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrr}
+\toprule
+$\varepsilon$ & $\mu^2_{m=0}$ & $\mu^2_{m=\pm 2}$ & $\mu^2_{m=\pm 1}$ \\
+\midrule
+$0.00$ & 473.74 & 473.74 & 473.74 \\
+$0.10$ & 336.83 & 589.55 & 442.41 \\
+$0.20$ & 219.78 & 685.05 & 413.32 \\
+$0.40$ & 44.91  & 842.19 & 359.80 \\
+$0.482$ & 0.49  & 891.77 & 341.58 \\
+\bottomrule
+\end{tabular}
+\caption{Representative spin-2 branch values on the axiymmetric slice $s=0$.
+         The soft branch is exclusively $m=0$; the $m=\pm 2$ branch moves
+         separately toward the negative-side transition.}
+\label{tab:spin2_spectrum}
+\end{table}
+
+\subsection{Positive Side}
+
+On the positive side the $T_1$ singlet becomes soft first, at
+\begin{equation}
+  \varepsilon_{c+} = \sqrt{\tfrac{11}{5}} - 1 \approx 0.48324 \quad\text{(exact)},
+  \qquad
+  r_0(\varepsilon_{c+}) \approx 2.8114,
+\end{equation}
+where $\mu_\varepsilon^2\to 0$.  This threshold is exact and independent of $r_0$;
+it is a softening threshold, not the establishment of a fully condensed phase.
+
+\subsection{Negative Side}
+
+On the negative side the $m=\pm 2$ sector drives the transition to the $s\neq 0$
+phase.  From the closed-form expression the exact critical point is
+\begin{equation}
+  \varepsilon_{c-} = \tfrac{1}{\sqrt{2}} - 1 \approx -0.292893 \quad\text{(exact)},
+\end{equation}
+consistent with the three-indicator numerical estimate $-0.29309\pm 0.00019$.
+The four-th coefficient in the Landau expansion satisfies
+$b(\varepsilon)\in[2288,7805]>0$, confirming a second-order transition.
+
+\subsection{Order Parameter Fit}
+
+The order parameter is fitted as
+\begin{equation}
+  s_0 \propto |\varepsilon - \varepsilon_c|^\beta,
+  \qquad
+  \beta = 0.4678,\quad R^2 = 0.987,
+\end{equation}
+consistent with a continuous transition.  $\beta$ falls slightly below the
+mean-field value $1/2$ by $1/2-\beta\approx 0.032$; this paper does not claim
+to extract the universality class from this minisuperspace EFT.
+
+\subsection{Interpretation}
+
+The final picture of the spin-2 sector should be understood as mass splitting
+organised by residual representation, not by the single squash variable.
+This paper employs representation-theoretic language as the primary description.
+
+\subsection{Computational Verification}
+
+\begin{itemize}
+  \item Isotropic point Schur degeneracy ($\mu_q^2=48\pi^2$):
+        \texttt{paper03/spin2\_schur\_degeneracy.py}
+  \item $SO(2)$ splitting, softening, phase transition
+        (three-indicator analysis, $\varepsilon_{c\pm}$ estimation):
+        \texttt{paper03/spin2\_spectrum\_splitting.py}
+  \item $H_{11}^q$, $H_{22}^q$ closed forms ($\varepsilon_{c\pm}$ exact):
+        \texttt{paper03/spin2\_diagonal\_hessians.py}
+  \item $H_{44}^q$ closed form (Method~2 rationalisation):
+        \texttt{paper03/spin2\_offdiag\_hessian.py}
+\end{itemize}

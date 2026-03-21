@@ -1,0 +1,120 @@
+%==============================================================================
+% Appendix F: Cross-Hessian Checks and Quadratic Decoupling
+%==============================================================================
+\section{Cross-Hessian Checks and Quadratic Decoupling}
+\label{app:F}
+
+This appendix demonstrates that the physical spin-1 mode $X_k$ decouples from
+all other sectors at quadratic order.
+
+\subsection{Setup}
+
+The physical basis is
+\begin{equation}
+  X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}}.
+\end{equation}
+Each mixed Hessian is evaluated by a centred finite difference:
+\begin{equation}
+  \frac{\partial^2 \Veff}{\partial p\,\partial X_k}
+  \approx
+  \frac{V(p_0+h,+X_k) - V(p_0+h,-X_k) - V(p_0-h,+X_k) + V(p_0-h,-X_k)}
+       {4h^2}.
+\end{equation}
+
+\subsection{Spin-1 $\times$ Spin-2}
+
+\begin{equation}
+  M_{Ai}^{(qX)} =
+  \left.\frac{\partial^2 \Veff}{\partial q_A \partial X_i}\right|_\text{iso}
+  = 0
+\end{equation}
+holds for all 15 components.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Variable & $X_0$ & $X_1$ & $X_2$ \\
+\midrule
+$\varepsilon$ & 0.0000 & 0.0000 & 0.0000 \\
+$s$           & 0.0000 & 0.0000 & 0.0000 \\
+$q_3$         & 0.0000 & 0.0000 & 0.0000 \\
+$q_4$         & 0.0000 & 0.0000 & 0.0000 \\
+$q_5$         & 0.0000 & 0.0000 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Spin-1 $\times$ spin-2 cross-Hessian: all 15 components vanish.}
+\end{table}
+
+\subsection{Spin-1 $\times$ Radial and Torsion}
+
+\begin{equation}
+  M_i^{(rX)} = 0,
+  \qquad
+  M_i^{(\eta X)} = 0
+\end{equation}
+both hold.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Sector & $X_0$ & $X_1$ & $X_2$ \\
+\midrule
+$r$    & 0.0000 & 0.0000 & 0.0000 \\
+$\eta$ & 0.0000 & 0.0000 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Spin-1 $\times$ radial and torsion cross-Hessians: all 6 components
+         vanish.}
+\end{table}
+
+\subsection{Step-Size Stability}
+
+The zero determination remains stable across step sizes.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rr}
+\toprule
+$h$ & \shortstack[r]{Max absolute value\\over all\\21 components} \\
+\midrule
+$10^{-1}$         & 0.0 \\
+$10^{-2}$         & 0.0 \\
+$10^{-3}$         & 0.0 \\
+$5\times 10^{-4}$ & 0.0 \\
+$10^{-4}$         & 0.0 \\
+\bottomrule
+\end{tabular}
+\caption{Step-size stability of the cross-Hessian zero determination.}
+\end{table}
+
+\subsection{Evenness under $X_k \to -X_k$}
+
+Even for representative non-zero backgrounds,
+\begin{equation}
+  V(p,+X_k) - V(p,-X_k) = 0
+\end{equation}
+holds numerically.  Thus, at least in the current implementation, $\Veff$ behaves
+as an even function of $X_k$ under sign reversal, and the cross-Hessian
+consequently vanishes.
+
+\subsection{Scope Boundary}
+
+What this result asserts is \emph{quadratic decoupling} in the final basis.  It
+does not immediately imply full decoupling at nonlinear order or for arbitrary
+backgrounds.  This paper states the block-diagonal EFT of \S\ref{sec:eft} with
+this scope explicitly declared.
+
+\subsection{Computational Verification}
+
+\begin{itemize}
+  \item All 21 component finite-difference evaluations (including step-size
+        stability and parity checks):
+        \texttt{paper03/spin1\_cross\_hessian.py}
+  \item Homogeneous consistency (antisymmetry and Jacobi pass;
+        linked to Appendix~\ref{app:C}):
+        \texttt{paper03/homogeneous\_consistency.py}
+  \item Exact check of the invariant basis \\ (linked to Appendix~\ref{app:G}):
+        \texttt{paper03/eft\_invariant\_generation.py}
+\end{itemize}

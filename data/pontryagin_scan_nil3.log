@@ -1,0 +1,83 @@
+=================================================================
+Nil³ isotropic twist — Pontryagin & V_eff scan (App B.7)
+DPPUv2 plan v5.0 Option B
+=================================================================
+
+Features of Nil³ twist:
+  S³ twist: C^3_{01}=C^3_{12}=C^3_{20}=+4Lω/r² (3 pairs, positive)
+  Nil³ twist: C^3_{01}=-Lω/R² only (1 pair, negative)
+  → Lower symmetry; cancellation may break
+
+
+=================================================================
+Nil³ isotropic twist scan  (R=1.0, η=-2.0)
+=================================================================
+
+[Step 1] Running TwistNil3S1Engine symbolically...
+  Done (0.4s)
+  V_eff = (-64*pi**4*L**5*alpha*kappa**2*omega**4 + 12*pi**4*L**3*R**4*omega**2 - 128*pi**4*L**3*R**2*alpha*kappa**2*omega**2 + 144*pi**4*L*R**6*eta**2 + 12*pi**4*L*R**6 - 64*pi**4*L*R**4*alpha*kappa**2)/(3*R**5*kappa**2)
+
+[Step 2] Lambdifying R_{abcd} and V_eff...
+  R argument order: ['R', 'omega', 'eta', 'L', 'kappa', 'theta_NY', 'alpha']
+  Done (0.0s)
+
+[Step 3] Numerical scan of P(ω) (R=1.0, η=-2.0)
+
+         ω                P(ω)
+  --------  ------------------
+    -1.000        0.000000e+00
+    -0.750        0.000000e+00
+    -0.500        0.000000e+00
+    -0.250        0.000000e+00
+     0.000        0.000000e+00
+     0.250        0.000000e+00
+     0.500        0.000000e+00
+     0.750        0.000000e+00
+     1.000        0.000000e+00
+
+  max|P(ω)| = 0.0000e+00
+  → P ≡ 0 (machine precision)
+
+[Step 4] Symmetry check of P(ω)
+  P is numerically zero; symmetry test skipped
+
+[Step 5] Scan of m²(R) = ∂²V_eff/∂ω²|_{ω=0}
+       R           m²(R)       stability
+  ------  --------------  --------------
+    0.50    6.806978e+04    stable (ω=0)
+    1.00    9.091931e+03    stable (ω=0)
+    2.00    1.428680e+03    stable (ω=0)
+    3.00    5.676201e+02    stable (ω=0)
+    5.00    2.223526e+02    stable (ω=0)
+
+  min m²(R) = 2.2235e+02 at R=5.00
+  → m²(R) > 0 for all R: ω=0 stable (chiral equilibrium maintained)
+
+[Step 6] Symbolic computation of P = ⟨R, ∗R⟩
+
+  [Symbolic computation] Computing P = ⟨R, ∗R⟩...
+  P (before simplify): zero
+  P (after simplify):  0 [CONFIRMED]
+  Symbolic computation done (0.0s)
+
+=================================================================
+Nil³ isotropic twist — summary
+=================================================================
+  max|P(ω)| (numerical) = 0.0000e+00  → P ≡ 0
+  P (symbolic)          = 0 [exact]
+  sign of m²(R)         = all positive (ω=0 stable)
+
+  Conclusion: P ≡ 0 (same cancellation as S³ occurs in Nil³ as well)
+  → Evidence for 'protection theorem' that P≠0 is impossible for C^3_{ij}-type twist is strengthened
+
+=================================================================
+Overall summary
+=================================================================
+
+       R       η          max|P|      P=0?     m²>0?
+  ------  ------  --------------  --------  --------
+    1.00   -2.00      0.0000e+00       YES       YES
+
+Computation time: 0.4s
+
+*Script: scripts/paper03/pontryagin_scan_nil3.py

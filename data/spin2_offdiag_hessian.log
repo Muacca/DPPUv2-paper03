@@ -1,0 +1,50 @@
+======================================================================
+spin-2 off-diagonal Hessian H₄₄^q via rational substitution (App D.9)
+======================================================================
+
+[1] Build V_eff in (z₄, f, r) via rational substitution
+
+  Running EC pipeline in (z₄, f, r) ...
+  Pipeline completed in 0.2s
+  V_eff free symbols: ['f', 'r', 'z4']
+
+[2] Derive H₄₄^q(f, r) in closed form
+
+  Differentiating V_eff w.r.t. z₄ ...
+  Differentiation completed in 0.1s
+
+  H₄₄^q(f, r) =  (32*pi**2*f**12*r - 48*pi**2*f**6*r + 32*pi**2*f**3*r + 48*pi**2*r)/f**8
+
+  Interpretation: f = (1+ε)^{2/3}, so ε=0 corresponds to f=1.
+  At f=1: H₄₄^q(1, r) = 64*pi**2*r
+
+[3] Verify Schur degeneracy at ε=0
+
+  Equilibrium radius (isotropic point):  r₀ = 3.000000
+  H₄₄^q(ε=0, r₀) = 1894.9643
+  Schur reference  64π²r₀ = 1894.9643
+  Relative error   |H₄₄ − 64π²r₀| / 64π²r₀ = 0.00e+00  [OK]
+
+[4] ε-scan: confirm H₄₄^q(ε) > 0 for all ε ∈ [−0.3, 0.6]
+
+  Computing ................................................ done
+
+  ε range scanned:   [-0.30, 0.60]
+  H₄₄^q minimum:    1445.8014  at ε = 0.170,  r = 2.9626
+  H₄₄^q maximum:    9408.6773
+  H₄₄^q > 0 throughout: YES [OK]
+
+  First phase transition (T₁ soft mode):  ε_c ≈ 0.4773
+  H₄₄^q at ε_c:  2132.3033  →  m=±1 doublet massive [OK]
+
+Summary
+-------
+  Closed-form H₄₄^q(f,r) = (32*pi**2*f**12*r - 48*pi**2*f**6*r + 32*pi**2*f**3*r + 48*pi**2*r)/f**8
+  where f = (1+ε)^{2/3}
+  Schur degeneracy at ε=0:  H₄₄^q = H₁₁^q = H₂₂^q = 64π²r₀  [OK]
+  H₄₄^q > 0 for all ε ∈ [-0.30, 0.60]:  [OK]
+  m=±1 doublet (T₄,T₅) remains massive at ε_c:  [OK]
+
+Total computation time: 28.9s
+
+*Script: scripts/paper03/spin2_offdiag_hessian.py

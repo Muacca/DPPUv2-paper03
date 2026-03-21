@@ -1,0 +1,101 @@
+=================================================================
+S³ anisotropic twist — Confirmation of P≡0 (App B.7)
+=================================================================
+=================================================================
+  Task 1: Consistency check
+  VectorTwist(ω₁=ω₂=ω₃=ω) == TwistS3S1Engine(ω) ?
+=================================================================
+
+  [Isotropic twist] Running isotropic twist engine...
+  Done (0.4s)
+
+  [Vector Twist] Running general vector twist engine...
+  Done (0.3s)
+
+  --- Comparison of P ---
+  P_iso: no 'pontryagin' key (check engine implementation)
+  P_vec: no 'pontryagin' key
+
+  --- Comparison of V_eff ---
+  V_vec(ω,ω,ω) - V_iso = 0
+  Match: Yes
+
+=================================================================
+  Task 2: Compute P(ω₁,ω₂,ω₃)
+=================================================================
+
+  Recomputing P from Riemann tensor...
+  Computation time: 0.0s
+
+  Pfaffian for each (c,d) block:
+    Pf(ω^{(0,1)}) [SS] = 0
+    Pf(ω^{(0,2)}) [SS] = 0
+    Pf(ω^{(0,3)}) [S3] = 0
+    Pf(ω^{(1,2)}) [SS] = 0
+    Pf(ω^{(1,3)}) [S3] = 0
+    Pf(ω^{(2,3)}) [S3] = 0
+
+  P ∝ Σ Pf(ω^{(cd)}) = 0
+  → P ≡ 0  (vanishes even for general vector twist)
+
+=================================================================
+  Task 3: V_eff analysis (Hessian, I₂ factorability)
+=================================================================
+
+  V_eff expression:
+  V_eff = 2*pi**2*L*(-1024*L**4*alpha*kappa**2*omega1**4 - 2048*L**4*alpha*kappa**2*omega1**2*omega2**2 - 2048*L**4*alpha*kappa**2*omega1**2*omega3**2 - 1024*L**4*alpha*kappa**2*omega2**4 - 2048*L**4*alpha*kappa**2*omega2**2*omega3**2 - 1024*L**4*alpha*kappa**2*omega3**4 + 12*L**2*omega1**2*r**4 + 12*L**2*omega2**2*r**4 + 12*L**2*omega3**2*r**4 + 9*eta**2*r**6 - 36*r**6)/(3*kappa**2*r**5)
+
+  Computing Hessian H_{ij} = ∂²V/∂ωᵢ∂ωⱼ |_{ω=0}...
+  Computation time: 0.0s
+
+  H = 
+    [16*pi**2*L**3/(kappa**2*r), 0, 0]
+    [0, 16*pi**2*L**3/(kappa**2*r), 0]
+    [0, 0, 16*pi**2*L**3/(kappa**2*r)]
+
+  Hessian is diagonal. Eigenvalues:
+    λ_1 = 16*pi**2*L**3/(kappa**2*r)
+    λ_2 = 16*pi**2*L**3/(kappa**2*r)
+    λ_3 = 16*pi**2*L**3/(kappa**2*r)
+  → H = m²(r)·I₃ (isotropic type)
+
+  Check of factorability by I₂ = ω₁²+ω₂²+ω₃²:
+  V(√(I₂/3), √(I₂/3), √(I₂/3)) = 2*pi**2*L*(-1024*I2**2*L**4*alpha*kappa**2 + 12*I2*L**2*r**4 + 9*eta**2*r**6 - 36*r**6)/(3*kappa**2*r**5)
+
+=================================================================
+  Task 4: Pfaffian verification (decomposability)
+=================================================================
+
+   (c,d)  type      Pf    Rank     decomp?
+  ---------------------------------------------
+  (0,1):    SS       0       2         Yes
+  (0,2):    SS       0       2         Yes
+  (0,3):    S3       0       2         Yes
+  (1,2):    SS       0       2         Yes
+  (1,3):    S3       0       2         Yes
+  (2,3):    S3       0       2         Yes
+
+  → Pfaffian=0 and rank≤2 for all blocks
+
+=================================================================
+  Task 5: Nil³ — Verify non-contribution of ω₁, ω₂
+=================================================================
+
+  Check of Nil³ structure constants C^3_{ij}:
+    C^3_{01} = -L*omega/R**2
+    C^3_{10} = L*omega/R**2
+
+  → Nil³ MC: dσ⁰=dσ¹=0, so ω₁,ω₂ direction twists do not
+    contribute to structure constants (confirms prediction of instruction Task 5)
+
+  Nil³ P = 0
+  → P ≡ 0: confirmed
+
+=================================================================
+  Final summary
+=================================================================
+  [Conclusion] P ≡ 0 (vanishes even for general vector twist)
+
+Computation time: 1.4s
+
+*Script: scripts/paper03/pontryagin_anisotropic_twist.py

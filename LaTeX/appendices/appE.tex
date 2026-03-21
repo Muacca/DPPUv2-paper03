@@ -1,0 +1,139 @@
+%==============================================================================
+% Appendix E: Spin-1 Sector: H, G, and Generalised Eigenvalue Analysis
+%==============================================================================
+\section{Spin-1 Sector: $H$, $G$, and Generalised Eigenvalue Analysis}
+\label{app:E}
+
+This appendix summarises the raw quadratic form and the transformation to the
+final basis for the spin-1 sector.
+
+\subsection{Raw Quadratic Blocks}
+
+At the isotropic point $r_0=3$, $L=1$,
+\begin{equation}
+  H_2 =
+  \begin{pmatrix}
+    52.6379 & -631.6544 \\
+    -631.6544 & 3789.9295
+  \end{pmatrix},
+  \qquad
+  G_2 =
+  \begin{pmatrix}
+    236.870435 & -355.305547 \\
+    -355.305547 & 532.958162
+  \end{pmatrix}.
+\end{equation}
+The raw Hessian alone is insufficient for determining physical (in)stability; the
+full pair $(H,G)$ must be treated as a generalised eigenvalue problem.
+
+\subsection{Null Mode and Physical Mode}
+
+The null direction is
+\begin{equation}
+  Y_k \propto (\omega_k,\delta_k) = \!\left(1,\frac{2}{3}\right),
+  \qquad k=0,1,2,
+\end{equation}
+and the physical direction is
+\begin{equation}
+  X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}}.
+\end{equation}
+In this basis,
+\begin{equation}
+  G\,Y_k = 0,
+  \qquad
+  G_\phys = 769.8286\,I_3,
+  \qquad
+  H_\phys = 3223.06\,I_3,
+  \qquad
+  \lambda_\phys = 4.1867 > 0.
+\end{equation}
+
+\subsection{Auxiliary Interpretation Summary}
+
+$Y_k$ is neither gauge nor variable redundancy.  Indeed,
+\begin{equation}
+  \delta g_{\tau,\sigma^0} \neq 0,
+  \qquad
+  H_\mathrm{null} = 894.845 > 0,
+  \qquad
+  \lambda_\mathrm{eff} \to +\infty,
+\end{equation}
+so $Y_k$ is interpreted as a non-dynamical auxiliary without a kinetic term.
+
+\subsection{Detailed Exclusion of Variable Redundancy}
+\label{app:E:Yk}
+
+We detail the exclusion of $Y_k$ as variable redundancy (elaborating
+\S\ref{sec:spin1:notgauge}).
+
+\paragraph{Necessary conditions for variable redundancy:}
+\begin{enumerate}
+  \item $\delta g_{\mu\nu}=0$ (metric variation vanishes),
+  \item $H_\mathrm{null}=0$ (Hessian along the null direction vanishes),
+  \item $\lambda_\mathrm{eff}$ finite.
+\end{enumerate}
+None of these are satisfied, as we now show.
+
+\paragraph{Exclusion of condition~1 ($\delta g_{\tau,\sigma^0}\neq 0$):}
+
+For axis $k=0$, the variation along $Y_0$ direction gives
+\begin{equation}
+  \delta e^3_\text{twist} = +\frac{2L}{r_0} e^0,
+  \qquad
+  \delta e^3_\text{mixing} = -\frac{2L}{r_0} e^0,
+\end{equation}
+so $\delta e^3 = 0$.  However,
+\begin{equation}
+  \delta e^0 = +\frac{2L}{r_0} e^3
+\end{equation}
+remains, yielding
+\begin{equation}
+  \delta g_{\tau,\sigma^0}
+  = (\delta e^0)_\tau\,(e^0)_{\sigma^0}
+  = \frac{2L}{r_0}\,(e^3)_\tau\,(e^0)_{\sigma^0} \neq 0.
+\end{equation}
+At $r_0=3$, $L=1$ this gives $2L/r_0=2/3\neq 0$.  Condition~1 is excluded.
+The same conclusion holds for $k=1,2$.
+
+\paragraph{Exclusion of condition~2 ($H_\mathrm{null}>0$):}
+
+The Hessian along the null direction $Y=(1,\,2/3)^T$ is
+\begin{equation}
+  H_\mathrm{null} = Y^T H_2\, Y = 894.845 > 0.
+\end{equation}
+Condition~2 is excluded.
+
+\paragraph{Exclusion of condition~3 ($\lambda_\mathrm{eff}\to+\infty$):}
+
+The Rayleigh quotient at $v=Y_k$ gives denominator $G_2 Y_k = 0$, while the
+numerator $H_\mathrm{null} = 894.845 > 0$, so
+\begin{equation}
+  \lambda_\mathrm{eff}(Y_k) = \frac{Y^T H_2 Y}{Y^T G_2 Y} \to +\infty.
+\end{equation}
+Condition~3 is excluded.
+
+All three necessary conditions for variable redundancy are excluded; $Y_k$ is
+confirmed to be a \textbf{non-dynamical auxiliary}.
+
+\subsection{Final Statement}
+
+The final conclusions for the spin-1 sector are the following two points.
+\begin{enumerate}
+  \item The propagating triplet is $X_k$ alone.
+  \item $Y_k$ is a constraint-like auxiliary direction and is not included in the
+        physical mass spectrum.
+\end{enumerate}
+The negative eigenvalue of the raw basis cannot be read directly as a physical
+instability.
+
+\subsection{Computational Verification}
+
+\begin{itemize}
+  \item Numerical computation of $H_2$, $G_2$ and physical/null basis: \\
+        \texttt{paper03/spin1\_null\_mode\_analysis.py}
+  \item Strict computation of the $G$ metric (field-space metric): \\
+        \texttt{paper03/spin1\_kinetic\_metric.py}
+  \item Numerical confirmation of variable redundancy exclusion
+        ($\delta g\neq 0$, $H_\mathrm{null}>0$, $\lambda_\mathrm{eff}\to\infty$):
+        \texttt{paper03/spin1\_auxiliary\_exclusion.py}
+\end{itemize}

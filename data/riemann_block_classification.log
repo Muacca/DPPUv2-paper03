@@ -1,0 +1,199 @@
+============================================================
+Riemann Block Structure Analysis (App B.2)
+Verification of lemma preconditions for P≡0 (Conditions 1-3)
+============================================================
+
+Running [S³×S¹ with Isotropic Twist]...
+
+============================================================
+  S³×S¹ with Isotropic Twist
+============================================================
+
+  Non-zero components: 120
+
+  Count by block type:
+    SS: 36
+    S3: 48  → ['R_{0103}', 'R_{0113}', 'R_{0130}', 'R_{0131}', 'R_{0203}', 'R_{0223}', 'R_{0230}', 'R_{0232}', 'R_{0301}', 'R_{0302}', 'R_{0310}', 'R_{0320}', 'R_{1003}', 'R_{1013}', 'R_{1030}', 'R_{1031}', 'R_{1213}', 'R_{1223}', 'R_{1231}', 'R_{1232}', 'R_{1301}', 'R_{1310}', 'R_{1312}', 'R_{1321}', 'R_{2003}', 'R_{2023}', 'R_{2030}', 'R_{2032}', 'R_{2113}', 'R_{2123}', 'R_{2131}', 'R_{2132}', 'R_{2302}', 'R_{2312}', 'R_{2320}', 'R_{2321}', 'R_{3001}', 'R_{3002}', 'R_{3010}', 'R_{3020}', 'R_{3101}', 'R_{3110}', 'R_{3112}', 'R_{3121}', 'R_{3202}', 'R_{3212}', 'R_{3220}', 'R_{3221}']
+    33: 36  → ['R_{0303}', 'R_{0313}', 'R_{0323}', 'R_{0330}', 'R_{0331}', 'R_{0332}', 'R_{1303}', 'R_{1313}', 'R_{1323}', 'R_{1330}', 'R_{1331}', 'R_{1332}', 'R_{2303}', 'R_{2313}', 'R_{2323}', 'R_{2330}', 'R_{2331}', 'R_{2332}', 'R_{3003}', 'R_{3013}', 'R_{3023}', 'R_{3030}', 'R_{3031}', 'R_{3032}', 'R_{3103}', 'R_{3113}', 'R_{3123}', 'R_{3130}', 'R_{3131}', 'R_{3132}', 'R_{3203}', 'R_{3213}', 'R_{3223}', 'R_{3230}', 'R_{3231}', 'R_{3232}']
+    3X: 0
+
+  [Condition 2 check] R_{i3j3} type components:
+    -> 9 components are non-zero! Condition 2 NOT satisfied
+      R_{0303} = 8*L**2*omega**2/r**4
+      R_{0313} = -4*L**2*omega**2/r**4
+      R_{0323} = -4*L**2*omega**2/r**4
+      R_{1303} = -4*L**2*omega**2/r**4
+      R_{1313} = 8*L**2*omega**2/r**4
+    R_{3i3j} type: 9
+
+  [Type SS = R_{ijkl}]  (purely spatial block)
+    Independent components (a<b, c<d, (a,b)<=( c,d)): 6
+      R_{0101} = (-12*L**2*omega**2 - eta**2*r**2 + 4*r**2)/r**4
+      R_{0102} = 12*L**2*omega**2/r**4
+      R_{0112} = -12*L**2*omega**2/r**4
+      R_{0202} = (-12*L**2*omega**2 - eta**2*r**2 + 4*r**2)/r**4
+      R_{0212} = 12*L**2*omega**2/r**4
+      R_{1212} = (-12*L**2*omega**2 - eta**2*r**2 + 4*r**2)/r**4
+
+  [Type S3 = R_{ijk3} etc.]  (mixed block)
+    R_{ijk3} type (d=3, a<b): 6
+      R_{0103} = (2*L*eta*omega + 4*L*omega)/r**3
+      R_{0113} = (-2*L*eta*omega - 4*L*omega)/r**3
+      R_{0203} = (2*L*eta*omega + 4*L*omega)/r**3
+      R_{0223} = (-2*L*eta*omega - 4*L*omega)/r**3
+      R_{1213} = (2*L*eta*omega + 4*L*omega)/r**3
+      R_{1223} = (-2*L*eta*omega - 4*L*omega)/r**3
+    R_{3ijk} type (a=3, c<d): 6
+      R_{3001} = (2*L*eta*omega - 4*L*omega)/r**3
+      R_{3002} = (2*L*eta*omega - 4*L*omega)/r**3
+      R_{3101} = (-2*L*eta*omega + 4*L*omega)/r**3
+      R_{3112} = (2*L*eta*omega - 4*L*omega)/r**3
+      R_{3202} = (-2*L*eta*omega + 4*L*omega)/r**3
+      R_{3212} = (-2*L*eta*omega + 4*L*omega)/r**3
+
+  [Type 33]  (block containing two indices equal to 3)
+    R_{0303} = 8*L**2*omega**2/r**4
+    R_{0313} = -4*L**2*omega**2/r**4
+    R_{0323} = -4*L**2*omega**2/r**4
+    R_{0330} = -8*L**2*omega**2/r**4
+    R_{0331} = 4*L**2*omega**2/r**4
+    R_{0332} = 4*L**2*omega**2/r**4
+    R_{1303} = -4*L**2*omega**2/r**4
+    R_{1313} = 8*L**2*omega**2/r**4
+    R_{1323} = -4*L**2*omega**2/r**4
+    R_{1330} = 4*L**2*omega**2/r**4
+    R_{1331} = -8*L**2*omega**2/r**4
+    R_{1332} = 4*L**2*omega**2/r**4
+    R_{2303} = -4*L**2*omega**2/r**4
+    R_{2313} = -4*L**2*omega**2/r**4
+    R_{2323} = 8*L**2*omega**2/r**4
+    R_{2330} = 4*L**2*omega**2/r**4
+    R_{2331} = 4*L**2*omega**2/r**4
+    R_{2332} = -8*L**2*omega**2/r**4
+    R_{3003} = -8*L**2*omega**2/r**4
+    R_{3013} = 4*L**2*omega**2/r**4
+    R_{3023} = 4*L**2*omega**2/r**4
+    R_{3030} = 8*L**2*omega**2/r**4
+    R_{3031} = -4*L**2*omega**2/r**4
+    R_{3032} = -4*L**2*omega**2/r**4
+    R_{3103} = 4*L**2*omega**2/r**4
+    R_{3113} = -8*L**2*omega**2/r**4
+    R_{3123} = 4*L**2*omega**2/r**4
+    R_{3130} = -4*L**2*omega**2/r**4
+    R_{3131} = 8*L**2*omega**2/r**4
+    R_{3132} = -4*L**2*omega**2/r**4
+    R_{3203} = 4*L**2*omega**2/r**4
+    R_{3213} = 4*L**2*omega**2/r**4
+    R_{3223} = -8*L**2*omega**2/r**4
+    R_{3230} = -4*L**2*omega**2/r**4
+    R_{3231} = -4*L**2*omega**2/r**4
+    R_{3232} = 8*L**2*omega**2/r**4
+
+  [Index pattern tally]
+    (3,S,3,S): 9
+    (3,S,S,3): 9
+    (3,S,S,S): 12
+    (S,3,3,S): 9
+    (S,3,S,3): 9
+    (S,3,S,S): 12
+    (S,S,3,S): 12
+    (S,S,S,3): 12
+    (S,S,S,S): 36
+
+Running [Nil³×S¹ with Isotropic Twist]...
+
+============================================================
+  Nil³×S¹ with Isotropic Twist
+============================================================
+
+  Non-zero components: 36
+
+  Count by block type:
+    SS: 12
+    S3: 16  → ['R_{0203}', 'R_{0230}', 'R_{0302}', 'R_{0320}', 'R_{1213}', 'R_{1231}', 'R_{1312}', 'R_{1321}', 'R_{2003}', 'R_{2030}', 'R_{2113}', 'R_{2131}', 'R_{3002}', 'R_{3020}', 'R_{3112}', 'R_{3121}']
+    33: 8  → ['R_{0303}', 'R_{0330}', 'R_{1313}', 'R_{1331}', 'R_{3003}', 'R_{3030}', 'R_{3113}', 'R_{3131}']
+    3X: 0
+
+  [Condition 2 check] R_{i3j3} type components:
+    -> 2 components are non-zero! Condition 2 NOT satisfied
+      R_{0303} = L**2*omega**2/(4*R**4)
+      R_{1313} = L**2*omega**2/(4*R**4)
+    R_{3i3j} type: 2
+
+  [Type SS = R_{ijkl}]  (purely spatial block)
+    Independent components (a<b, c<d, (a,b)<=( c,d)): 3
+      R_{0101} = (-3*L**2*omega**2 - 4*R**2*eta**2 - 3*R**2)/(4*R**4)
+      R_{0202} = (1 - 4*eta**2)/(4*R**2)
+      R_{1212} = (1 - 4*eta**2)/(4*R**2)
+
+  [Type S3 = R_{ijk3} etc.]  (mixed block)
+    R_{ijk3} type (d=3, a<b): 2
+      R_{0203} = (-2*L*eta*omega + L*omega)/(4*R**3)
+      R_{1213} = (-2*L*eta*omega + L*omega)/(4*R**3)
+    R_{3ijk} type (a=3, c<d): 2
+      R_{3002} = (-2*L*eta*omega - L*omega)/(4*R**3)
+      R_{3112} = (-2*L*eta*omega - L*omega)/(4*R**3)
+
+  [Type 33]  (block containing two indices equal to 3)
+    R_{0303} = L**2*omega**2/(4*R**4)
+    R_{0330} = -L**2*omega**2/(4*R**4)
+    R_{1313} = L**2*omega**2/(4*R**4)
+    R_{1331} = -L**2*omega**2/(4*R**4)
+    R_{3003} = -L**2*omega**2/(4*R**4)
+    R_{3030} = L**2*omega**2/(4*R**4)
+    R_{3113} = -L**2*omega**2/(4*R**4)
+    R_{3131} = L**2*omega**2/(4*R**4)
+
+  [Index pattern tally]
+    (3,S,3,S): 2
+    (3,S,S,3): 2
+    (3,S,S,S): 4
+    (S,3,3,S): 2
+    (S,3,S,3): 2
+    (S,3,S,S): 4
+    (S,S,3,S): 4
+    (S,S,S,3): 4
+    (S,S,S,S): 12
+
+============================================================
+  Hodge Dual block mapping check
+============================================================
+
+  (*R)_{abcd} = (1/2) ε_{abef} R^{ef}_{cd}
+              = (1/2) Σ_{ef} ε_{abef} R_{efcd}
+
+  Below: enumerate the (ab) -> (ef) mapping for non-zero ε_{abef} != 0
+    
+  Mappings where ε_{abef} != 0:
+    ε_{0123} = +1  (SS: (0,1)) → (S3: (2,3))
+    ε_{0213} = -1  (SS: (0,2)) → (S3: (1,3))
+    ε_{0312} = +1  (S3: (0,3)) → (SS: (1,2))
+    ε_{1203} = +1  (SS: (1,2)) → (S3: (0,3))
+    ε_{1302} = -1  (S3: (1,3)) → (SS: (0,2))
+    ε_{2301} = +1  (S3: (2,3)) → (SS: (0,1))
+
+  Mapping summary:
+    dual(S3) -> ['SS']
+    dual(SS) -> ['S3']
+
+============================================================
+  Lemma condition check summary
+============================================================
+
+  [S³]
+    Condition 1 (non-zero only in SS or S3): ✓  (3X=0, 33=36)
+    Condition 2 (R_{i3j3} = 0):              x
+    No 33 blocks (stronger condition):        x  (36 components)
+    -> Lemma preconditions: NOT SATISFIED
+
+  [Nil³]
+    Condition 1 (non-zero only in SS or S3): ✓  (3X=0, 33=8)
+    Condition 2 (R_{i3j3} = 0):              x
+    No 33 blocks (stronger condition):        x  (8 components)
+    -> Lemma preconditions: NOT SATISFIED
+
+  Related analysis: Index contraction analysis for P=Σ R_{abcd} (*R)^{abcd}
+
+Computation time: 2.9s
+
+*Script: scripts/proofs/riemann_block_classification.py

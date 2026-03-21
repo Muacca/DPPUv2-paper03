@@ -1,0 +1,89 @@
+============================================================
+G metric rigorous computation (velocity mode) (App E.6)
+============================================================
+
+[Step 1/5] Running UnifiedEngine (velocity mode, estimated ~300-600s)...
+Engine run: 319.9s
+
+Velocity symbols confirmed: ['v_omega1', 'v_omega2', 'v_omega3', 'v_delta0', 'v_delta1', 'v_delta2']
+[Step 2/5] Substituting physical parameters...
+  Substitution done: 14.5s
+r₀ = 2.999999  (expected: 3.0)
+
+[Step 4/5] Computing G_{ij} (SymPy diff × 36 components)...
+  Differentiation done: 0.0s
+
+============================================================
+[G field-space metric results]
+============================================================
+
+G^{ωω} (3×3):
+               ω₁          ω₂          ω₃
+  ω₁    236.8704      0.0000      0.0000
+  ω₂      0.0000    236.8704      0.0000
+  ω₃      0.0000      0.0000    236.8704
+
+G^{δδ} (3×3):
+               δ₀          δ₁          δ₂
+  δ₀    532.9582      0.0000      0.0000
+  δ₁      0.0000    532.9582      0.0000
+  δ₂      0.0000      0.0000    532.9582
+
+G^{ωδ} (3×3):
+               δ₀          δ₁          δ₂
+  ω₁   -355.3055      0.0000      0.0000
+  ω₂      0.0000   -355.3055      0.0000
+  ω₃      0.0000      0.0000   -355.3055
+
+[Schur structure determination]
+
+  G^{ωω}: diag = [236.870435, 236.870435, 236.870435]
+         off-diag max = 0.00e+00  diag spread = 0.00e+00  → Schur confirmed
+
+  G^{δδ}: diag = [532.958162, 532.958162, 532.958162]
+         off-diag max = 0.00e+00  diag spread = 0.00e+00  → Schur confirmed
+
+  G^{ωδ}: diag = [-355.305547, -355.305547, -355.305547]
+         off-diag max = 0.00e+00  diag spread = 0.00e+00  → Schur confirmed
+
+============================================================
+[Generalized eigenvalue problem H v = λ G v]
+============================================================
+
+  H_red = [[52.6379, -631.6544],
+           [-631.6544, 3789.9295]]
+
+  G_red = [[236.870435, -355.305547],
+           [-355.305547, 532.958162]]
+
+  det(H_red) = -199493.35  (< 0 → indefinite)
+  det(G_red) = -0.000000  (<= 0 → not positive definite!)
+
+  G (6×6) eigenvalues: [-1.52826724e-13 -5.98089518e-14 -3.01817568e-16  7.69828597e+02
+  7.69828597e+02  7.69828597e+02]
+  G positive definite: NO (sign issue)
+
+  Generalized eigenvalue computation error (G_red is rank-deficient): The leading minor of order 2 of B is not positive definite. The factorization of B could not be completed and no eigenvalues or eigenvectors were computed.
+
+  [Eigenvalue in physical subspace (excluding G null modes)]
+  G_red is rank-1: null direction = (1, 2L/r0) = (1, 2/3) at r0=3, L=1
+  Physical direction u = (-2, 3) / sqrt(13)  (orthogonal to null)
+  u^T H u = 41899.7699,  u^T G u = 10007.7718
+  lambda_phys = 4.186723  (> 0: physical direction is stable)
+
+============================================================
+[Tachyon determination]
+============================================================
+  [OK] G_red computed (velocity mode engine)
+  [--] G (6x6) positive definiteness check
+  [OK] G_red is rank-1 (det ~ 0)
+  [OK] lambda_phys computed (physical subspace)
+  [OK] lambda_phys > 0 (physical direction stable)
+
+  lambda_phys = 4.1867 > 0  [OK]
+
+
+Computation time: 334.5s
+
+*Script: scripts/paper03/spin1_kinetic_metric.py
+============================================================

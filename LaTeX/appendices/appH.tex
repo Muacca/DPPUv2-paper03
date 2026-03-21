@@ -1,0 +1,305 @@
+%==============================================================================
+% Appendix H: Numerical Tables and Supplemental Data
+%==============================================================================
+\section{Numerical Tables and Supplemental Data}
+\label{app:H}
+
+This appendix tabulates the principal numerical values used throughout paper~III.
+
+\subsection{Core Numerical Dictionary}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{6cm}}
+\toprule
+Quantity & Value & Interpretation \\
+\midrule
+$r_0$                    & $3.0$                              & isotropic-point radius \\
+$\mu_q^2$                & $48\pi^2 \approx 473.74$           & spin-2 quintet mass \\
+$\varepsilon_{c+}$       & $0.48324$                          & positive-side softening threshold \\
+$\varepsilon_{c-}$       & $-0.29309\pm 0.00019$              & negative-side second-order transition \\
+$\mu_\omega^2$           & $52.6379$                          & raw twist Hessian \\
+$\mu_\delta^2$           & $3789.9295$                        & raw mixing Hessian \\
+$m_{\omega\delta}$       & $-631.6544$                        & raw bilinear mixing \\
+$G_{\omega\omega}$       & $236.870435$                       & raw kinetic metric \\
+$G_{\delta\delta}$       & $532.958162$                       & raw kinetic metric \\
+$G_{\omega\delta}$       & $-355.305547$                      & raw kinetic metric \\
+$H_\phys$                & $3223.06$                          & physical spin-1 Hessian \\
+$G_\phys$                & $769.8286$                         & physical spin-1 kinetic metric \\
+$\lambda_\phys$          & $4.1867$                           & physical generalised eigenvalue \\
+$H_\mathrm{null}$        & $894.845$                          & auxiliary curvature \\
+$c_\omega$               & $105.28$                           & $h\omega\omega$ cubic coupling \\
+$c_\delta$               & $1894.96$                          & $h\delta\delta$ cubic coupling \\
+\bottomrule
+\end{tabular}
+\caption{Core numerical dictionary for paper~III.}
+\label{tab:num_dict}
+\end{table}
+
+\subsection{Cross-Hessian Summary}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrl}
+\toprule
+Block & Components & Result \\
+\midrule
+Spin-1 $\times$ spin-2  & 15 & all zero \\
+Spin-1 $\times$ radial  & 3  & all zero \\
+Spin-1 $\times$ torsion & 3  & all zero \\
+Spin-2 $\times$ torsion ($\eta$ and $V$) & 10 & all zero \\
+Radial $\times$ $V$ & 1 & all zero \\
+Radial $\times$ $\eta$ & 1 & nonzero ($\approx 118.4$) \\
+\bottomrule
+\end{tabular}
+\caption{Cross-Hessian summary at the isotropic point.  The spin-1 sector fully
+         decouples; the spin-2 sector decouples from torsion; the scalar/torsion
+         subsector contains a coupled $(r,\eta)$ block.}
+\label{tab:cross_hess}
+\end{table}
+
+\subsection*{H.2A.~Supplemental Scalar-Modulus Check with $L$ Released}
+
+In the main text the $\Sone$ scale $L$ is fixed at $L=1$.  Here we temporarily
+release $L$ and record supplemental results from a numerical evaluation of the
+$4\times 4$ Hessian $H^{(r,L,\eta,V)}$ near the isotropic point.
+
+\textit{Conditions:} $r_0=3$, $L_0=1$, $\kappa=1$, $\alpha=\theta_\NY=0$;
+centred difference with $h=10^{-3}$ (stability confirmed at multiple step sizes).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Background & $H_{LL}$ & $H_{rL}$ & $H_{L\eta}$ & $H_{LV}$ & $\lambda_\mathrm{min}$ \\
+\midrule
+AX & $\approx 0$ & $-177.65$ & $355.31$ & $0$      & $-349.79$ \\
+VT & $\approx 0$ & $-59.22$  & $0$      & $355.31$ & $-360.20$ \\
+MX & $\approx 0$ & $\approx 0$ & $355.31$ & $355.31$ & $-437.45$ \\
+\bottomrule
+\end{tabular}
+\caption{$4\times 4$ Hessian $H^{(r,L,\eta,V)}$ with $L$ released.  All cases
+         are indefinite (saddle-point type).}
+\end{table}
+
+The full $4\times 4$ eigenvalues are:
+\begin{itemize}
+  \item AX: $-349.8,\; 130.1,\; 355.3,\; 575.0$
+  \item VT: $-360.2,\; 121.4,\; 355.3,\; 712.6$
+  \item MX: $-437.5,\; 23.7,\; 412.0,\; 830.9$
+\end{itemize}
+Since $H_{LL}\approx 0$, $L$ is a flat direction in the quadratic approximation
+at the isotropic point, analogous to $r$.  The $L=1$ normalisation in the main
+text is therefore appropriate.
+Rather than a standard scalar degree of freedom with a stable mass, $L$ is a
+modulus-type auxiliary variable that possesses large mixing couplings of the same
+order as the diagonal scales ($|H_{rL}|=177.6$, $H_{L\eta}=355.3$).  Releasing
+$L$ deepens the existing saddle-point structure: the minimum eigenvalue
+deteriorates from $\lambda_\mathrm{min}=-35.9$ in the $(r,\eta)$ $2\times 2$
+block to $\lambda_\mathrm{min}=-349.8$ in the full $4\times 4$ block.
+Accordingly, $L$ is \emph{not} added to the final mode dictionary (H.3); the
+treatment and potential stabilisation of $L$ is left as a separate analysis
+beyond the scope of the present paper.
+
+\subsection{Final Mode Dictionary with Numerical Anchors}
+\label{app:H:numerical}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{l l X l}
+\toprule
+Variable & Classification & Numerical anchor & Note \\
+\midrule
+$q_A$ & spin-2 & $\mu_q^2 = 48\pi^2$ at $\varepsilon=0$ & final basis \\
+$X_k$ & spin-1 physical  & $\lambda_\phys = 4.1867$ & quadratic decoupled \\
+$Y_k$ & spin-1 auxiliary & $G Y_k=0$, $H_\mathrm{null}=894.845$ & not gauge \\
+$\eta$ & torsion scalar   & AX control parameter & physical input \\
+$V$   & torsion scalar   & VT control parameter & physical input \\
+$P$   & topological density & AX/VT zero; MX nonzero & chirality indicator \\
+\bottomrule
+\end{tabularx}
+\caption{Final mode dictionary with numerical anchors for paper~III.}
+\end{table}
+
+At the isotropic MX point the torsion scalar block satisfies numerically:
+\begin{equation}
+  H^{(\eta,V)} =
+  \begin{pmatrix}
+    355.31 & 0 \\
+    0 & 355.31
+  \end{pmatrix}.
+\end{equation}
+Before accounting for coupling to the radial mode, the torsion subsector is
+locally stable and doubly degenerate.
+
+\paragraph{$(r,\eta)$ coupled block eigenvalue analysis (AX mode, $\eta=1$, $V=0$):}
+
+\begin{equation}
+  H^{(r,\eta)} =
+  \begin{pmatrix}
+    H_{rr} & H_{r\eta} \\
+    H_{\eta r} & H_{\eta\eta}
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \approx 0 & 118.44 \\
+    118.44 & 355.31
+  \end{pmatrix}.
+\end{equation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Quantity & Value \\
+\midrule
+$H_{rr}$     & $\approx 0$ ($\approx -10^{-6}$) \\
+$H_{r\eta}$  & $118.435$ \\
+$H_{\eta\eta}$ & $355.306$ \\
+$\det H^{(r,\eta)}$ & $-1.40\times 10^4$ \\
+$\lambda_1$ (minimum) & $-35.86$ \\
+$\lambda_2$ (maximum) & $391.17$ \\
+\bottomrule
+\end{tabular}
+\caption{Eigenvalue analysis of the $(r,\eta)$ coupled block in AX mode.}
+\end{table}
+
+$H_{rr}\approx 0$ indicates that $r$ is in a \emph{flat direction (zero mode)} of
+the effective potential in the AX background.  Consequently $\det H^{(r,\eta)}<0$
+and the $2\times 2$ block is saddle-point type (indefinite).  The eigenvector of
+the negative eigenvalue is predominantly in the $r$ direction ($\approx -0.957\,
+r + 0.290\,\eta$), so the instability originates in the flat direction of $r$ and
+its coupling to $\eta$.  The eigenvalue of the predominantly $\eta$ direction
+$\lambda_2\approx 391$ remains positive.
+
+In the VT mode ($\eta=0$, $V=1$), $H_{rr}=118.44$ (non-zero) and $H_{r\eta}
+\approx 0$, forming a positive-definite block.  Thus the $r$--$\eta$ mixing and
+the $r$ zero mode are specific to the axial torsion component $\eta$.
+
+\subsection{Representative Phase Atlas on the Axisymmetric Slice}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrp{4.5cm}}
+\toprule
+$\varepsilon$ & $\mu^2_{m=0}$ & $\mu^2_{m=\pm 2}$ & $\mu^2_{m=\pm 1}$
+& Phase note \\
+\midrule
+$-0.40$ & 675.1 & -239.8 & 117.4 & $m=\pm 2$ branch unstable \\
+$-0.30$ & 793.9 & -12.5  & 321.8 & near $\varepsilon_{c-}$ \\
+$-0.20$ & 734.5 & 203.9  & 445.9 & stable negative side \\
+$-0.10$ & 610.9 & 364.1  & 487.1 & stable negative side \\
+$ 0.00$ & 473.7 & 473.7  & 473.7 & isotropic Schur point \\
+$ 0.20$ & 219.8 & 685.1  & 413.3 & positive-side split \\
+$ 0.40$ & 44.9  & 842.2  & 359.8 & near $\varepsilon_{c+}$ \\
+$ 0.482$ & 0.49 & 891.8  & 341.6 & $m=0$ soft mode \\
+\bottomrule
+\end{tabular}
+\caption{Representative phase atlas on the axisymmetric slice $s=0$.}
+\end{table}
+
+The boundary points are:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrl}
+\toprule
+Boundary & Value & Vanishing branch \\
+\midrule
+$\varepsilon_{c-}$ & $-0.29309\pm 0.00019$ & $\mu^2_{m=\pm 2}\to 0$ \\
+$\varepsilon_{c+}$ & $0.48324$              & $\mu^2_{m=0}\to 0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Composite Visualization at Selected $H_{\varepsilon\varepsilon}=0$ Points}
+
+The following figures display, side by side, (i) the $(\varepsilon,\eta)$ phase
+diagram, (ii) the effective potential $\Veff(r)$ at the selected point, and
+(iii) the three spin-2 spectral branches $\{m=0,\,m=\pm 2,\,m=\pm 1\}$.  The
+purpose is to provide a comprehensive view of the relationship between the
+phase-diagram position, the potential shape, and the spectral splitting analysed
+in \S\ref{sec:spin2} and Appendix~\ref{app:D}.
+
+A note of caution: $H_{\varepsilon\varepsilon}=0$ is a \emph{local softening
+condition along the squash direction} and does not always coincide with the
+actual phase-transition point.
+
+\paragraph{$\alpha=0$, Type-I representative point.}
+Baseline softening figure.  Corresponds to the positive-side threshold
+$\varepsilon_{c+}=0.48324$ of the main text, where the $m=0$ branch just reaches
+zero while the $m=\pm 2$ branch remains massive.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig16_visualize_type-I.png}
+  \caption{Composite visualization at a positive-$\varepsilon$, $\alpha=0$ point
+           on the $H_{\varepsilon\varepsilon}=0$ locus.}
+  \label{fig:vis_typeI}
+\end{figure}
+
+\paragraph{$\alpha<0$, Type-IW/IIW representative point.}
+Example of local softening on the $\alpha<0$ side.  From paper~II, $\alpha\le 0$
+is the stable side for the isotropic vacuum, forming the Type-IW and Type-IIW
+stable phases.  The spectral splitting seen here is a normal branch splitting
+associated with a shift of the background point, not a ghost instability.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig17_visualize_type-IW.png}
+  \caption{Composite visualization Type-IW at a positive-$\varepsilon$, $\alpha<0$
+           representative point.}
+  \label{fig:vis_typeIW}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig18_visualize_type-IIW.png}
+  \caption{Composite visualization Type-IIW at a positive-$\varepsilon$, $\alpha<0$
+           representative point.}
+  \label{fig:vis_typeIIW}
+\end{figure}
+
+The figures function as a supplemental phase atlas that allows simultaneous
+comparison of the phase classification, the radial potential shape, and which
+spectral branch participates in the softening.
+
+\paragraph{$\alpha>0$, Type-G representative point.}
+Supplemental visualisation is available on the ghost/metastable side, but the
+physical interpretation of the spectral branches requires care.  In this paper
+the region where $\alpha>0$ and the potential may possess a local well is
+classified as Type-G in the phase diagram.  This region corresponds to the
+ghost-unstable side, which does not yield a globally stable vacuum~\cite{Woodard2015}.
+Accordingly, $H_{\varepsilon\varepsilon}=0$ and $H_{ss}=0$ within the Type-G
+region should not be interpreted on the same footing as critical conditions in
+the stable phases; a detailed physical interpretation of these loci is outside
+the scope of the present paper.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig19_visualize_type-G.png}
+  \caption{Composite visualization at a positive-$\varepsilon$, $\alpha>0$
+           representative point.}
+  \label{fig:vis_typeG}
+\end{figure}
+
+\subsection{Scripts}
+
+The scripts generating the numerical tables in this appendix are:
+\begin{itemize}
+  \item \texttt{paper03/spin0\_torsion\_cross\_hessian.py}:
+        spin-2\,$\times$\,torsion and radial\,$\times$\,torsion cross-Hessians,
+        torsion block $H^{(\eta,V)}$ (\S\ref{app:H}\,.2).
+  \item \texttt{paper03/spin0\_reta\_block\_eigenvalues.py}:
+        $(r,\eta)$ coupled-block eigenvalue analysis (\S\ref{app:H:numerical}).
+  \item \texttt{paper03/spin0\_rLetaV\_hessian.py}:
+        $4\times 4$ Hessian $H^{(r,L,\eta,V)}$ (\S\ref{app:H}\,.2A).
+\end{itemize}
+
+\subsection{Remarks}
+
+The numerical values in this appendix serve as reference anchors for the
+stability discussions and mode dictionaries in the main text.  The phase atlas
+here samples representative points only; full-grid supplemental data and
+high-density figures for publication are deferred to subsequent work or
+supplemental material as needed.

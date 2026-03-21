@@ -1,0 +1,120 @@
+%==============================================================================
+% Appendix C: Full Shear Tensor Basis and Embedding of (eps, s, phi)
+%==============================================================================
+\section{Full Shear Tensor Basis and Embedding of $(\varepsilon,s,\phi)$}
+\label{app:C}
+
+This appendix summarises the final basis of the spin-2 sector and its relation
+to the raw geometric variables $(\varepsilon,s,\phi)$.
+
+\subsection{Traceless Symmetric Basis}
+
+The full shear tensor is expanded as
+\begin{equation}
+  h_{ij} = \sum_{A=1}^5 q_A\,(T_A)_{ij}.
+\end{equation}
+The explicit matrix representations of $T_1,\ldots,T_5$ are given in
+\S\ref{sec:setup:spin2}.  The following properties hold exactly:
+\begin{equation}
+  \tr(T_A T_B) = \delta_{AB},
+  \qquad
+  \tr(h) = 0,
+  \qquad
+  \tr(h^2) = \sum_{A=1}^5 q_A^2.
+\end{equation}
+
+\subsection{Embedding of the Old Variables}
+
+The raw geometric variables $(\varepsilon,s,\phi)$ provide a description of a
+particular three-dimensional slice within the spin-2 quintet.  In this paper we
+do not place these slice variables in the primary role; instead we adopt the
+final basis $q_A$ as the principal variables.  Accordingly:
+\begin{itemize}
+  \item $\varepsilon$ is primarily used for axisymmetric deformations in the
+        $m=0$ singlet direction;
+  \item $s$ and $\phi$ are auxiliary parameters for tracking the negative-side
+        condensed phase.
+\end{itemize}
+All representation-theoretic statements are always rewritten in $q_A$.
+
+\subsection{Invariants in the Final Basis}
+
+It is confirmed exactly that the low-order invariants in the final basis are
+\begin{equation}
+  I_2 = \tr(h^2) = \sum_{A=1}^5 q_A^2,
+  \qquad
+  I_3 = h_{ij}\omega_i\omega_j,
+  \qquad
+  I_4 = \tr(h^3).
+\end{equation}
+
+\subsection{Constant-Shape Homogeneous Consistency}
+
+The homogeneous consistency for the constant frame deformation
+$e^i = r\, M^i{}_j\,\sigma^j$ with the structure-constant transformation
+\begin{equation}
+  C'^i{}_{jk} = M^i{}_a\,(M^{-1})^b{}_j\,(M^{-1})^c{}_k\, C^a{}_{bc}
+\end{equation}
+was verified for two representative all-five-nonzero full-shear samples on both
+$\Sthree$ and $\Nilthree$:
+\begin{itemize}
+  \item antisymmetry residual $= 0$,
+  \item Jacobi residual $= 0$,
+\end{itemize}
+both holding exactly.  The final spatial ansatz is therefore self-consistent as a
+homogeneous minisuperspace frame.
+
+\subsection{Role of This Appendix}
+
+The purpose of this appendix is to clarify the change of viewpoint from raw
+geometric variables to the final basis.  All final statements about spin-2 in
+this paper are written in $q_A$ and its irreducible decomposition; $(\varepsilon,
+s,\phi)$ are used only as auxiliary parameters for the phase diagram.
+
+\subsection{Jacobian: Old Variables to Final Basis}
+
+We give the correspondence between the raw geometric variables $(\varepsilon,s)$
+and the final basis coordinates $(q_1,q_2)$ explicitly.
+
+For $\varepsilon$---which embeds a $T_1$-direction deformation exponentially:
+\begin{equation}
+  \varepsilon = \exp\!\left(\frac{\sqrt{6}}{2}\,q_1\right) - 1,
+  \qquad
+  q_1 = \frac{2}{\sqrt{6}}\ln(1+\varepsilon),
+  \qquad
+  \frac{\partial q_1}{\partial\varepsilon}\bigg|_{\varepsilon=0}
+  = \frac{2}{\sqrt{6}} = \sqrt{\frac{2}{3}}.
+\end{equation}
+
+For $s$ (deformation in the $T_2$ direction):
+\begin{equation}
+  s = \exp\!\left(\frac{q_2}{\sqrt{2}}\right) - 1,
+  \qquad
+  q_2 = \sqrt{2}\ln(1+s),
+  \qquad
+  \frac{\partial q_2}{\partial s}\bigg|_{s=0} = \sqrt{2}.
+\end{equation}
+
+The angle $\phi$ appearing in the $s\neq 0$ phase corresponds to an $SO(2)$
+rotation in the $(q_2,q_3)$ plane:
+\begin{equation}
+  q_2 = s_q\cos\phi,
+  \qquad
+  q_3 = s_q\sin\phi,
+  \qquad
+  s_q = \sqrt{q_2^2+q_3^2}.
+\end{equation}
+The analogous embedding for the $T_4,T_5$ directions (off-diagonal components)
+is structurally identical by symmetry.
+
+The combined Jacobian diagonal at the isotropic point is
+\begin{equation}
+  J = \mathrm{diag}\!\left(\sqrt{\tfrac{2}{3}},\,\sqrt{2}\right),
+\end{equation}
+and the Hessian basis transformation is
+\begin{equation}
+  H_q = J^{-T} H_{\varepsilon s}\, J^{-1}.
+\end{equation}
+At the isotropic point, $H_{\varepsilon s} = \mu_q^2\,I_2$ and
+$J^{-T}J^{-1}\propto I_2$, so Schur degeneracy $H_q = \mu_q^2\,\delta_{AB}$
+is preserved under the change of basis.

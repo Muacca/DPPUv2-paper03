@@ -1,0 +1,91 @@
+%==============================================================================
+% Appendix G: Landau-EFT Selection Rules and Forbidden Terms
+%==============================================================================
+\section{Landau-EFT Selection Rules and Forbidden Terms}
+\label{app:G}
+
+This appendix briefly summarises the final invariant basis adopted in paper~III
+and the selection rules on it.
+
+\subsection{Final Invariant Basis}
+
+The low-order invariants adopted are
+\begin{equation}
+  I_2 = \tr(h^2),
+  \quad
+  I_3 = h_{ij}\omega_i\omega_j,
+  \quad
+  I_4 = \tr(h^3),
+  \quad
+  W_2 = \omega_i\omega_i.
+\end{equation}
+At quartic order the auxiliary invariants
+\begin{equation}
+  I_2^2, \qquad I_2 W_2, \qquad W_2^2
+\end{equation}
+are employed.
+
+\subsection{Explicit Form of $I_3$}
+
+In the final $T_A$ conventions,
+\begin{equation}
+\begin{aligned}
+  I_3 =\;
+  &\frac{q_1}{\sqrt{6}}\!\left(\omega_1^2+\omega_2^2-2\omega_3^2\right)
+  + \frac{q_2}{\sqrt{2}}\!\left(\omega_1^2-\omega_2^2\right)
+  + \sqrt{2}\,q_3\omega_1\omega_2 \\
+  &+ \sqrt{2}\,q_4\omega_1\omega_3
+  + \sqrt{2}\,q_5\omega_2\omega_3.
+\end{aligned}
+\end{equation}
+It is confirmed exactly that this gives $I_3 = q_A F_A(\omega)$.
+
+\subsection{Allowed and Forbidden Structures}
+
+In the final basis the spin-2 $\times$ spin-1 cubic coupling is determined by
+the Clebsch--Gordan decomposition
+\begin{equation}
+  \text{spin-2} \otimes \text{spin-1} \otimes \text{spin-1}.
+\end{equation}
+Since $\omega_i\omega_j$ and $\delta_i\delta_j$ are symmetric products of
+commuting variables,
+\begin{equation}
+  \Sym^2(\text{spin-1}) = \text{spin-0} \oplus \text{spin-2},
+\end{equation}
+and no antisymmetric spin-1 component appears.  Therefore the independent cubic
+couplings that produce a scalar by contracting with the spin-2 tensor $h_{ij}$
+reduce to their spin-2 projections:
+\begin{equation}
+  h_{ij}\omega_i\omega_j,
+  \qquad
+  h_{ij}\delta_i\delta_j.
+\end{equation}
+
+In the language of the final basis:
+\begin{itemize}
+  \item $h_{ij}\omega_i\omega_j$ and $h_{ij}\delta_i\delta_j$ are representative
+        allowed cubic terms.
+  \item Quadratic cross-terms in $X_k$ vanish in the final basis.
+  \item Known forbidden terms $H_\mathrm{sym}$ and $K_\mathrm{sym}$ are excluded
+        because they cannot be reduced to a symmetric-rank-2 spin-2 projection;
+        they do not satisfy the requisite condition and are therefore
+        not adopted as independent invariants in the final EFT.
+\end{itemize}
+
+\subsection{Boundary of the Claim}
+
+What this appendix claims is the low-order invariant organisation for the final
+basis adopted in this paper.  The following are \emph{not} claimed:
+\begin{itemize}
+  \item Complete generation of arbitrary non-invariant polynomials.
+  \item Unique classification of all nonlinear couplings.
+\end{itemize}
+This paper uses the label ``unified Landau-EFT'' with this limitation explicitly
+stated.
+
+\subsection{Computational Verification}
+
+\begin{itemize}
+  \item Invariant generation and exact assertion pass:
+        \texttt{paper03/eft\_invariant\_generation.py}
+\end{itemize}

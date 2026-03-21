@@ -1,0 +1,105 @@
+============================================================
+spin-2 five-fold degeneracy at isotropic point (App D.9)
+============================================================
+
+[1] Definition of T_A basis (traceless symmetric 3×3)
+
+  Tr(T_A T_B) = δ_AB: OK
+
+[2] Algebraic proof of Hessian degeneracy via SO(3) symmetry
+
+  tr(S²) - Σq_A² = 0  confirmed
+
+  H_{AB} = 2λ δ_{AB}  (Schur condition satisfied [OK])
+
+[3] Variable transformation (ε,s) ↔ (q₁,q₂) and Hessian transformation
+
+  From frame factors in s3.py (§6.1):
+    ε = exp(√6/2 · q₁) − 1  →  ∂ε/∂q₁|₀ = √6/2,  ∂²ε/∂q₁²|₀ = 3/2
+    s = exp(q₂/√2) − 1      →  ∂s/∂q₂|₀ = 1/√2,  ∂²s/∂q₂²|₀ = 1/2
+
+  ∂ε/∂q₁|₀ = 1.224745 = √6/2 = 1.224745  confirmed
+  ∂s/∂q₂|₀ = 0.707107 = 1/√2 = 0.707107  confirmed
+
+
+[4] Symbolic computation of H_εε and H_ss (FAEngine, LC only)
+
+  Engine computation time: 4.9s
+
+  H_εε (α=0, ε=s=0) = 128*pi**2*L*r/(3*kappa**2)
+  H_ss (α=0, ε=s=0) = 128*pi**2*L*r/kappa**2
+  H_εs (α=0, ε=s=0) = 0
+
+  H_εε − H_ss = -256*pi**2*L*r/(3*kappa**2)  ≠ 0 (H₁₁^(q) = H₂₂^(q) after q-transform [OK])
+
+  H₁₁^(q) = (3/2) H_εε = 64*pi**2*L*r/kappa**2
+  H₂₂^(q) = (1/2) H_ss = 64*pi**2*L*r/kappa**2
+  H₁₂^(q) = (cross) H_εs = 0
+
+  H₁₁^(q) / H₂₂^(q) = 1  (= 1 [OK])
+
+[5] T₃, T₄, T₅ modes (off-diagonal shear) — SO(3) rotation argument
+
+  R(45 deg) T2 R(45 deg)^T - T3 = 2.22e-16  (= T3 [OK])
+
+[6] Numerical verification: V_eff scan in q₁, q₂, q₃ directions
+
+  q₁ direction (squash ε):
+    q₁=+0.000 → ε=+0.000000, V=-2.362783e+02,  ΔV=0.0000e+00
+    q₁=+0.020 → ε=+0.024797, V=-2.361554e+02,  ΔV=1.2295e-01
+    q₁=+0.040 → ε=+0.050210, V=-2.357996e+02,  ΔV=4.7874e-01
+    q₁=+0.060 → ε=+0.076252, V=-2.352296e+02,  ΔV=1.0487e+00
+    q₁=-0.020 → ε=-0.024197, V=-2.361485e+02,  ΔV=1.2983e-01
+    q₁=-0.040 → ε=-0.047809, V=-2.357445e+02,  ΔV=5.3380e-01
+
+  H₁₁^(q) finite difference ≈ 6.3195e+02
+
+  q₂ direction (shear s):
+    q₂=+0.000 → s=+0.000000, V=-2.362783e+02,  ΔV=0.0000e+00
+    q₂=+0.020 → s=+0.014243, V=-2.361519e+02,  ΔV=1.2639e-01
+    q₂=+0.040 → s=+0.028688, V=-2.357721e+02,  ΔV=5.0627e-01
+    q₂=+0.060 → s=+0.043339, V=-2.351366e+02,  ΔV=1.1418e+00
+    q₂=-0.020 → s=-0.014043, V=-2.361519e+02,  ΔV=1.2639e-01
+    q₂=-0.040 → s=-0.027888, V=-2.357721e+02,  ΔV=5.0627e-01
+
+  H₂₂^(q) finite difference ≈ 6.3195e+02
+
+  H₂₂^(q) / H₁₁^(q) = 1.0000  (theoretical: 1.0000 = Schur isotropic)
+  H_εε / H_ss = 1/3  (= 1/3 [OK])
+
+[7] Isotropic point mass λ verification
+
+  H_εε (symbolic) = 128*pi**2*L*r/(3*kappa**2)
+  H_ss (symbolic) = 128*pi**2*L*r/kappa**2
+
+  H₁₁^(q) = H₂₂^(q)  confirmed  (Schur's lemma — symbolic verification)
+
+  ∴ All 5 modes have the same mass μ² = H₁₁^(q) / G₁₁^(q).
+
+  λ = H₁₁^(q)/2 = H₂₂^(q)/2 = ... = H₅₅^(q)/2  (Schur: all 5 modes [OK])
+
+============================================================
+Results summary (App D.9)
+============================================================
+
+[Conclusion] spin-2 five-fold degeneracy at isotropic point S=0
+
+  1. SO(3) symmetry proof:
+     V_eff(e^S) = V₀ + λ tr(S²) + O(|q|³)
+     → H_{AB} = 2λ δ_{AB}  (all 5 components have the same Hessian coefficient)
+
+  2. Numerical verification (r=L=κ=1, η=0.1, α=0):
+     H₁₁^(q) (finite difference) = 6.3195e+02
+     H₂₂^(q) (finite difference) = 6.3195e+02
+     H₁₁/H₂₂ = 1.0000  (theoretical 1.0000)
+
+  3. T₃, T₄, T₅ modes:
+     SO(3) rotation correspondence: H₃₃ = H₄₄ = H₅₅ = H₂₂^(q)  [group-theoretic proof]
+
+  4. Mass consistency:
+     μ₁² = H₁₁^(q)/G₁₁^(q) = H_εε/G_εε = 48π² (known result (App D.9))
+     All 5 components: μ_A² = 48π² for A=1,...,5  confirmed [OK]
+
+Computation time: 5.8s
+
+*Script: script/paper03/spin2_schur_degeneracy.py

@@ -1,0 +1,127 @@
+=================================================================
+Algebraic structure analysis of P equiv 0 (App B.2–B.3)
+=================================================================
+
+[Running engines...]
+  S³ engine complete
+  Nil³ engine complete
+
+=================================================================
+  S³: Algebraic structure of the 33 block
+=================================================================
+
+  R_{i3j3} matrix (i,j in {0,1,2}):
+    i=0: [8*L**2*omega**2/r**4  -4*L**2*omega**2/r**4  -4*L**2*omega**2/r**4]
+    i=1: [-4*L**2*omega**2/r**4  8*L**2*omega**2/r**4  -4*L**2*omega**2/r**4]
+    i=2: [-4*L**2*omega**2/r**4  -4*L**2*omega**2/r**4  8*L**2*omega**2/r**4]
+
+  Diagonal entry: 8*L**2*omega**2/r**4
+  Off-diagonal entry: -4*L**2*omega**2/r**4
+  Ratio (offdiag/diag): -1/2
+
+  Tr(R_{i3j3}) = Σ_i R_{i3i3} = 24*L**2*omega**2/r**4
+  Σ_{i,j} R_{i3j3}^2 = 288*L**4*omega**4/r**8
+
+  P contribution from SS x 33: Sigma_{i<j,k<l} epsilon_{ij,kl} R_{ijkl} R_{...}
+  (See output of compute_P_by_blocks for details)
+
+=================================================================
+  Nil³: Algebraic structure of the 33 block
+=================================================================
+
+  R_{i3j3} matrix (i,j in {0,1,2}):
+    i=0: [L**2*omega**2/(4*R**4)  0  0]
+    i=1: [0  L**2*omega**2/(4*R**4)  0]
+    i=2: [0  0  0]
+
+  Diagonal entry: L**2*omega**2/(4*R**4)
+  Off-diagonal entry: 0
+  Ratio (offdiag/diag): 0
+
+  Tr(R_{i3j3}) = Σ_i R_{i3i3} = L**2*omega**2/(2*R**4)
+  Σ_{i,j} R_{i3j3}^2 = L**4*omega**4/(8*R**8)
+
+  P contribution from SS x 33: Sigma_{i<j,k<l} epsilon_{ij,kl} R_{ijkl} R_{...}
+  (See output of compute_P_by_blocks for details)
+
+=================================================================
+  S³: Computing Hodge(*R)_{i3j3}
+=================================================================
+
+  (*R)_{i3j3} = (1/2) Sigma_{ef} epsilon_{i3,ef} R_{efj3}
+  (e,f) with epsilon_{i3,ef} != 0 are spatial pairs (SS type) only
+    (*R)_{0303} = 0
+    (*R)_{0313} = 2*L*omega*(eta + 2)/r**3
+    (*R)_{0323} = 2*L*omega*(-eta - 2)/r**3
+    (*R)_{1303} = 2*L*omega*(-eta - 2)/r**3
+    (*R)_{1313} = 0
+    (*R)_{1323} = 2*L*omega*(eta + 2)/r**3
+    (*R)_{2303} = 2*L*omega*(eta + 2)/r**3
+    (*R)_{2313} = 2*L*omega*(-eta - 2)/r**3
+    (*R)_{2323} = 0
+
+=================================================================
+  Nil³: Computing Hodge(*R)_{i3j3}
+=================================================================
+
+  (*R)_{i3j3} = (1/2) Sigma_{ef} epsilon_{i3,ef} R_{efj3}
+  (e,f) with epsilon_{i3,ef} != 0 are spatial pairs (SS type) only
+    (*R)_{0303} = 0
+    (*R)_{0313} = L*omega*(1 - 2*eta)/(4*R**3)
+    (*R)_{0323} = 0
+    (*R)_{1303} = L*omega*(2*eta - 1)/(4*R**3)
+    (*R)_{1313} = 0
+    (*R)_{1323} = 0
+    (*R)_{2303} = 0
+    (*R)_{2313} = 0
+    (*R)_{2323} = 0
+
+[Decisive test] Contributions to P by first-pair block type
+
+=================================================================
+  S³: Independent block-by-block verification of P
+=================================================================
+
+  P_SS (first pair SS): 0
+  P_S3 (first pair S3): 0
+  P_33 (first pair 33): 0
+  P_total             : 0
+
+  Sign relations among contributions:
+    P_SS = 0 independently?  YES
+    P_S3 = 0 independently?  YES
+    P_33 = 0 independently?  YES
+    P_SS + P_S3 = 0? YES
+    P_SS + P_S3 + P_33 = 0 (total)? YES
+
+=================================================================
+  Nil³: Independent block-by-block verification of P
+=================================================================
+
+  P_SS (first pair SS): 0
+  P_S3 (first pair S3): 0
+  P_33 (first pair 33): 0
+  P_total             : 0
+
+  Sign relations among contributions:
+    P_SS = 0 independently?  YES
+    P_S3 = 0 independently?  YES
+    P_33 = 0 independently?  YES
+    P_SS + P_S3 = 0? YES
+    P_SS + P_S3 + P_33 = 0 (total)? YES
+
+=================================================================
+  Summary: Structure of P equiv 0
+=================================================================
+
+  [S³]
+    -> All blocks independently zero (strongest result)
+    P_SS=0, P_S3=0, P_33=0
+
+  [Nil³]
+    -> All blocks independently zero (strongest result)
+    P_SS=0, P_S3=0, P_33=0
+
+Computation time: 0.6s
+
+*Script: scripts/proofs/pontryagin_block_decomposition.py

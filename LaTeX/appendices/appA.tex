@@ -1,0 +1,116 @@
+%==============================================================================
+% Appendix A: Conventions and Computational Pipeline
+%==============================================================================
+\section{Conventions and Computational Pipeline}
+\label{app:A}
+
+This appendix collects the notation conventions and the computational pipeline
+for reproducing the results of this paper.
+
+\subsection{Notation Conventions}
+
+\begin{itemize}
+  \item Spatial tensor indices: $i,j=1,2,3$.
+  \item Spin-2 basis label: $A=1,\ldots,5$.
+  \item Spin-1 triplet label (consistent with the scripts): $k=0,1,2$.
+  \item Volume factor: $\Vol = 2\pi^2 L r^3$.
+  \item Effective potential:
+        $\Veff = -\!\left(\tfrac{R}{2\kappa^2}+\theta_\NY N\right)\Vol$.
+  \item Pontryagin density:
+        $P = \innerprod{R}{\star R}
+           = \tfrac{1}{2}\,\varepsilon^{abcd} R_{abef} R_{cd}{}^{ef}$.
+\end{itemize}
+
+\subsection{Where the Mode Dictionary Is Fixed}
+
+The mode dictionary is presented in a distributed manner.
+
+\begin{enumerate}
+  \item \S\ref{sec:setup} provides the overview from raw geometric variables to
+        the final basis.
+  \item \S\ref{sec:spin1} establishes the physical/auxiliary classification of
+        the spin-1 sector.
+  \item \S\ref{sec:eft} fixes the definitive dictionary adopted in this paper.
+  \item Appendix~\ref{app:H:numerical} collects the numerical anchors
+        corresponding to that dictionary.
+\end{enumerate}
+
+\subsection{Computational Pipeline}
+
+The numerical and symbolic computations of this paper are conceptually organised
+in the following order.
+
+\begin{enumerate}
+  \item Specify the homogeneous frame and the structure constants $C^i{}_{jk}$.
+  \item Compute the curvature, Ricci scalar, Nieh--Yan density, and Pontryagin
+        density from the Einstein--Cartan connection.
+  \item Assemble $\Veff$ and evaluate the Hessian and generalised eigenvalues at
+        the isotropic point and at deformed points.
+  \item Organise the full shear basis $T_A$, spin-1 physical/auxiliary basis
+        $(X,Y)$, and torsion modes into the final basis.
+  \item As additional consistency checks, independently verify the cross-Hessian,
+        homogeneous consistency, and invariant generation with separate scripts.
+\end{enumerate}
+
+\subsection{Scripts}
+
+The main scripts, organised by purpose, are listed below.  The principal
+appendices (B, D, E, F, G, H) also contain references to the corresponding
+scripts; see each appendix for details.
+
+\paragraph{Pontryagin protection (Appendix~\ref{app:B})}
+\begin{itemize}
+  \item \texttt{proofs/riemann\_block\_classification.py}
+  \item \texttt{proofs/pontryagin\_block\_decomposition.py}
+  \item \texttt{proofs/plucker\_cancellation\_proof.py}
+  \item \texttt{proofs/pfaffian\_decomposability.py}
+  \item \texttt{proofs/vt\_mode\_cancellation.py}
+  \item \texttt{proofs/analytic\_proof\_P\_equals\_zero.py}
+  \item \texttt{paper03/pontryagin\_scan\_s3.py}
+  \item \texttt{paper03/pontryagin\_scan\_nil3.py}
+  \item \texttt{paper03/pontryagin\_anisotropic\_twist.py}
+  \item \texttt{paper03/torsion\_mode\_analysis.py}
+\end{itemize}
+
+\paragraph{Spin-2 sector (Appendix~\ref{app:D})}
+\begin{itemize}
+  \item \texttt{paper03/spin2\_schur\_degeneracy.py}
+  \item \texttt{paper03/spin2\_spectrum\_splitting.py}
+  \item \texttt{paper03/spin2\_diagonal\_hessians.py}
+  \item \texttt{paper03/spin2\_offdiag\_hessian.py}
+\end{itemize}
+
+\paragraph{Spin-1 physical/auxiliary decomposition (Appendix~\ref{app:E})}
+\begin{itemize}
+  \item \texttt{paper03/spin1\_null\_mode\_analysis.py}
+  \item \texttt{paper03/spin1\_kinetic\_metric.py}
+  \item \texttt{paper03/spin1\_auxiliary\_exclusion.py}
+\end{itemize}
+
+\paragraph{Cross-Hessian and final-basis consistency (Appendices~\ref{app:F}, \ref{app:G})}
+\begin{itemize}
+  \item \texttt{paper03/spin1\_cross\_hessian.py}
+  \item \texttt{paper03/homogeneous\_consistency.py}
+  \item \texttt{paper03/eft\_invariant\_generation.py}
+\end{itemize}
+
+\paragraph{Scalar/torsion sector and numerical tables (Appendix~\ref{app:H})}
+\begin{itemize}
+  \item \texttt{paper03/spin0\_torsion\_cross\_hessian.py}
+  \item \texttt{paper03/spin0\_reta\_block\_eigenvalues.py}
+  \item \texttt{paper03/spin0\_rLetaV\_hessian.py}
+\end{itemize}
+
+\subsection{Sanity Checks}
+
+All conclusions used in the main text have passed at least the following sanity
+checks.
+\begin{enumerate}
+  \item Reproduction of raw spin-1 quadratic coefficients
+        $(\mu_\omega^2, \mu_\delta^2, m_{\omega\delta})$.
+  \item All 21 cross-Hessians are zero.
+  \item Homogeneous Maurer--Cartan consistency.
+  \item Exact check of the invariant basis $\{I_2, I_3, I_4, W_2\}$.
+\end{enumerate}
+These constitute reproducibility information supporting the main propositions of
+this paper.

@@ -1,0 +1,199 @@
+%==============================================================================
+% Section 5: Spin-1 Sector: Twist-Mixing System and Physical/Auxiliary
+%            Decomposition
+%==============================================================================
+\section{Spin-1 Sector: Twist-Mixing System and Physical/Auxiliary Decomposition}
+\label{sec:spin1}
+
+This section replaces the raw geometric variables $(\omega_i,\delta_i)$ with the
+physical basis and reconstructs the spin-1 sector via the generalised eigenvalue
+problem
+\begin{equation}
+  Hv = \lambda G v.
+\end{equation}
+The conclusion is that $Y_k$ is a non-dynamical auxiliary direction and $X_k$ is
+the unique propagating spin-1 triplet.
+
+\subsection{Raw Spin-1 Variables}
+
+At the isotropic point $r_0=3$, $L=1$, the raw $2\times 2$ blocks are
+\begin{equation}
+  H_2 =
+  \begin{pmatrix}
+    \mu_\omega^2 & m_{\omega\delta} \\
+    m_{\omega\delta} & \mu_\delta^2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    52.6379 & -631.6544 \\
+    -631.6544 & 3789.9295
+  \end{pmatrix},
+\end{equation}
+\begin{equation}
+  G_2 =
+  \begin{pmatrix}
+    G_{\omega\omega} & G_{\omega\delta} \\
+    G_{\omega\delta} & G_{\delta\delta}
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    236.870435 & -355.305547 \\
+    -355.305547 & 532.958162
+  \end{pmatrix}.
+\end{equation}
+Looking only at the eigenvalues of the raw Hessian gives the impression of
+a negative direction, but this is insufficient for determining physical mass.
+The physically meaningful quantity is the generalised eigenvalue problem for the
+pair $(H,G)$.
+
+\subsection{Null Direction and Physical Direction}
+
+The field-space metric $G$ is rank-deficient.  For each axis $k$ it has a null
+direction
+\begin{equation}
+  Y_k \propto (\omega_k,\delta_k)
+     = \!\left(1,\frac{2L}{r_0}\right)
+     = \!\left(1,\frac{2}{3}\right),
+  \qquad k=0,1,2,
+\end{equation}
+where $k=0,1,2$ labels the three spin-1 axes and is distinct from the spatial
+tensor indices $i,j=1,2,3$.  The physical direction orthogonal to $Y_k$ is
+\begin{equation}
+  X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
+  \qquad k=0,1,2.
+\end{equation}
+
+The geometric reason why $Y_k$ is null is simple.  For a fixed $k$, the twist
+$\omega_k$ mixes a time-direction component into $e^k$, while the mixing
+$\delta_k$ conversely mixes a spatial component into $e^0$.  The $Y_k$ direction
+is the combination in which these two deformations cancel in the quadratic form
+of the metric, yielding $G\,Y_k=0$.  However, the coframe deformation itself
+does not vanish, so this direction is not gauge but remains as a
+\emph{constraint-like auxiliary}.
+
+In this basis,
+\begin{equation}
+  G\,Y_k = 0,
+  \qquad
+  G_\phys = 769.8286\,I_3,
+  \qquad
+  H_\phys = 3223.06\,I_3,
+\end{equation}
+and the physical generalised eigenvalue is
+\begin{equation}
+  \lambda_\phys
+  = \frac{u^T H u}{u^T G u}\bigg|_{u=(-2,3)}
+  = \frac{41899.77}{10007.77}
+  = 4.1867 > 0.
+\end{equation}
+The physical spin-1 triplet is therefore locally stable.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.70\textwidth]{figures/fig10_spin-1_decomposition.png}
+  \caption{Decomposition from the raw spin-1 basis to the physical/auxiliary
+           basis.  The rank-deficiency of $G$ is the origin of the decomposition.}
+  \label{fig:spin1_decomp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\textwidth]{figures/fig11_G_spectrum.png}
+  \caption{Eigenvalue spectrum of the field-space metric $G$ in the spin-1
+           sector.  Three eigenvalues are exactly zero (null directions $Y_k$)
+           and three are degenerate at $G_\phys=769.83$ (physical directions
+           $X_k$), reflecting the $SO(3)$ Schur structure.}
+  \label{fig:G_spectrum}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{figures/fig12_spin1_rotation.png}
+  \caption{Basis rotation from raw spin-1 variables $(\omega_k,\delta_k)$ to the
+           physical/auxiliary basis $(X_k,Y_k)$.  The null direction $Y_k\propto
+           (1,2L/r_0)$ is a non-dynamical auxiliary; the orthogonal direction
+           $X_k$ carries the propagating spin-1 degree of freedom.}
+  \label{fig:spin1_rot}
+\end{figure}
+
+\subsection{Why $Y_k$ Is Not Gauge}
+\label{sec:spin1:notgauge}
+
+It is important not to confuse $Y_k$ with gauge freedom or variable redundancy.
+For axis $k=0$, the variation along the null direction gives
+\begin{equation}
+  \delta e^3_\text{twist} = +\frac{2L}{r_0} e^0,
+  \qquad
+  \delta e^3_\text{mixing} = -\frac{2L}{r_0} e^0,
+\end{equation}
+so $\delta e^3 = 0$ in total.  However,
+\begin{equation}
+  \delta e^0 = +\frac{2L}{r_0} e^3
+\end{equation}
+survives, producing the metric variation
+\begin{equation}
+  \delta g_{\tau,\sigma^0} = 1 \neq 0.
+\end{equation}
+Hence this direction is \emph{not} gauge.
+
+Furthermore, variable redundancy would require:
+\begin{itemize}
+  \item $\delta g_{\mu\nu} = 0$ (metric variation vanishes),
+  \item $H_\mathrm{null} = 0$ (Hessian along the null direction vanishes), and
+  \item $\lambda_\mathrm{eff}$ finite.
+\end{itemize}
+In reality,
+\begin{equation}
+  H_\mathrm{null} = 894.845 > 0,
+  \qquad
+  \lambda_\mathrm{eff} \to +\infty.
+\end{equation}
+Therefore $Y_k$ is correctly interpreted as an auxiliary direction without a
+kinetic term, i.e.\ a \emph{non-dynamical auxiliary}.  Full details of the
+variable-redundancy exclusion are given in Appendix~\ref{app:E:Yk}.
+
+\subsection{Quadratic Decoupling}
+
+We evaluated whether the physical spin-1 mode mixes with other sectors at
+quadratic order.  The mixed Hessians
+\begin{equation}
+  M_{Ai}^{(qX)} = \frac{\partial^2 V}{\partial q_A \partial X_i},
+  \qquad
+  M_i^{(rX)} = \frac{\partial^2 V}{\partial r\, \partial X_i},
+  \qquad
+  M_i^{(\eta X)} = \frac{\partial^2 V}{\partial \eta\, \partial X_i}
+\end{equation}
+(15, 3, and 3 components respectively; 21 in total) were evaluated by numerical
+finite differences, and
+\begin{equation}
+  M_{Ai}^{(qX)} = 0,
+  \qquad
+  M_i^{(rX)} = 0,
+  \qquad
+  M_i^{(\eta X)} = 0
+\end{equation}
+were all confirmed.  Step-size stability and the parity check
+$V(p,+X_k)-V(p,-X_k)=0$ are detailed in Appendix~\ref{app:F}.  Quadratic
+decoupling is therefore a structural fact in the final basis, not a numerical
+artefact.
+
+\subsection{Final Quadratic Sector for Spin-1}
+
+Summarising, the quadratic contribution of the spin-1 sector is
+\begin{equation}
+  \mathcal{L}_{X} + \mathcal{L}_{Y}
+  = \frac{1}{2}\dot{X}^T G_\phys \dot{X}
+    - \frac{1}{2} X^T H_\phys X
+    - \frac{1}{2} Y^T H_\mathrm{null} Y.
+\end{equation}
+The field $Y$ has no kinetic term, and the negative direction apparent in the raw
+basis is not a physical instability.  The complete block decomposition of
+$\mathcal{L}_\mathrm{quad}$ including all sectors is presented in \S\ref{sec:eft}.
+
+The conclusions of this section are the following three points.
+\begin{enumerate}
+  \item The raw basis $(\omega_i,\delta_i)$ is not the final physical basis.
+  \item $Y_k$ is neither gauge nor redundancy but a non-dynamical auxiliary.
+  \item $X_k$ is the unique propagating spin-1 triplet and decouples from all
+        other sectors at quadratic order.
+\end{enumerate}

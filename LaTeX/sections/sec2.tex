@@ -1,0 +1,154 @@
+%==============================================================================
+% Section 2: Setup and Geometric Framework
+%==============================================================================
+\section{Setup and Geometric Framework}
+\label{sec:setup}
+
+This section collects the degrees of freedom, action, and geometric conventions.
+We adopt the final basis as the canonical description throughout.
+
+\subsection{Effective Potential}
+
+The effective potential in the homogeneous minisuperspace reduction is
+\begin{equation}
+  \Veff = -\!\left(\frac{R}{2\kappa^2} + \theta_\NY N\right)\Vol,
+  \qquad
+  \Vol = 2\pi^2 L r^3,
+\end{equation}
+where $R$ is the Ricci scalar computed from the Einstein--Cartan connection
+\cite{Hehl1976}, $N$ is the Nieh--Yan density \cite{NiehYan1982}, $r$ is the
+$\Sthree$ radius, and $L$ is the $\Sone$ scale.  In subsequent isotropic-point
+evaluations we normalise $L=1$, at which the equilibrium radius is $r_0=3$.
+
+The Pontryagin density is defined by
+\begin{equation}
+  P = \innerprod{R}{\star R}
+    = \frac{1}{2}\,\varepsilon^{abcd} R_{abef} R_{cd}{}^{ef}.
+\end{equation}
+The central subject of this paper is the organisation of $\Veff$ and $P$ in the
+final basis of homogeneous geometric freedoms.
+
+\subsection{Homogeneous Ansatz and Spatial Frame}
+
+The spatial 3-frame is written using left-invariant 1-forms $\sigma^i$ as
+\begin{equation}
+  e^i = r\, M^i{}_j\, \sigma^j,
+\end{equation}
+where $M^i{}_j = (\exp h)^i{}_j$ with $h = \sum_A q_A T_A$ the full shear
+tensor (see \S\ref{sec:setup:spin2}).  Full shear deformations are embedded as
+constant frame deformations.  The complete coframe---including the twist
+$\omega_k$ and spin-1 mixing $\delta_k$ definitions---is given in
+Appendix~\ref{app:B}.
+
+Under a constant frame deformation the structure constants transform as
+\begin{equation}
+  C'^i{}_{jk} = M^i{}_a\,(M^{-1})^b{}_j\,(M^{-1})^c{}_k\, C^a{}_{bc},
+\end{equation}
+and the homogeneous Maurer--Cartan system is preserved.
+
+\subsection{Spin-2 Quintet: Full Shear Basis}
+\label{sec:setup:spin2}
+
+The traceless symmetric tensor $h_{ij}$ is expanded as
+\begin{equation}
+  h_{ij} = \sum_{A=1}^5 q_A\,(T_A)_{ij},
+  \qquad
+  \tr(T_A T_B) = \delta_{AB}.
+\end{equation}
+The adopted basis matrices are
+\begin{equation}
+  T_1 = \frac{1}{\sqrt{6}}
+  \begin{pmatrix}1&0&0\\0&1&0\\0&0&-2\end{pmatrix},
+  \qquad
+  T_2 = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}1&0&0\\0&-1&0\\0&0&0\end{pmatrix},
+\end{equation}
+\begin{equation}
+  T_3 = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}0&1&0\\1&0&0\\0&0&0\end{pmatrix},
+  \quad
+  T_4 = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}0&0&1\\0&0&0\\1&0&0\end{pmatrix},
+  \quad
+  T_5 = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}0&0&0\\0&0&1\\0&1&0\end{pmatrix}.
+\end{equation}
+The fundamental invariants in this basis are
+\begin{equation}
+  I_2 = \tr(h^2) = \sum_{A=1}^5 q_A^2,
+  \qquad
+  I_3 = h_{ij}\omega_i\omega_j,
+  \qquad
+  I_4 = \tr(h^3),
+  \qquad
+  W_2 = \omega_i\omega_i.
+\end{equation}
+An exact check confirms that the component expansion $I_3 = q_A F_A(\omega)$
+holds under the adopted $T_A$ conventions.
+
+\subsection{Spin-1 Variables and Torsion Modes}
+
+The raw geometric variables of the spin-1 sector are the twist $\omega_i$ and
+the mixing $\delta_i$.  The raw basis is not, however, the final physical basis.
+The generalised eigenvalue analysis of \S\ref{sec:spin1} decomposes the raw
+variables into the physical propagating triplet $X_k$ and the non-dynamical
+auxiliary $Y_k$.  Explicit expressions and derivations are given in
+\S\ref{sec:spin1}.
+
+For the torsion scalars we distinguish three modes:
+\begin{itemize}
+  \item AX mode: $(\eta\neq 0,\ V=0)$,
+  \item VT mode: $(\eta=0,\ V\neq 0)$,
+  \item MX mode: $(\eta\neq 0,\ V\neq 0)$.
+\end{itemize}
+This distinction is essential for the Pontryagin structure.
+
+\subsection{Representation-Theoretic Organisation}
+
+The degrees of freedom are organised by $SO(3)$ irreducible representations as
+follows.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llrl}
+\toprule
+Sector & Variable & DOF & Representation \\
+\midrule
+Radial  & $r$               & 1 & spin-0 \\
+Shear   & $q_A$             & 5 & spin-2 \\
+Raw spin-1 & $(\omega_i,\delta_i)$ & 6 & spin-1 $\oplus$ spin-1 \\
+Physical spin-1 & $X_k$     & 3 & spin-1 \\
+Auxiliary spin-1 & $Y_k$    & 3 & spin-1 \\
+Torsion & $(\eta, V)$       & 2 & spin-0 \\
+\bottomrule
+\end{tabular}
+\caption{$SO(3)$ irreducible decomposition of the homogeneous geometric degrees
+  of freedom.  The raw spin-1 variables $(\omega_i,\delta_i)$ are an intermediate
+  description; the final physical dictionary uses $X_k$ and $Y_k$, established
+  in \S\ref{sec:spin1}.}
+\label{tab:mode_dict0}
+\end{table}
+
+In particular, $\varepsilon$ and $s$ are ultimately understood as particular
+projections of $q_A$ and are not treated as standalone irreducible variables.
+The physical/auxiliary classification of the spin-1 sector is established by the
+generalised eigenvalue analysis of \S\ref{sec:spin1}, and the definitive mode
+dictionary is presented in \S\ref{sec:eft}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figures/fig02_final_mode_classification.png}
+  \caption{$SO(3)$ irreducible decomposition of the homogeneous $\Sthree\times\Sone$
+           geometric degrees of freedom and the final mode classification.  The
+           raw spin-1 variables are decomposed into the physical triplet $X_k$
+           ($\lambda_\phys=4.19>0$) and the non-dynamical auxiliary $Y_k$ via
+           the generalised eigenvalue analysis of \S\ref{sec:spin1}.}
+  \label{fig:mode_class}
+\end{figure}
+
+\subsection{Scope}
+
+This paper addresses the homogeneous minisuperspace geometric sector.
+Consequently, local inhomogeneous modes, boundary conditions, and full
+field-theoretic gauge fixing are outside the scope of the present work and are
+deferred to future investigations (see \S\ref{sec:discussion}).

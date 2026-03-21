@@ -1,0 +1,67 @@
+======================================================================
+# Symbolic Block Structure Verification: All Topologies
+======================================================================
+
+======================================================================
+# Topology: S^3 x S^1
+======================================================================
+
+Building S^3 x S^1 engine (MX + FULL mode)...
+
+Block structure (cd indices):
+  cd=Spatial: 6 components
+  cd=Mixed:   0 components
+
+  VERIFIED: cd=Mixed block is EMPTY
+
+  P = <R, *R> = 0
+
+======================================================================
+# Topology: T^3 x S^1
+======================================================================
+
+Building T^3 x S^1 engine (MX + FULL mode)...
+
+Block structure (cd indices):
+  cd=Spatial: 6 components
+  cd=Mixed:   0 components
+
+  VERIFIED: cd=Mixed block is EMPTY
+
+  P = <R, *R> = 0
+
+======================================================================
+# Topology: Nil^3 x S^1
+======================================================================
+
+Building Nil^3 x S^1 engine (MX + FULL mode)...
+
+Block structure (cd indices):
+  cd=Spatial: 6 components
+  cd=Mixed:   0 components
+
+  VERIFIED: cd=Mixed block is EMPTY
+
+  P = <R, *R> = 0
+
+
+======================================================================
+# SUMMARY
+======================================================================
+
+| Topology      | cd=Spatial | cd=Mixed | P = <R,*R> | Verified |
+|---------------|------------|----------|------------|----------|
+| S^3 x S^1     |          6 |        0 |          0 |      YES |
+| T^3 x S^1     |          6 |        0 |          0 |      YES |
+| Nil^3 x S^1   |          6 |        0 |          0 |      YES |
+
+======================================================================
+THEOREM VERIFIED FOR ALL TOPOLOGIES:
+  P = <R, *R> = 0 is an algebraic identity for M^3 x S^1 with
+  minisuperspace ansatz and EC connection, regardless of M^3.
+======================================================================
+
+
+Computation time: 2.6s
+
+*Script: scripts/proofs/symbolic_block_all_topologies.py

@@ -1,0 +1,107 @@
+======================================================================
+spin-2 diagonal Hessians H₁₁^q and H₂₂^q (closed form, App D.9)
+======================================================================
+
+[1] H₁₁^q: V_eff(a, r) via F = diag(a, a, 1/a²)
+
+  Building V_eff(a, r) ...
+  Done in 0.1s
+  V_eff free symbols: ['a', 'r']
+
+  Differentiating w.r.t. a ...
+  Differentiation done in 0.0s
+
+  H₁₁^q(a, r) =  (-160*pi**2*a**6*r + 352*pi**2*r)/(3*a**8)
+
+  At a=1 (ε=0):
+    H₁₁^q(1, r) = 64*pi**2*r
+    (expected form: 64π²r)
+
+[2] H₂₂^q: V_eff(a, b, r) via F = diag(a·b, a/b, 1/a²)
+
+  Building V_eff(a, b, r) ...
+  Done in 0.1s
+  V_eff free symbols: ['a', 'b', 'r']
+
+  Differentiating w.r.t. b ...
+  Symmetry check dV/db|_{b=1} = 0: YES [OK]
+  Differentiation done in 0.0s
+
+  H₂₂^q(a, r) = (128*pi**2*a**6*r - 64*pi**2*r)/a**2
+
+  At a=1 (ε=0):
+    H₂₂^q(1, r) = 64*pi**2*r
+    (expected form: 64π²r)
+
+[3] Sign calibration and Schur degeneracy
+
+  Equilibrium radius (isotropic):  r₀ = 3.000000
+  Schur reference  64π²r₀ = 1894.9643
+
+  H₁₁^q(ε=0, r₀) = 1894.9643
+  H₁₁^q / 64π²r₀ = 1.000000  [OK]
+
+  H₂₂^q(ε=0, r₀) = 1894.9643
+  H₂₂^q / 64π²r₀ = 1.000000  [OK]
+
+  FA-engine finite-diff H₁₁^q(ε=0) = 1894.9644
+  Closed-form H₁₁^q(ε=0)           = 1894.9643
+  Relative error = 3.10e-08  [OK]
+
+  FA-engine finite-diff H₂₂^q(ε=0) = 1894.9644
+  Closed-form H₂₂^q(ε=0)           = 1894.9643
+  Relative error = 3.10e-08  [OK]
+
+  H₄₄^q(ε=0, r₀) = 1894.9643  (from spin2_offdiag_hessian.py)
+
+  Schur check: all three equal at ε=0:
+    H₁₁^q = H₂₂^q = H₄₄^q = 64π²r₀ = 1894.9643:  PASS [OK]
+
+[4] ε-scan: closed form H₁₁, H₂₂ vs FA-engine finite difference
+
+  Scanning ................................................ done
+
+  Max relative error |CF−FD| / |CF|:
+    H₁₁: 1.70e-06  [OK]
+    H₂₂: 1.81e-07  [OK]
+
+  Representative values from closed-form formulas:
+        ε         H₁₁^q         H₂₂^q        r₀
+  ---------------------------------------------
+    0.007       1839.67       1937.97    2.9999
+    0.395        156.34       4184.49    2.8579
+    0.477          9.25       4611.79    2.8146
+
+  Analytical T₂ critical point (H₂₂^q = 0 condition):
+    2a⁶ = 1  →  ε_c− = 1/√2 − 1 = -0.292893  (exact, r-independent)
+    (Numerical three-indicator estimate: ε_c− ≈ −0.29309)
+
+  T₁ soft mode (H₁₁^q = 0):  ε_c+ ≈ 0.4875  (expected ε_c+ ≈ 0.4832)
+    H₂₂^q at ε_c+: 4611.79  → m=±2 doublet massive [OK]
+  T₂ soft mode (H₂₂^q = 0):  ε_c− ≈ -0.2898  (exact analytic: -0.292893)  [OK]
+
+======================================================================
+Summary: closed-form spin-2 diagonal Hessians
+======================================================================
+
+  T₁ (m=0 squash singlet):
+    H₁₁^q(a, r) = (-160*pi**2*a**6*r + 352*pi**2*r)/(3*a**8)
+    where a = (1+ε)^{1/3}
+
+  T₂ (m=±2 shear doublet):
+    H₂₂^q(a, r) = (128*pi**2*a**6*r - 64*pi**2*r)/a**2
+    where a = (1+ε)^{1/3}
+
+  T₄ (m=±1 off-diagonal doublet)  [from spin2_offdiag_hessian.py]:
+    H₄₄^q(f, r) = (32π²f¹²r − 48π²f⁶r + 32π²f³r + 48π²r)/f⁸
+    where f = (1+ε)^{2/3} = a²
+
+  Schur degeneracy at ε=0:  H₁₁ = H₂₂ = H₄₄ = 64π²r₀ = 1894.96  [OK]
+
+  Analytical critical points (H = 0 condition; both r-independent):
+    ε_c−  (T₂ soft, H₂₂=0):  2a⁶=1   →  ε_c− = 1/√2 − 1 = -0.292893  (exact)
+    ε_c+  (T₁ soft, H₁₁=0):  5a⁶=11  →  ε_c+ = √(11/5) − 1 = 0.483240  (exact)
+
+Total computation time: 28.0s
+
+*Script: scripts/paper03/spin2_diagonal_hessians.py

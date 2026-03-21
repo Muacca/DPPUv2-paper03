@@ -1,0 +1,24 @@
+========================================================================
+Homogeneous ansatz consistency (App F.7)
+========================================================================
+
+[1] General constant-frame formula
+  e^i = r M^i_j sigma^j with constant invertible M
+  C'^i_jk = M^i_a (M^-1)^b_j (M^-1)^c_k C^a_bc
+
+[2] Exact component checks for representative full-shear samples
+
+  sample-1: det(M) = 1420707109*sqrt(6)/1824343220700 + 2201*sqrt(2)/488410 + 13316537911/14478914450
+    coeffs = ['1/7', '2/11', '-1/5', '3/13', '-2/17']
+    S3: antisymmetry residuals = 0, Jacobi residuals = 0
+    Nil3: antisymmetry residuals = 0, Jacobi residuals = 0
+
+  sample-2: det(M) = -22261*sqrt(6)/41990400 - 23*sqrt(2)/38400 + 9935/10368
+    coeffs = ['-1/9', '1/6', '2/15', '-1/8', '1/10']
+    S3: antisymmetry residuals = 0, Jacobi residuals = 0
+    Nil3: antisymmetry residuals = 0, Jacobi residuals = 0
+
+
+Computation time: 3.9s
+
+*Script: scripts/paper03/homogeneous_consistency.py

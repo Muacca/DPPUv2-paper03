@@ -1,0 +1,214 @@
+%==============================================================================
+% Appendix B: Detailed Proof of the Pontryagin Protection Theorem
+%==============================================================================
+\section{Detailed Proof of the Pontryagin Protection Theorem}
+\label{app:B}
+
+This appendix derives the Pontryagin protection theorem of \S\ref{sec:pont}
+algebraically.
+
+\subsection{Statement}
+
+\begin{theorem}[P0, restated]
+  For the AX and VT modes and for the homogeneous minisuperspace topologies
+  under consideration,
+  $P = \innerprod{R}{\star R} \equiv 0$.
+\end{theorem}
+
+\subsection{AX Sector: Algebraic Proof of Pl\"ucker/Pfaffian Cancellation}
+\label{app:B:AX}
+
+\subsubsection*{Coframe definition}
+
+The $\Sthree\times\Sone$ coframe used throughout this section is
+\begin{equation}
+  e^i = r\, M^i{}_j\,\sigma^j \quad (i=0,1,2),
+  \qquad
+  e^3 = L\!\left(d\tau + \omega_k\,\sigma^k\right),
+\end{equation}
+where $\sigma^i$ are the left-invariant 1-forms of $\Sthree$ and
+$M^i{}_j = (\exp h)^i{}_j$ with $h = \sum_A q_A T_A$.  For isotropic AX mode
+we set $h=0$ ($M=I$) and $\omega_k=\omega$ (all components equal).
+
+The structure constants from the Maurer--Cartan equations
+$de^k = (1/r)\varepsilon_{ijk}\,e^i\wedge e^j$,
+$de^3 = (2L\omega/r^2)\varepsilon_{ij}\,e^i\wedge e^j$ are
+\begin{equation}
+  C^k_{ij} = \frac{2}{r}\varepsilon_{ijk},
+  \qquad
+  C^3_{ij} = \frac{4L\omega}{r^2}\varepsilon_{ij}.
+\end{equation}
+Defining
+\begin{equation}
+  c \equiv \frac{1+\eta}{r},
+  \qquad
+  f \equiv \frac{2L\omega}{r^2},
+\end{equation}
+the non-zero EC connection components are
+\begin{equation}
+  \omega^k_{ij} = c\,\varepsilon_{ijk},
+  \qquad
+  \omega^3_{ij} = f\,\varepsilon_{ij},
+  \qquad
+  \omega^i_{3j} = -f\,\varepsilon_{ij},
+  \qquad
+  \omega^i_{j3} = +f\,\varepsilon_{ij}.
+\end{equation}
+
+\subsubsection*{Riemann tensor formula for homogeneous spaces}
+
+For homogeneous spaces the frame derivatives vanish and the Riemann tensor is
+\begin{equation}
+  R^a{}_{bcd}
+  = \omega^a{}_{ec}\,\omega^e{}_{bd}
+  - \omega^a{}_{ed}\,\omega^e{}_{bc}
+  + \omega^a{}_{be}\,C^e{}_{cd}.
+\end{equation}
+
+\subsubsection*{Representative components for $(c,d)=(0,1)$}
+
+The key Riemann components needed for the Pl\"ucker condition are
+\begin{align}
+  R_{0101} &= \frac{1-\eta^2}{r^2} + f^2, \\
+  R_{2301} &= 0, \\
+  R_{0201} &= -f^2, \\
+  R_{1301} &= \frac{f(\eta-1)}{r}, \\
+  R_{0301} &= \frac{f(1-\eta)}{r} = -R_{1301}, \\
+  R_{1201} &= f^2.
+\end{align}
+
+\subsubsection*{Verification: Pfaffian $=0$ for $(c,d)=(0,1)$}
+
+\begin{equation}
+\begin{aligned}
+  \mathrm{Pf}\,\omega^{(01)}
+  &= R_{0101}\cdot R_{2301} - R_{0201}\cdot R_{1301} + R_{0301}\cdot R_{1201} \\
+  &= \left(\tfrac{1-\eta^2}{r^2}+f^2\right)\cdot 0
+   - (-f^2)\cdot\tfrac{f(\eta-1)}{r}
+   + \tfrac{f(1-\eta)}{r}\cdot f^2 \\
+  &= \frac{f^3(\eta-1)}{r} + \frac{f^3(1-\eta)}{r}
+   = 0.
+   \qquad\checkmark
+\end{aligned}
+\end{equation}
+
+\subsubsection*{Verification for $(c,d)=(0,3)$ (S3-type)}
+
+Using $C^e_{03}=0$,
+\begin{equation}
+  R_{0103}=-fc,\;
+  R_{2303}=f^2,\;
+  R_{0203}=-fc,\;
+  R_{1303}=f^2,\;
+  R_{0303}=-f^2,\;
+  R_{1203}=0.
+\end{equation}
+\begin{equation}
+  \mathrm{Pf}\,\omega^{(03)}
+  = (-fc)\cdot f^2 - (-fc)\cdot f^2 + (-f^2)\cdot 0
+  = -f^3c + f^3c = 0. \qquad\checkmark
+\end{equation}
+
+\subsubsection*{Generalisation to all $(c,d)$ pairs}
+
+The six $(c,d)$ pairs fall into the SS-type $\{01,02,12\}$ and the S3-type
+$\{03,13,23\}$.
+\begin{itemize}
+  \item \textbf{SS-type}: The cyclic symmetry of $\{0,1,2\}$ (the $SO(3)$ symmetry
+        of $\Sthree$) gives the same algebraic structure as $(0,1)$.  The
+        Pl\"ucker condition holds for the same algebraic reason.
+  \item \textbf{S3-type}: As seen for $(0,3)$, the key is $C^e_{i3}=0$ (the
+        $\tau$-direction generates no structure constants).  This holds for all
+        S3-type pairs.
+  \item $P_{33}$ \textbf{terms}: $R_{3\cdots 3\cdots}$ vanishes trivially by
+        antisymmetry.
+\end{itemize}
+Hence the Pontryagin density is established algebraically:
+\begin{equation}
+  P = 2\sum_{(c,d)}\mathrm{Pf}\,\omega^{(cd)} = 0.
+\end{equation}
+
+\textbf{Remark.} The above proof is for isotropic twist.  For general vector
+twist $(\omega_0,\omega_1,\omega_2)$ the same structure of structure constants is
+preserved, and together with the identity $\Veff=f(I_2)$, it is confirmed
+symbolically that $P\equiv 0$ (including $\Nilthree\times\Sone$).
+
+\subsection{VT Sector: Pfaffian Cancellation}
+\label{app:B:VT}
+
+In the VT mode the cancellation mechanism differs.  For $\Sthree\times\Sone$,
+\begin{equation}
+  \sum_\mathrm{SS}\mathrm{Pf}\,\omega^{(cd)}
+  = -\frac{16L^2 V\,I_2}{3r^5},
+  \qquad
+  \sum_\mathrm{S3}\mathrm{Pf}\,\omega^{(cd)}
+  = +\frac{16L^2 V\,I_2}{3r^5},
+\end{equation}
+giving $P = \sum_\mathrm{SS}\mathrm{Pf} + \sum_\mathrm{S3}\mathrm{Pf} = 0$.
+
+The cancellation is not trivial decomposability of each block (as in AX mode),
+but an exact sign cancellation between the SS and S3 group Pfaffian totals.
+The sign reversal originates from $V$ entering as pure vector-trace torsion only
+in the $\tau$ direction, so the SS and S3 dual structures act complementarily.
+The same cancellation holds algebraically for $\Nilthree\times\Sone$ as well.
+
+\subsection{MX Sector: the Unique Exception}
+
+In the MX mode $\eta\neq 0$ and $V\neq 0$ simultaneously, and the protection
+breaks.  For $\Sthree\times\Sone$:
+\begin{equation}
+  P(\bm{\omega}) =
+  \frac{2V\eta\,(V^2 r^2 + 9\eta^2 - 36)}{9r^3}
+  + \frac{40V\eta L^2}{3r^5}\, I_2.
+\end{equation}
+Even at the isotropic point ($I_2=0$), $P_0 = 2V\eta(V^2 r^2+9\eta^2-36)/(9r^3)
+\neq 0$, so the origin of $P\neq 0$ is torsion mixing $V\eta$, not the twist
+$\omega$.
+
+\subsection{NyVariant Independence}
+\label{app:B:NyVar}
+
+The Riemann tensor (and hence $P$) is independent of the NyVariant
+(FULL/TT/REE) choice, as guaranteed theoretically by the pipeline computation
+order.  The results by mode are:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Mode & FULL & TT & REE \\
+\midrule
+AX & 0 & 0 & 0 \\
+VT & 0 & 0 & 0 \\
+MX & nonzero & nonzero & nonzero \\
+\bottomrule
+\end{tabular}
+\caption{Pontryagin density by torsion mode and NyVariant.}
+\label{tab:NyVar}
+\end{table}
+
+\subsection{Interpretation}
+
+The key points of this appendix are the following.
+\begin{enumerate}
+  \item AX and VT are protected by distinct algebraic mechanisms: AX by
+        individual cancellation per $(c,d)$ block (Pl\"ucker type); VT by sign
+        cancellation between SS and S3 group Pfaffians.
+  \item The MX mode is the unique exception; the twist itself is not the origin.
+  \item The Pontryagin structure is cleanly separated sector by sector in a
+        manner consistent with the final-basis organisation.
+\end{enumerate}
+
+\subsection{Computational Verification}
+
+The algebraic computations of this appendix are confirmed symbolically by the
+following scripts.
+\begin{itemize}
+  \item AX mode, Riemann block classification, per-$(c,d)$ Pfaffian zero check:\\
+        \texttt{paper03/pontryagin\_anisotropic\_twist.py}
+  \item VT/MX modes, NyVariant cross-check (all 18 cases):\\
+        \texttt{paper03/torsion\_mode\_analysis.py}
+  \item Isotropic twist $P\equiv 0$ scan ($r$, $\eta$ dependence):
+        \texttt{paper03/pontryagin\_scan\_s3.py},
+        \texttt{paper03/pontryagin\_scan\_nil3.py}
+\end{itemize}

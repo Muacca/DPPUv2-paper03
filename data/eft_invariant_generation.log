@@ -1,0 +1,23 @@
+========================================================================
+Invariant generation in the final Landau-EFT basis (App G.5)
+========================================================================
+
+[1] Final full-shear basis
+  Tr(T_A T_B) = delta_AB: OK
+  tr(h) = 0
+
+[2] Explicit invariant expansions
+  I2 = tr(h^2) = q1**2 + q2**2 + q3**2 + q4**2 + q5**2
+  W2 = omega_i omega_i = w1**2 + w2**2 + w3**2
+  I3 = h_ij omega_i omega_j = sqrt(6)*q1*w1**2/6 + sqrt(6)*q1*w2**2/6 - sqrt(6)*q1*w3**2/3 + sqrt(2)*q2*w1**2/2 - sqrt(2)*q2*w2**2/2 + sqrt(2)*q3*w1*w2 + sqrt(2)*q4*w1*w3 + sqrt(2)*q5*w2*w3
+  I4 = tr(h^3) = -sqrt(6)*q1**3/6 + sqrt(6)*q1*q2**2/2 + sqrt(6)*q1*q3**2/2 - sqrt(6)*q1*q4**2/4 - sqrt(6)*q1*q5**2/4 + 3*sqrt(2)*q2*q4**2/4 - 3*sqrt(2)*q2*q5**2/4 + 3*sqrt(2)*q3*q4*q5/2
+
+[3] Assertions
+  I2 - sum_A q_A^2 = 0
+  I3 - hand-written q_A omega_i omega_j expression = 0
+  Result: all assertions passed
+
+
+Computation time: 0.0s
+
+*Script: scripts/paper03/eft_invariant_generation.py
