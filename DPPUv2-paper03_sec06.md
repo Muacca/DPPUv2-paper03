@@ -182,7 +182,7 @@ flowchart LR
 
 ### 6.5 Interpretation as a geometric Landau EFT
 
-以上の結果から本モデルを、単なる重力 minisuperspace における数値ポテンシャルの記述としてではなく、有限自由度の geometric Landau-EFT として理解することができるようになる [10]。ここでは
+以上の結果から本モデルを、単なる重力 minisuperspace における数値ポテンシャルの記述としてではなく、有限自由度の geometric Landau-EFT として理解することができるようになる。ここでは
 
 1. order parameter に相当する幾何自由度が既約表現で整理される。
 2. 二次 sector は表現論的ブロックに整理できる。spin-1 sector は完全に decouple し、scalar/torsion 側は連立 $(r,\eta)$ ブロックと独立な $V$ 方向という精密化されたブロック構造をもつ。
