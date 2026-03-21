@@ -204,7 +204,7 @@ ghost/metastable 側についても補助的な可視化は可能であるが、
 本付録の数値表を生成するスクリプトは以下の通りである。
 
 - `paper03/spin0_torsion_cross_hessian.py`：spin-2 × torsion、radial × torsion の cross-Hessian、torsion block $H^{(\eta,V)}$（H.2 対応）
-- `paper03/spin0_reta_block_eigenvalues.py`：$(r,\eta)$ 連立ブロックの固有値解析（H.3 対応）
+- `paper03/spin0_reta_block_eigenvalues.py`： $(r,\eta)$ 連立ブロックの固有値解析（H.3 対応）
 - `paper03/spin0_rLetaV_hessian.py`：4×4 Hessian $H^{(r,L,\eta,V)}$（H.2A 対応）
 
 ### H.7 Remarks
