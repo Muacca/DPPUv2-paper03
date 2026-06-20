@@ -18,13 +18,10 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from sympy import (
-    symbols, simplify, diff, Rational, S, pi, sqrt,
-    expand, factor, together, cancel, trigsimp, latex, pprint
-)
+from sympy import symbols, simplify, diff, Rational, S, factor
 from sympy.tensor.array import MutableDenseNDimArray
 
-from dppu.utils.levi_civita import epsilon_symbol
+from dppu.utils.epsilon import epsilon_3d
 
 
 def build_structure_constants(r, epsilon, dim=4):
@@ -39,7 +36,7 @@ def build_structure_constants(r, epsilon, dim=4):
     for i in range(3):
         for j in range(3):
             for k in range(3):
-                eps_val = epsilon_symbol(i, j, k)
+                eps_val = epsilon_3d(i, j, k)
                 if eps_val != 0:
                     C[i, j, k] = 4 * eps_val / r * factors[i]
     return C

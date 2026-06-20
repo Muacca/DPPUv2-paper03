@@ -31,12 +31,13 @@ Additional fiber terms:
 Volume factor: 2π² · L · r³
 """
 
+from dataclasses import dataclass
 from sympy import S, Rational, sqrt, cosh, sinh, Matrix, cancel
 from sympy.tensor.array import MutableDenseNDimArray
-from typing import Any, Dict
+from typing import Any, Dict, List, Tuple
 
 from .base_topology import TopologyEngine
-from ..utils.levi_civita import epsilon_symbol
+from ..utils.epsilon import epsilon_3d
 
 
 class S3Geometry(TopologyEngine):
@@ -50,12 +51,18 @@ class S3Geometry(TopologyEngine):
     Direct usage::
 
         from dppu.topology.s3 import S3Geometry
-        from dppu.topology.unified import DOFConfig, TopologyType, FiberMode
+        from dppu.topology import make_config, TopologyType, FiberMode
         from dppu.torsion.mode import Mode
         from dppu.torsion.nieh_yan import NyVariant
 
-        cfg = DOFConfig.from_engine('FullyAnisotropicS3S1Engine')
-        cfg.torsion_mode = Mode.AX
+        cfg = make_config(
+            TopologyType.S3,
+            enable_squash=True,
+            enable_shear=True,
+            fiber_mode=FiberMode.TWIST,
+            isotropic_twist=False,
+            torsion_mode=Mode.AX,
+        )
         engine = S3Geometry(cfg)
         engine.run()
     """
@@ -152,7 +159,7 @@ class S3Geometry(TopologyEngine):
             for i in range(3):
                 for j in range(3):
                     for k in range(3):
-                        eps_val = epsilon_symbol(i, j, k)
+                        eps_val = epsilon_3d(i, j, k)
                         if eps_val != 0:
                             C[i, j, k] = eps_val * 4 * spatial_factors[i] / r
         else:
@@ -211,7 +218,7 @@ class S3Geometry(TopologyEngine):
                         for l in range(3):
                             for m in range(3):
                                 for n in range(3):
-                                    eps_val = epsilon_symbol(l, m, n)
+                                    eps_val = epsilon_3d(l, m, n)
                                     if eps_val != 0:
                                         v += (F[i, l] * F_inv[j, m]
                                               * F_inv[k, n] * eps_val)
@@ -297,3 +304,167 @@ class S3Geometry(TopologyEngine):
         import math
         sq2 = math.sqrt(2.0)
         return math.exp(q3/sq2), math.exp(q4/sq2), math.exp(q5/sq2)
+
+
+# ── Module-level helpers ──────────────────────────────────────────────────────
+
+def s3_lie_frame_structure_constants(
+    q: Any,
+    n_lapse: Any,
+    qdot: Any,
+    lam: Any,
+    dim: int = 4,
+) -> "MutableDenseNDimArray":
+    """Build S3×time Lie-frame structure constants for a cosmological ansatz.
+
+    Returns C^a_{bc} (4D) for the coframe ``e^0 = N dt``, ``e^i = q σ^i``
+    (i = 1,2,3) with explicit lapse *n_lapse*, scale factor *q*, its time
+    derivative *qdot*, and spatial curvature normalisation *lam*.
+
+    Non-zero components:
+
+    * Time-spatial block (Hubble terms):
+        C^i_{0i} = h,  C^i_{i0} = −h   where  h = qdot / (n_lapse · q)
+
+    * Spatial block (Lie-algebra of SU(2)):
+        C^i_{jk} = lam · ε_{i-1, j-1, k-1} / q   for  i, j, k ∈ {1,2,3}
+
+    Args:
+        q:        Scale-factor symbol (positive).
+        n_lapse:  Lapse function symbol N.
+        qdot:     Time derivative of q (symbol or expression).
+        lam:      SU(2) Lie-algebra normalisation factor.
+                  ``lam = 2`` gives the unit-round S3 conventions used in
+                  Phase5A; ``lam = 4/r`` is the LZ-native convention.
+        dim:      Space-time dimension (default 4).
+
+    Returns:
+        ``MutableDenseNDimArray`` of shape ``(dim, dim, dim)``.
+    """
+    from sympy.tensor.array import MutableDenseNDimArray
+
+    c_arr = MutableDenseNDimArray.zeros(dim, dim, dim)
+    h = qdot / (n_lapse * q)
+
+    for i in range(1, dim):
+        c_arr[i, 0, i] = h
+        c_arr[i, i, 0] = -h
+
+    for i in range(1, dim):
+        for j in range(1, dim):
+            for k in range(1, dim):
+                eps_val = epsilon_3d(i - 1, j - 1, k - 1)
+                if eps_val:
+                    c_arr[i, j, k] = lam * eps_val / q
+    return c_arr
+
+
+# ── S3 SVT linearised decomposition symbols ───────────────────────────────────
+
+@dataclass
+class S3SVTSymbols:
+    """S3 background coframe + linearised branch-A SVT decomposition symbols.
+
+    Encodes the coframe perturbation δe^a_j around the S3 background
+    (N dt, q σ^i) into SVT sectors:
+
+    * scalar    : ``s``  (trace part, coefficient 1/3)
+    * shift     : ``N_1, N_2, N_3``  (×3)
+    * spin-2/qA : ``qA_00, qA_11, qA_01, qA_02, qA_12``  traceless symmetric  (×5)
+    * spin-1/X  : ``X_01, X_02, X_12``  antisymmetric  (×3)
+
+    Also provides component dicts ``qA_components``, ``X_components``,
+    the linearised coframe perturbation dict ``de[(a, j)]``,
+    and the ordered coordinate list ``coords`` (12 symbols, canonical order).
+    """
+
+    N: Any                             # lapse symbol
+    q: Any                             # spatial scale-factor symbol
+    s: Any                             # scalar perturbation
+    N_shift: List                      # [N_1, N_2, N_3]
+    qA00: Any
+    qA11: Any
+    qA01: Any
+    qA02: Any
+    qA12: Any
+    qA22: Any                          # derived: -(qA00 + qA11)
+    X01: Any
+    X02: Any
+    X12: Any
+    qA_components: Dict                # {(i,j): expr} for i,j in {0,1,2}
+    X_components:  Dict                # {(i,j): expr}
+    de: Dict                           # {(a, j): expr} for a in {0..3}, j in {1..3}
+    coords: List                       # 12 SVT symbols in canonical order
+
+
+def s3_svt_symbols(
+    N: Any = None,
+    q: Any = None,
+) -> S3SVTSymbols:
+    """Build S3 background + linearised SVT decomposition symbols.
+
+    Parameters
+    ----------
+    N : sympy.Symbol, optional
+        Lapse symbol.  Defaults to ``sp.Symbol('N')``.
+    q : sympy.Symbol, optional
+        Spatial scale-factor symbol.  Defaults to ``sp.Symbol('q')``.
+
+    Returns
+    -------
+    S3SVTSymbols
+        Dataclass with all symbols and component dicts for stage2/stage3
+        S3 linearised Dirac computations.
+    """
+    import sympy as sp
+
+    if N is None:
+        N = sp.Symbol("N")
+    if q is None:
+        q = sp.Symbol("q")
+
+    s: Any = sp.Symbol("s")
+    N_shift: List = [sp.Symbol(f"N_{i}") for i in range(1, 4)]
+
+    qA00, qA11, qA01, qA02, qA12 = sp.symbols("qA_00 qA_11 qA_01 qA_02 qA_12")
+    qA22 = -(qA00 + qA11)
+    qA_components: Dict[Tuple[int, int], Any] = {
+        (0, 0): qA00, (1, 1): qA11, (2, 2): qA22,
+        (0, 1): qA01, (1, 0): qA01,
+        (0, 2): qA02, (2, 0): qA02,
+        (1, 2): qA12, (2, 1): qA12,
+    }
+
+    X01, X02, X12 = sp.symbols("X_01 X_02 X_12")
+    X_components: Dict[Tuple[int, int], Any] = {
+        (0, 1): X01,  (1, 0): -X01,
+        (0, 2): X02,  (2, 0): -X02,
+        (1, 2): X12,  (2, 1): -X12,
+        (0, 0): sp.S.Zero, (1, 1): sp.S.Zero, (2, 2): sp.S.Zero,
+    }
+
+    de: Dict[Tuple[int, int], Any] = {}
+    for a in range(4):
+        for j in range(1, 4):
+            if a == 0:
+                de[(a, j)] = N_shift[j - 1]
+            else:
+                ia, ij = a - 1, j - 1
+                val: Any = qA_components[(ia, ij)] + X_components[(ia, ij)]
+                if ia == ij:
+                    val = val + s / 3
+                de[(a, j)] = val
+
+    coords: List = [s] + N_shift + [qA00, qA11, qA01, qA02, qA12, X01, X02, X12]
+
+    return S3SVTSymbols(
+        N=N, q=q, s=s,
+        N_shift=N_shift,
+        qA00=qA00, qA11=qA11, qA01=qA01, qA02=qA02, qA12=qA12,
+        qA22=qA22,
+        X01=X01, X02=X02, X12=X12,
+        qA_components=qA_components,
+        X_components=X_components,
+        de=de,
+        coords=coords,
+    )

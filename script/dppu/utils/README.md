@@ -1,177 +1,129 @@
 # Utils Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group providing shared utilities.
+Shared utility functions for tensor algebra, symbolic verification, logging, artifact I/O, and formatted output.
 
 ## Overview
 
-Common functionality used across multiple modules: Levi-Civita symbol, symbolic computation helpers, and visualization utilities.
+The utils layer is intentionally small and dependency-light.  It provides:
+
+- `tee_logger.py` for timestamped script logs.
+- `epsilon.py` for metric-aware epsilon tensor contractions.
+- `symbolic.py` for zero-proof helpers and tensor inventory checks.
+- `io.py` for UTF-8 artifact I/O when CSV/JSON/text helpers are needed.
 
 ## Modules
 
-### levi_civita.py
+### `epsilon.py`
 
-Levi-Civita symbol (totally antisymmetric tensor).
-
-**Key functions:**
-
-- `epsilon_symbol(i, j, k)`: 3D Levi-Civita symbol
-- `levi_civita_4d(a, b, c, d)`: 4D Levi-Civita symbol
-
-**3D:**
-
-```python
-from dppu.utils import epsilon_symbol
-
-eps = epsilon_symbol(0, 1, 2)  # = +1
-eps = epsilon_symbol(1, 0, 2)  # = -1
-eps = epsilon_symbol(0, 0, 2)  # = 0
-```
-
-**4D:**
-
-```python
-from dppu.utils import levi_civita_4d
-
-eps = levi_civita_4d(0, 1, 2, 3)  # = +1
-eps = levi_civita_4d(1, 0, 2, 3)  # = -1
-```
-
-**Properties:**
-
-- Totally antisymmetric: sign flips under any 2-index swap
-- Zero for repeated indices
-- Normalization: ε₀₁₂₃ = +1 (or ε₀₁₂ = +1)
-
-### symbolic.py
-
-Helper functions for symbolic computation.
+Totally antisymmetric epsilon symbols and metric-aware raised/lowered epsilon tensors.
 
 **Key functions:**
 
-- `prove_zero(expr)`: Prove an expression is zero
-- `find_nonzero_witness(expr, params)`: Search for non-zero counterexamples
-- `generate_test_points(param_ranges, n_points)`: Generate test points
+- `epsilon_symbol(a, b, c, d)`: 4D Levi-Civita symbol with lower-index orientation.
+- `epsilon_4d(mu, nu, rho, sigma)`: 4D epsilon symbol.
+- `epsilon_3d(i, j, k)`: 3D epsilon symbol.
+- `epsilon_nd(indices)`: n-dimensional epsilon symbol.
+- `metric_signature_sign(metric)`: sign of the metric determinant.
+- `epsilon_tensor_down(metric, a, b, c, d)`: lowered epsilon tensor.
+- `epsilon_tensor_up(metric_inv, a, b, c, d)`: raised epsilon tensor.
 
-**Zero proof:**
+`epsilon_tensor_up` is useful for metric-aware epsilon contractions in symbolic diagnostics.
 
-```python
-from dppu.utils import prove_zero
-import sympy as sp
+### `symbolic.py`
 
-x = sp.Symbol('x')
-expr = x**2 - x**2
-
-is_zero, proof_type = prove_zero(expr)
-# is_zero=True, proof_type='symbolic'
-```
-
-**Counterexample search:**
-
-```python
-from dppu.utils import find_nonzero_witness
-
-expr = some_complex_expression
-witness = find_nonzero_witness(expr, {'r': (0.1, 5.0), 'eta': (-5, 5)})
-
-if witness:
-    print(f"Non-zero at: {witness['params']}")
-    print(f"Value: {witness['value']}")
-else:
-    print("No non-zero witness found")
-```
-
-### visualization.py
-
-Standardized plot styles and helper functions for paper figures.
+Symbolic simplification, zero-proving, witness search, and tensor inventory helpers.
 
 **Key functions:**
 
-- `set_style()`: Set global matplotlib style for high-quality figures (seaborn whitegrid, serif font, 300 dpi)
-- `save_plot(filename, output_dir="output")`: Save plot with standard settings
+- `prove_zero(expr, assumptions_dict=None, timeout_seconds=10)`: attempt symbolic zero proof.
+- `generate_test_points(symbols_list, n_points=10)`: generate numerical test points.
+- `find_nonzero_witness(expr, symbols_list, n_points=10, precision=50)`: search for numerical nonzero witnesses.
+- `normalize_expression(expr)`: canonical simplification pass.
+- `derivative_inventory(expr, symbol_pairs)`: report which symbols appear in an expression.
+- `nonzero_component_count(array_expr, subs=None)`: count nonzero tensor components.
+- `canonical_simplify(expr)`: standard paper07 normalization — `factor(cancel(simplify(expr)))`.
+- `series_coefficients(expr, variable, order=4)`: Taylor coefficients as a ``{degree: value_str}`` dict.
+- `derivative_degree_classifier(expr, derivative_symbols)`: classify derivative degree via lambda scaling.
 
-**Usage:**
+### `logger.py`
+
+Step-oriented logger for the engine pipeline.
+
+**Key classes:**
+
+- `ComputationLogger`: log progress to file and console.
+- `NullLogger`: suppress log output for tests or batch use.
+
+`ComputationLogger` and `NullLogger` are re-exported from `dppu.engine` for backward compatibility.
+
+### `tee_logger.py`
+
+Tee-style stdout logger for scripts.
+
+**Key functions/classes:**
+
+- `setup_log(script_file, log_dir="logs")`: redirect stdout to both console and a timestamped log file.
+- `teardown_log()`: restore stdout and print runtime metadata.
+- `LogTee`: context-manager wrapper around `setup_log` / `teardown_log`.
+
+Environment variables:
+
+- `DPPU_LOG_DIR`: override the log directory.
+- `DPPU_LOG_STDOUT=0`: write only to the log file and suppress console echo.
+
+Callers choose the log directory through `log_dir` or `DPPU_LOG_DIR`.
+
+### `io.py`
+
+UTF-8 artifact I/O helpers.
+
+**Key functions:**
+
+- `now_utc_iso()`: UTC ISO-8601 timestamp.
+- `read_text(path)` / `write_text(path, text)`: UTF-8 text I/O.
+- `read_json(path)` / `write_json(path, payload)`: deterministic UTF-8 JSON I/O.
+- `read_csv(path, missing_ok=False)` / `write_csv(path, fieldnames, rows)`: CSV helpers.
+- `upsert_csv_rows(path, fieldnames, rows, key_fields)`: stable keyed CSV upsert.
+
+### `printing.py`
+
+Formatted console output helpers.
+
+**Key functions:**
+
+- `hline(char="=", width=70)`: horizontal separator.
+- `print_header(title, width=70)`: section header.
+- `print_sub(title)`: subsection label.
+- `mat_str(mat)`: compact bracket/semicolon string for a SymPy matrix.
+- `print_json_rows(label, rows, fields)`: machine-readable ``label_begin / label_row JSON / label_end`` output.
+
+## Usage
 
 ```python
-from dppu.utils.visualization import set_style, save_plot
-import matplotlib.pyplot as plt
+from dppu.utils.tee_logger import setup_log, teardown_log
 
-set_style()
-plt.plot(x, y)
-plt.xlabel(r'$\varepsilon$')
-plt.ylabel(r'$\mu^2$')
-save_plot("spin2_spectrum.pdf", output_dir="output")
+setup_log(__file__, log_dir="../data")
+try:
+    print("verification output")
+finally:
+    teardown_log()
 ```
-
-## Usage Examples
-
-### Levi-Civita in Torsion Construction
 
 ```python
-from dppu.utils import epsilon_symbol
+from dppu.utils.epsilon import epsilon_tensor_up
 
-# Axial torsion T^{ijk} = (2η/r) ε^{ijk}
-def build_axial_torsion(eta, r):
-    T = {}
-    for i in range(3):
-        for j in range(3):
-            for k in range(3):
-                T[(i,j,k)] = (2*eta/r) * epsilon_symbol(i, j, k)
-    return T
-```
-
-### 4D Levi-Civita in Hodge Dual
-
-```python
-from dppu.utils import levi_civita_4d
-
-# (*R)^{ab}_{cd} = (1/2) ε_{cdef} R^{ab,ef}
-def hodge_dual(R):
-    R_star = np.zeros((4,4,4,4))
-    for a in range(4):
-        for b in range(4):
-            for c in range(4):
-                for d in range(4):
-                    for e in range(4):
-                        for f in range(4):
-                            R_star[a,b,c,d] += 0.5 * levi_civita_4d(c,d,e,f) * R[a,b,e,f]
-    return R_star
-```
-
-## Mathematical Background
-
-### Levi-Civita Symbol Definition
-
-**3D:**
-```
-ε_{ijk} = { +1  (i,j,k) is an even permutation of (0,1,2)
-          { -1  (i,j,k) is an odd permutation of (0,1,2)
-          {  0  any index is repeated
-```
-
-**4D:**
-```
-ε_{abcd} = { +1  (a,b,c,d) is an even permutation of (0,1,2,3)
-           { -1  (a,b,c,d) is an odd permutation of (0,1,2,3)
-           {  0  any index is repeated
-```
-
-### Identities
-
-```
-ε_{ijk} ε_{ilm} = δ_{jl}δ_{km} - δ_{jm}δ_{kl}
-ε_{abcd} ε_{abef} = 2(δ_{ce}δ_{df} - δ_{cf}δ_{de})
+eps = epsilon_tensor_up(metric_inv, 0, 1, 2, 3)
 ```
 
 ## Dependencies
 
-- SymPy (symbolic computation)
-- NumPy (numerical computation)
-- matplotlib + seaborn (visualization)
-- mpmath (high-precision arithmetic, optional)
+- SymPy for symbolic expressions.
+- NumPy for numerical witness generation.
 
 ## Related Modules
 
-- [curvature](../curvature/README.md): Hodge dual computation
-- [torsion](../torsion/README.md): Torsion construction
+- [curvature](../curvature/README.md): Hodge and Pontryagin contractions.
+- [torsion](../torsion/README.md): torsion ansatz construction.
+- [engine](../engine/README.md): pipeline logging and checkpoint integration.

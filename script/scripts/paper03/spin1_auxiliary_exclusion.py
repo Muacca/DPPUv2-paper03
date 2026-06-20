@@ -28,6 +28,9 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 
 import time
 import numpy as np
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+from dppu.utils.tee_logger import setup_log, teardown_log
+setup_log(__file__, log_dir='output')
 
 _t_start = time.time()
 
@@ -176,16 +179,17 @@ print("Divergence of effective eigenvalue lambda_eff = (n^T H n) / (n^T G n)")
 print("=" * 65)
 
 # Normalize n and u
-G_phys = u_vec @ G_red @ u_vec
-H_phys = u_vec @ H_red @ u_vec
+G_XX = u_vec @ G_red @ u_vec
+H_XX = u_vec @ H_red @ u_vec
 H_cross = n_vec @ H_red @ u_vec
+lambda_proj = H_XX / G_XX
 
 print(f"  G_null  = n^T G n = {G_null:.6f}")
 print(f"  H_null  = n^T H n = {H_null:.6f}")
-print(f"  G_phys  = u^T G u = {G_phys:.4f}")
-print(f"  H_phys  = u^T H u = {H_phys:.4f}")
+print(f"  G_XX    = u^T G u = {G_XX:.4f}")
+print(f"  H_XX    = u^T H u = {H_XX:.4f}")
 print(f"  H_cross = n^T H u = {H_cross:.4f}")
-print(f"  lambda_phys = H_phys / G_phys = {H_phys/G_phys:.6f}")
+print(f"  lambda_proj = H_XX / G_XX = {lambda_proj:.6f}  (pre-Schur projection quotient)")
 
 print("\n  lambda_eff when varying t/s ratio (mixed direction):")
 print(f"  {'t/s':>8s}  {'G_v':>14s}  {'H_v':>14s}  {'lambda_eff':>14s}")
@@ -280,3 +284,4 @@ print("=" * 65)
 print(f"\nComputation time: {time.time() - _t_start:.1f}s")
 print()
 print("*Script: scripts/paper03/spin1_auxiliary_exclusion.py")
+teardown_log()

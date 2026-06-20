@@ -39,14 +39,16 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from dppu.utils.tee_logger import setup_log, teardown_log
+setup_log(__file__, log_dir='output')
 
 import numpy as np
 
-from sympy import symbols, S, cancel, lambdify, diff as sdiff, pi
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from sympy import S, cancel, lambdify
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 t0_total = time.time()
 
@@ -72,8 +74,6 @@ print("  ε≠0: splits into at most 3 distinct masses")
 print("    H₁₁^q(ε), H₂₂^q(ε) = H₃₃^q(ε), H₄₄^q(ε) = H₅₅^q(ε)")
 
 # T_A basis (same settings as spin2_schur_degeneracy.py)
-from sympy import sqrt, Matrix, simplify
-
 sqrt2 = np.sqrt(2)
 sqrt6 = np.sqrt(6)
 
@@ -121,9 +121,17 @@ print("[2] Compute H₁₁^q(ε), H₂₂^q(ε) (FA engine, finite difference)")
 print()
 
 t1 = time.time()
-cfg = DOFConfig.from_engine('FullyAnisotropicS3S1Engine')
-cfg.torsion_mode = Mode.MX
-cfg.ny_variant = NyVariant.FULL
+cfg = make_config(
+    TopologyType.S3,
+    enable_squash=True,
+    enable_shear=True,
+    fiber_mode=FiberMode.TWIST,
+    isotropic_twist=False,
+    torsion_mode=Mode.MX,
+    ny_variant=NyVariant.FULL,
+    weyl_source=CurvatureSource.LC,
+    riemann_source=CurvatureSource.LC,
+)
 eng = UnifiedEngine(cfg, NullLogger())
 eng.run()
 print(f"  Engine run: {time.time()-t1:.1f}s")
@@ -150,7 +158,7 @@ print(f"  Substitution done: {time.time()-t2:.1f}s")
 Veff_num = lambdify((r_s, eps_s, s_s), Veff_p, modules='numpy')
 
 # Find r_min (equilibrium radius at ε=s=0)
-from scipy.optimize import minimize_scalar, brentq
+from scipy.optimize import minimize_scalar
 
 def Veff_iso(r_val):
     return float(Veff_num(r_val, 0.0, 0.0))
@@ -507,3 +515,4 @@ print()
 print(f"Computation time: {time.time()-t0_total:.1f}s")
 print()
 print("*Script: script/paper03/spin2_spectrum_splitting.py")
+teardown_log()

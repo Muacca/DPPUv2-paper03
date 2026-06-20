@@ -39,7 +39,7 @@ $$
 X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}}
 $$
 
-で与えられ、その generalized eigenvalue は $\lambda_{\rm phys}=4.1867>0$ である。さらに mixed Hessian 計算により、 $X_k$ は二次レベルで spin-2、radial、torsion 各 sector と完全に decouple する。
+で与えられる。second-class auxiliary $Y_k$ を Schur 消去した有限一般化固有値は $\lambda_{\rm phys}\simeq -0.4183<0$ であり、対応する kinetic norm は正である。したがって physical spin-1 triplet は非ゴースト・タキオン的である。一方、mixed Hessian 計算により、この corrected spin-1 mode は二次レベルで spin-2、radial、torsion 各 sector と完全に decouple する。
 
 以上を総合すると、本モデルは homogeneous $S^3\times S^1$ 幾何を舞台とする統一的な geometric Landau-EFT として理解できる。ここでは一様幾何自由度が既約表現に沿って整理され、Pontryagin 保護、相転移方向、physical/auxiliary 分解、および許容される相互作用項が一つの理論枠組みに統合される。本論は、EC+NY における古典的 minisuperspace 幾何セクターの一つの閉じた枠組みを与え、量子化等、今後の拡張の基盤とすることができる。
 
@@ -91,7 +91,7 @@ paper02 で導入した単一 squash 変数 $\varepsilon$ や、本論で追加�
 - §6 では最終 Landau-EFT と辞書表をまとめる。
 - §7 では 一様幾何自由度で完結したことと、今後に持ち越される課題を整理する。
 - §8 は結論である。
-- Appendix A-H には、計算パイプライン、証明、mass splitting 公式、cross-Hessian 詳細、不変量基底、数値表を収める。
+- Appendix A-I には、計算パイプライン、証明、mass splitting 公式、spin-1 Schur 消去、cross-Hessian 詳細、不変量基底、数値表、および reduction-order artifact 診断を収める。
 
 **Fig. 1** Logical structure of this paper and connections between sections.
 
@@ -109,7 +109,7 @@ flowchart LR
         Schur --> Split --> Phase
     end
     subgraph P45["§5 spin-1 decomp."]
-        X["X_k physical<br/>λ_phys=4.19>0"]
+        X["X_k physical<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
         Y["Y_k auxiliary<br/>non-dynamical"]
     end
     EFT["§6 Unified<br/>Geometric<br/>Landau-EFT"]
@@ -140,10 +140,11 @@ flowchart LR
 - [Appendix B. Detailed Proof of the Pontryagin Protection Theorem](DPPUv2-paper03_appB.md)
 - [Appendix C. Full Shear Tensor Basis and Embedding of $(\varepsilon,s,\phi)$](DPPUv2-paper03_appC.md)
 - [Appendix D. Mass Splitting Formulae in the Spin-2 Sector](DPPUv2-paper03_appD.md)
-- [Appendix E. Spin-1 Sector: $H$, $G$, and Generalized Eigenvalue Analysis](DPPUv2-paper03_appE.md)
+- [Appendix E. Spin-1 Sector: Schur Reduction and Finite Generalized Eigenvalue](DPPUv2-paper03_appE.md)
 - [Appendix F. Cross-Hessian Checks and Quadratic Decoupling](DPPUv2-paper03_appF.md)
 - [Appendix G. Landau-EFT Selection Rules and Forbidden Terms](DPPUv2-paper03_appG.md)
 - [Appendix H. Numerical Tables and Supplemental Data](DPPUv2-paper03_appH.md)
+- [Appendix I. Reduction-order Artifact in the Spin-1 Sector](DPPUv2-paper03_appI.md)
 
 
 ## 参考文献
@@ -154,4 +155,3 @@ flowchart LR
 4. H. T. Nieh and M. L. Yan, "An identity in Riemann–Cartan geometry," J. Math. Phys. **23**, 373–374 (1982).
 5. O. Chandia and J. Zanelli, "Topological invariants, instantons, and the chiral anomaly on spaces with torsion," Phys. Rev. D **55**, 7580–7585 (1997).
 6. R. P. Woodard,“Ostrogradsky's theorem on Hamiltonian instability,” Scholarpedia, 10(8), 32243 (2015).
-

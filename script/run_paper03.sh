@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # run_paper03.sh
-# Run all paper03 and proofs scripts, saving stdout+stderr to an output directory.
+# Run all paper03 and proofs scripts, saving stdout+stderr to the paper data directory.
 #
 # Usage (from the script/ directory):
 #   bash run_paper03.sh                          # run all scripts  -> data/
@@ -14,12 +14,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PAPER_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SCRIPTS_DIR="${SCRIPT_DIR}/scripts"
 
 # ── argument parsing ──────────────────────────────────────────────────────────
 
 TARGET="all"
-DATA_DIR="${SCRIPT_DIR}/data"
+DATA_DIR="${PAPER_ROOT}/data"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -42,6 +43,7 @@ mkdir -p "${DATA_DIR}"
 
 export PYTHONIOENCODING=utf-8
 export PYTHONUTF8=1
+export DPPU_LOG_DISABLE=1
 
 # ── helper ───────────────────────────────────────────────────────────────────
 
@@ -90,9 +92,11 @@ PAPER03_SCRIPTS=(
     paper03/spin2_spectrum_splitting.py
     paper03/spin2_diagonal_hessians.py
     paper03/spin2_offdiag_hessian.py
-    paper03/spin1_null_mode_analysis.py
     paper03/spin1_kinetic_metric.py
+    paper03/spin1_null_mode_analysis.py
     paper03/spin1_auxiliary_exclusion.py
+    paper03/spin1_appI_projection_artifact.py
+    paper03/spin1_symbolic_firstprinciples.py
     paper03/spin1_cross_hessian.py
     paper03/homogeneous_consistency.py
     paper03/eft_invariant_generation.py

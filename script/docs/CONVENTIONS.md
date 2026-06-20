@@ -316,7 +316,7 @@ $$
 X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
 $$
 
-with generalized eigenvalue $\lambda_{\rm phys} = H_{\rm phys}/G_{\rm phys} \approx 4.19 > 0$ (3-fold degenerate, SO(3)-symmetric).
+with generalized eigenvalue $\lambda_{\rm phys} \approx -0.4183 < 0$ (3-fold degenerate, SO(3)-symmetric, tachyonic non-ghost). Here $H_{\rm phys}$ denotes the Hessian block before auxiliary elimination; the correct effective mass is obtained via the Schur complement $H_{\rm eff} = H_{XX} - H_{XY}^2/H_{YY}$, giving $\lambda_{\rm phys} = H_{\rm eff}/G_{XX} \approx -0.4183 < 0$. The naive ratio $H_{\rm phys}/G_{\rm phys} \approx 4.19$ is the pre-elimination Rayleigh quotient and does not give the physical eigenvalue.
 
 ### 12.4 Generalized Eigenvalue Problem
 

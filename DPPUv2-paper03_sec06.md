@@ -51,14 +51,24 @@ $$
 $$
 \mathcal{L}_{q_A}=-\frac12\mu_q^2\sum_{A=1}^5 q_A^2,
 \qquad
-\mathcal{L}_{X}=\frac12\dot{X}^T G_{\rm phys}\dot{X}-\frac12 X^T H_{\rm phys}X,
+\mathcal{L}_{X}=\frac12\dot{X}^T G_{XX}\dot{X}-\frac12 X^T H_{\rm eff}X,
 \qquad
 \mathcal{L}_{Y}=-\frac12 Y^TH_{\rm null}Y
 $$
 
 である。
 
-$X_k$ と $(q_A,r,\eta)$ の mixed Hessian が全 21 成分でゼロと確認されたため、spin-1 sector の quadratic decoupling は final basis において厳密な statement である。また、spin-2 sector と torsion 変数 $(\eta,V)$ の間の cross-Hessian も全 10 成分でゼロと確認され、さらに radial– $V$ cross-Hessian もゼロである。ただし、radial– $\eta$ cross-Hessian は非ゼロ（ $\approx 118.4$ ）であり、spin-0/torsion subsector は $(r,\eta)$ 混合ブロックを形成する。したがって local stability の議論は、spin-2・spin-1 各 block については独立に行うことができるが、scalar/torsion subsector は $(r,\eta)$ を連立して扱う必要がある。
+ここで $\mathcal{L}\_{X}$ と $\mathcal{L}\_{Y}$ が block-diagonal に分離するのは、§5.5 の non-dynamical auxiliary $Y_k$ を代数 EOM $Y=-({H}\_{XY}/{H}\_{\rm null})X$ で消去（平方完成）した結果である。運動項は $G\,Y_k=0$ ゆえ $G_{XY}=0$ となり自明に分離しており、唯一の結合はポテンシャル cross 項 ${H}\_{XY}={H}\_{\rm cross}\neq0$ である。これは ${Y}\_{k}\to {Y}\_{k}+({H}\_{XY}/{H}\_{\rm null}){X}\_{k}$ のシフトにより、ポテンシャル二次形式
+
+$$
+\frac12 X^TH_{XX}X+X^TH_{XY}Y+\frac12 Y^TH_{\rm null}Y=\frac12 X^TH_{\rm eff}X+\frac12 Y^TH_{\rm null}Y,
+\qquad
+H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{\rm null}}
+$$
+
+として ${H}\_{\rm eff}$（§5.5, Appendix E）に畳み込まれる。したがって $\mathcal{L}\_{X}$ の ${H}\_{\rm eff}$ はすでに X-Y cross 項の寄与を含んでおり、 $\mathcal{L}\_{Y}$ の $Y$ はシフト後の auxiliary を表す。これは X-Y cross 項を落とした見かけの decoupling とは異なる。
+
+$X_k$ と $(q_A,r,\eta)$ の mixed Hessian が全 21 成分でゼロと確認されたため、spin-1 sector の quadratic decoupling は final basis において厳密な statement である。ただし、spin-1 block 自体は Schur 消去後に $\lambda_{\rm phys}\simeq -0.4183<0$ を持つため、非ゴースト・タキオン的である。また、spin-2 sector と torsion 変数 $(\eta,V)$ の間の cross-Hessian も全 10 成分でゼロと確認され、さらに radial– $V$ cross-Hessian もゼロである。ただし、radial– $\eta$ cross-Hessian は非ゼロ（ $\approx 118.4$ ）であり、spin-0/torsion subsector は $(r,\eta)$ 混合ブロックを形成する。したがって local stability の議論は、spin-2・spin-1 各 block については独立に行うことができるが、spin-1 block の結論は不安定であり、scalar/torsion subsector は $(r,\eta)$ を連立して扱う必要がある。
 
 **Fig. 13** Quadratic block organization of the final sector. The spin-1 sector fully decouples; the spin-2 sector decouples from torsion; the scalar/torsion subsector contains a coupled $(r,\eta)$ block.
 
@@ -69,7 +79,7 @@ flowchart LR
         spacer[" "]
         B_r["spin-0<br/>r  (radial)"]
         B_q["spin-2<br/>q_A  quintet<br/>μq²=48π²"]
-        B_X["spin-1 physical<br/>X_k<br/>λ_phys=4.19>0<br/>(propagating)"]
+        B_X["spin-1 physical<br/>X_k<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
         B_Y["spin-1 auxiliary<br/>Y_k<br/>H_null=894.85<br/>(non-dynamical)"]
         B_t["torsion<br/>η, V<br/>(control params)"]
     end
@@ -141,7 +151,7 @@ graph LR
 |---|---|---|---|
 | $r$ | spin-0 | isotropic radius | equilibrium value $r_0=3$ |
 | $q_A$ | spin-2 | full shear quintet | $\mu_q^2=48\pi^2$ |
-| $X_k$ | spin-1 physical | propagating mixed mode | quadratic decoupled |
+| $X_k$ | spin-1 physical | propagating mixed mode | quadratic decoupled; tachyonic, non-ghost |
 | $Y_k$ | spin-1 auxiliary | non-propagating auxiliary | not gauge |
 | $\eta$ | spin-0 torsion | AX parameter | input / control |
 | $V$ | spin-0 torsion | VT parameter | input / control |
@@ -182,7 +192,7 @@ flowchart LR
 
 ### 6.5 Interpretation as a geometric Landau EFT
 
-以上の結果から本モデルを、単なる重力 minisuperspace における数値ポテンシャルの記述としてではなく、有限自由度の geometric Landau-EFT として理解することができるようになる [10]。ここでは
+以上の結果から本モデルを、単なる重力 minisuperspace における数値ポテンシャルの記述としてではなく、有限自由度の geometric Landau-EFT として理解することができるようになる。ここでは
 
 1. order parameter に相当する幾何自由度が既約表現で整理される。
 2. 二次 sector は表現論的ブロックに整理できる。spin-1 sector は完全に decouple し、scalar/torsion 側は連立 $(r,\eta)$ ブロックと独立な $V$ 方向という精密化されたブロック構造をもつ。

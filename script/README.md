@@ -213,7 +213,7 @@ python scripts/paper03/spin1_cross_hessian.py
 | **Schur 5-fold degeneracy** | §4 | H_AB = μ²_q δ_AB, μ²_q = 48π² at isotropic point — **symbolic proof** | `paper03/spin2_schur_degeneracy.py` |
 | **Phase transitions ε_c±** | §4 | ε_c+ ≈ 0.483 (squash), ε_c− ≈ −0.293 (shear) — **numerical analysis** | `paper03/spin2_spectrum_splitting.py`, `paper03/spin2_diagonal_hessians.py` |
 | **Spin-1 physical/auxiliary decomp.** | §5 | X_k physical, Y_k auxiliary (Case B confirmed) — **analytic + numerical** | `paper03/spin1_kinetic_metric.py`, `paper03/spin1_null_mode_analysis.py` |
-| **λ_phys = 4.19 > 0** | §5 | Generalized eigenvalue: no tachyon in physical spin-1 sector | `paper03/spin1_kinetic_metric.py` |
+| **λ_phys ≈ −0.4183 < 0** | §5 | Schur-reduced finite generalized eigenvalue: tachyonic but non-ghost spin-1 mode | `paper03/spin1_kinetic_metric.py` |
 | **Quadratic sector decoupling** | §6 | Cross-Hessians vanish at isotropic point — **numerical verification** | `paper03/spin1_cross_hessian.py`, `paper03/spin0_torsion_cross_hessian.py` |
 | **EFT invariant basis** | §6 | Landau EFT selection rules and forbidden terms — **group-theoretic** | `paper03/eft_invariant_generation.py` |
 

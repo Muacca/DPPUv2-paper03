@@ -9,6 +9,29 @@ from typing import Any, Callable, Dict, List, Optional
 from sympy import S, cancel, expand, collect, lambdify
 
 
+def subs_zero_modes(expr: Any, params: Dict) -> Any:
+    """
+    Substitute torsion and NY modes to zero: eta=0, V=0, theta_NY=0.
+
+    Useful for extracting the background Weyl contribution (LC geometry alone)
+    and for the gamma=1/2 analytic derivation of EC vacua.
+
+    Args:
+        expr:   SymPy expression containing torsion/theta symbols
+        params: param dict from engine.data['params']
+
+    Returns:
+        SymPy expression with eta, V, theta_NY set to zero
+    """
+    subs = {
+        params['eta']:      S.Zero,
+        params['V']:        S.Zero,
+        params['theta_NY']: S.Zero,
+    }
+    return expr.subs(subs)
+
+
+
 def compute_effective_potential(
     action: Any,
     logger: Optional[Any] = None

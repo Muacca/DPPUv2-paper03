@@ -407,7 +407,8 @@ Y_blocks = [np.array([1, 0, 0, 2*L/r0, 0, 0]) / norm_Y,   # k=0
 # ... 詳細は scripts/paper03/spin1_kinetic_metric.py を参照 ...
 
 eigenvalues, _ = eigh(H_phys, G_phys)
-# lambda_phys > 0  ⟹  物理 spin-1 セクターにタキオンなし
+# 注意：上の素朴な射影は Schur 消去前の Rayleigh 商（≈ 4.19）であり、物理的な固有値ではない。
+# Schur 消去後 lambda_phys < 0 (≈ −0.4183)：タキオン的・非ゴースト
 ```
 
 > **警告**：`eigh(H_full, G_full)` を直接呼ぶと `G` が特異のため `scipy` が `LinAlgError` を発生させる。必ず先に物理部分空間に射影すること。

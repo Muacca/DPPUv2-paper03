@@ -62,18 +62,42 @@ with
 \begin{equation}
   \mathcal{L}_{q_A} = -\frac{1}{2}\mu_q^2 \sum_{A=1}^5 q_A^2,
   \qquad
-  \mathcal{L}_X = \frac{1}{2}\dot{X}^T G_\phys \dot{X} - \frac{1}{2} X^T H_\phys X,
+  \mathcal{L}_X = \frac{1}{2}\dot{X}^T G_{XX} \dot{X}
+    - \frac{1}{2} X^T H_\mathrm{eff} X,
   \qquad
   \mathcal{L}_Y = -\frac{1}{2} Y^T H_\mathrm{null} Y.
 \end{equation}
 
+The block-diagonal split of $\mathcal{L}_X$ and $\mathcal{L}_Y$ results from
+eliminating the non-dynamical auxiliary $Y_k$ of \S\ref{sec:spin1} through its
+algebraic equation of motion $Y=-(H_{XY}/H_\mathrm{null})X$ (completing the
+square).  The kinetic term separates trivially because $G\,Y_k=0$ implies
+$G_{XY}=0$; the only coupling is the potential cross term
+$H_{XY}=H_\mathrm{cross}\neq0$, which is absorbed by the shift
+$Y_k\to Y_k+(H_{XY}/H_\mathrm{null})X_k$,
+\begin{equation}
+  \tfrac12 X^T H_{XX} X + X^T H_{XY} Y + \tfrac12 Y^T H_\mathrm{null} Y
+  = \tfrac12 X^T H_\mathrm{eff} X + \tfrac12 Y^T H_\mathrm{null} Y,
+  \qquad
+  H_\mathrm{eff} = H_{XX} - \frac{H_{XY}^2}{H_\mathrm{null}}
+\end{equation}
+(see \S\ref{sec:spin1} and Appendix~\ref{app:E}).  Hence the $H_\mathrm{eff}$ in
+$\mathcal{L}_X$ already contains the X--Y cross-term contribution, and the $Y$ in
+$\mathcal{L}_Y$ denotes the shifted auxiliary; this differs from a decomposition
+that drops the cross term.
+
 Since all 21 mixed Hessian components between $X_k$ and $(q_A,r,\eta)$ vanish,
 quadratic decoupling of the spin-1 sector is an exact statement in the final
-basis.  All 10 spin-2--torsion cross-Hessian components also vanish at the
-isotropic point, and the radial--$V$ cross-Hessian is zero as well.  However,
-the radial--$\eta$ cross-Hessian is non-zero ($\approx 118.4$), so the
+basis.  The spin-1 block itself, however, has
+$\lambda_\phys\simeq -0.4183<0$ after Schur elimination and is therefore
+tachyonic but non-ghost.  All 10 spin-2--torsion cross-Hessian components also
+vanish at the isotropic point, and the radial--$V$ cross-Hessian is zero as well.
+However, the radial--$\eta$ cross-Hessian is non-zero ($\approx 118.4$), so the
 scalar/torsion subsector forms a coupled $(r,\eta)$ block with $V$ remaining
-independent.  Thus the natural block decomposition at quadratic order is
+independent.  Thus local stability can be discussed independently for the
+spin-2 and spin-1 blocks, but the spin-1 block is unstable and the scalar/torsion
+subsector must be treated as the coupled $(r,\eta)$ system.  The natural block
+decomposition at quadratic order is
 \begin{equation}
   (q_A)\;\oplus\;(X_k)\;\oplus\;(Y_k)\;\oplus\;
   \bigl[(r,\eta)\;\text{block}\;\oplus\;(V)\bigr].
@@ -134,7 +158,7 @@ Variable & Final classification & Role & Comment \\
 \midrule
 $r$   & spin-0 & isotropic radius & equilibrium $r_0=3$ \\
 $q_A$ & spin-2 & full shear quintet & $\mu_q^2=48\pi^2$ \\
-$X_k$ & spin-1 physical  & propagating mixed mode & quadratic decoupled \\
+$X_k$ & spin-1 physical  & propagating mixed mode & quadratic decoupled; tachyonic, non-ghost \\
 $Y_k$ & spin-1 auxiliary & non-propagating auxiliary & not gauge \\
 $\eta$ & spin-0 torsion & AX parameter & input/control \\
 $V$   & spin-0 torsion & VT parameter & input/control \\

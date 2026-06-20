@@ -75,18 +75,36 @@ In this basis,
 \begin{equation}
   G\,Y_k = 0,
   \qquad
-  G_\phys = 769.8286\,I_3,
+  G_{XX} = 769.8286\,I_3,
   \qquad
-  H_\phys = 3223.06\,I_3,
+  H_{XX} = 3223.06\,I_3.
 \end{equation}
-and the physical generalised eigenvalue is
+Here $H_{XX}$ is the $X$-block before the auxiliary direction has been
+eliminated.  The finite physical eigenvalue must be obtained from the full
+$X$--$Y$ system.  The direction $Y_k$ is a second-class auxiliary with no kinetic
+term,
+\begin{equation}
+  G_{YY}=0,
+  \qquad
+  H_{YY}=H_\mathrm{null}=894.845>0,
+  \qquad
+  H_{XY}=H_\mathrm{cross}
+    =\frac{24081847}{3750}\simeq 6421.8\neq 0.
+\end{equation}
+Therefore the Schur-reduced physical Hessian is
+\begin{equation}
+  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
+\end{equation}
+and the finite generalised eigenvalue is
 \begin{equation}
   \lambda_\phys
-  = \frac{u^T H u}{u^T G u}\bigg|_{u=(-2,3)}
-  = \frac{41899.77}{10007.77}
-  = 4.1867 > 0.
+  = \frac{H_\mathrm{eff}}{G_{XX}}
+  \simeq -0.4183<0.
 \end{equation}
-The physical spin-1 triplet is therefore locally stable.
+The corresponding corrected mode is approximately $(0.9816,0.1909)$ in the raw
+$(\omega_k,\delta_k)$ coordinates, and its kinetic norm is positive.  The
+physical spin-1 triplet is therefore tachyonic but non-ghost, so the isotropic
+background is locally unstable in the spin-1 twist direction.
 
 \begin{figure}[H]
   \centering
@@ -101,7 +119,7 @@ The physical spin-1 triplet is therefore locally stable.
   \includegraphics[width=0.68\textwidth]{figures/fig11_G_spectrum.png}
   \caption{Eigenvalue spectrum of the field-space metric $G$ in the spin-1
            sector.  Three eigenvalues are exactly zero (null directions $Y_k$)
-           and three are degenerate at $G_\phys=769.83$ (physical directions
+           and three are degenerate at $G_{XX}=769.83$ (non-null directions
            $X_k$), reflecting the $SO(3)$ Schur structure.}
   \label{fig:G_spectrum}
 \end{figure}
@@ -179,15 +197,29 @@ artefact.
 
 \subsection{Final Quadratic Sector for Spin-1}
 
-Summarising, the quadratic contribution of the spin-1 sector is
+Summarising, the quadratic contribution of the spin-1 sector, including the
+intra-sector $X$--$Y$ cross term, is
 \begin{equation}
-  \mathcal{L}_{X} + \mathcal{L}_{Y}
-  = \frac{1}{2}\dot{X}^T G_\phys \dot{X}
-    - \frac{1}{2} X^T H_\phys X
-    - \frac{1}{2} Y^T H_\mathrm{null} Y.
+  \mathcal{L}_{X,Y}
+  = \frac{1}{2}\dot{X}^T G_{XX} \dot{X}
+    - \frac{1}{2} X^T H_{XX} X
+    - X^T H_{XY}Y
+    - \frac{1}{2} Y^T H_{YY} Y.
 \end{equation}
-The field $Y$ has no kinetic term, and the negative direction apparent in the raw
-basis is not a physical instability.  The complete block decomposition of
+The field $Y$ has no kinetic term and can be eliminated by its algebraic equation
+of motion,
+\begin{equation}
+  Y=-\frac{H_{XY}}{H_{YY}}X.
+\end{equation}
+The physical effective Hessian is therefore
+\begin{equation}
+  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
+  \qquad
+  \lambda_\phys=\frac{H_\mathrm{eff}}{G_{XX}}\simeq -0.4183<0.
+\end{equation}
+Thus the corrected physical mode has negative mass squared and positive kinetic
+norm; it is a genuine tachyonic non-ghost spin-1 instability rather than an
+artifact of the auxiliary direction.  The complete block decomposition of
 $\mathcal{L}_\mathrm{quad}$ including all sectors is presented in \S\ref{sec:eft}.
 
 The conclusions of this section are the following three points.
@@ -195,5 +227,6 @@ The conclusions of this section are the following three points.
   \item The raw basis $(\omega_i,\delta_i)$ is not the final physical basis.
   \item $Y_k$ is neither gauge nor redundancy but a non-dynamical auxiliary.
   \item $X_k$ is the unique propagating spin-1 triplet and decouples from all
-        other sectors at quadratic order.
+        other sectors at quadratic order, but is tachyonic and non-ghost after
+        Schur elimination of $Y_k$.
 \end{enumerate}

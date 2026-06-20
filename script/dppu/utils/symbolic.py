@@ -12,12 +12,13 @@ Used primarily for Riemann tensor antisymmetry verification (3-level approach):
 Author: Muacca
 """
 
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import numpy as np
 from sympy import (
     simplify, expand, factor, cancel, together, trigsimp, Symbol
 )
+from sympy.core.expr import Expr
 from sympy.core.expr import Expr
 
 
@@ -205,3 +206,201 @@ def normalize_expression(expr: Expr) -> Expr:
         return result
     except Exception:
         return expr
+
+
+def derivative_inventory(
+    expr: Expr,
+    symbol_pairs: "List[Tuple[str, Any]]",
+) -> "Dict[str, bool]":
+    """
+    Check which symbols appear as free symbols in *expr*.
+
+    Args:
+        expr:         SymPy expression to inspect.
+        symbol_pairs: Iterable of (name, symbol) pairs.  Each *symbol*
+                      is tested for membership in ``expr.free_symbols``.
+
+    Returns:
+        Dict mapping each *name* to True/False.
+
+    Example::
+
+        from sympy import symbols
+        x, y = symbols("x y")
+        derivative_inventory(x**2, [("x", x), ("y", y)])
+        # → {"x": True, "y": False}
+    """
+    return {name: (sym in expr.free_symbols) for name, sym in symbol_pairs}
+
+
+def nonzero_component_count(
+    array_expr,
+    subs: "Optional[Dict]" = None,
+) -> "Tuple[int, List]":
+    """
+    Count the nonzero components of a symbolic tensor array.
+
+    Rank and dimension are inferred from ``array_expr.shape``.
+
+    Args:
+        array_expr: ``MutableDenseNDimArray`` (or any object supporting
+                    integer-tuple indexing and ``.shape``).
+        subs:       Optional substitution dict applied before testing.
+
+    Returns:
+        ``(count, examples)`` where *count* is the number of nonzero
+        components and *examples* is a list of up to eight
+        ``((index_tuple), factor(value))`` pairs.
+    """
+    from sympy import simplify as _simplify, factor as _factor
+
+    shape = array_expr.shape
+    rank = len(shape)
+    ranges = [range(d) for d in shape]
+
+    count = 0
+    examples: List = []
+
+    def _visit(prefix: List[int], depth: int) -> None:
+        nonlocal count
+        if depth == rank:
+            val = array_expr[tuple(prefix)]
+            if subs:
+                val = val.subs(subs)
+            val = _simplify(val)
+            if val != 0:
+                count += 1
+                if len(examples) < 8:
+                    examples.append((tuple(prefix), _factor(val)))
+            return
+        for i in ranges[depth]:
+            _visit(prefix + [i], depth + 1)
+
+    _visit([], 0)
+    return count, examples
+
+
+def sexpr(expr: Any) -> str:
+    """
+    Normalize a SymPy expression and return it as a string.
+
+    Applies ``factor(cancel(expr))`` for a compact canonical form.
+    Suitable for CSV output and human-readable logging.
+
+    Args:
+        expr: SymPy expression
+
+    Returns:
+        Canonical string representation
+
+    Example::
+
+        >>> from sympy import symbols
+        >>> x = symbols('x')
+        >>> sexpr((x**2 - 1) / (x - 1))
+        'x + 1'
+    """
+    from sympy import factor, cancel
+    return str(factor(cancel(expr)))
+
+
+def canonical_simplify(expr: Any) -> "Expr":
+    """
+    Canonical simplification: ``factor(cancel(simplify(expr)))``.
+
+    This is the standard normalization used in paper07 witness scripts
+    for comparing symbolic expressions and computing matrix entries.
+
+    Args:
+        expr: SymPy expression
+
+    Returns:
+        Simplified SymPy expression
+
+    Example::
+
+        >>> from sympy import symbols
+        >>> x = symbols('x')
+        >>> canonical_simplify((x**2 - 1) / (x - 1))
+        x + 1
+    """
+    from sympy import factor, cancel, simplify as _simplify
+    return factor(cancel(_simplify(expr)))
+
+
+def series_coefficients(
+    expr: "Expr",
+    variable: "Symbol",
+    order: int = 4,
+) -> "Dict[str, str]":
+    """
+    Return Taylor series coefficients of *expr* expanded around *variable=0*.
+
+    Coefficients are returned as a dict mapping degree string to value string,
+    for degrees 0 through *order* inclusive.  Zero coefficients are represented
+    as the string ``"0"``.
+
+    Args:
+        expr:     SymPy expression in *variable*.
+        variable: The expansion variable.
+        order:    Maximum degree (inclusive).
+
+    Returns:
+        Dict[str, str] mapping ``"0"`` .. ``str(order)`` to coefficient strings.
+
+    Notes:
+        - The expression is first expanded with ``sympy.expand`` before series.
+        - Each nonzero coefficient is simplified with :func:`canonical_simplify`.
+    """
+    import sympy as sp
+    series = sp.series(sp.expand(expr), variable, 0, order + 1).removeO()
+    coeffs: Dict[str, str] = {str(degree): "0" for degree in range(order + 1)}
+    poly = sp.Poly(series, variable) if series != 0 else None
+    if poly is not None:
+        for degree, coeff in poly.terms():
+            coeffs[str(degree[0])] = str(canonical_simplify(coeff))
+    return coeffs
+
+
+def derivative_degree_classifier(
+    expr: "Expr",
+    derivative_symbols: "Iterable[Symbol]",
+) -> "Dict[str, Any]":
+    """
+    Classify derivative degree using lambda-scaling (phase5E-style witness).
+
+    Rescales every symbol in *derivative_symbols* by a formal parameter
+    ``lam``, expands, and reads off the maximum polynomial degree in ``lam``.
+    Returns the maximum degree, which quadratic symbols contribute, and
+    a boolean flag.
+
+    Args:
+        expr:               SymPy expression.
+        derivative_symbols: Iterable of SymPy symbols to treat as derivatives.
+
+    Returns:
+        dict with keys:
+          - ``"max_degree"`` (int): highest power of lam found.
+          - ``"quadratic_symbols"`` (list[str]): symbols with nonzero d²/d(sym)² coefficient.
+          - ``"has_quadratic_derivatives"`` (bool): True iff max_degree >= 2.
+    """
+    import sympy as sp
+    lam = sp.Symbol("lam")
+    subs = {symbol: lam * symbol for symbol in derivative_symbols}
+    expanded = sp.expand(expr.subs(subs))
+    try:
+        poly = sp.Poly(expanded, lam)
+        max_degree = int(poly.degree())
+    except (sp.PolynomialError, TypeError):
+        max_degree = 0
+    quadratic_symbols: list = []
+    if max_degree >= 2:
+        for symbol in derivative_symbols:
+            coeff = sp.diff(sp.diff(expanded, lam, 2), symbol, 2)
+            if sp.simplify(coeff.subs(lam, 1)) != 0:
+                quadratic_symbols.append(str(symbol))
+    return {
+        "max_degree": max_degree,
+        "quadratic_symbols": quadratic_symbols,
+        "has_quadratic_derivatives": max_degree >= 2,
+    }

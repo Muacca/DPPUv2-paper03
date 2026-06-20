@@ -1,3 +1,5 @@
+C:\dev\DPPU\20_paper\20_arXiv\40_第三論文_v2\script\scripts\paper03\pontryagin_scan_nil3.py:69: DeprecationWarning: compute_hodge_dual is non-metric-aware (uses epsilon_symbol only). Use hodge_dual_2form() for Lorentzian computations.
+  R_dual = compute_hodge_dual(R_abcd)
 =================================================================
 Nil³ isotropic twist — Pontryagin & V_eff scan (App B.7)
 DPPUv2 plan v5.0 Option B
@@ -13,13 +15,13 @@ Features of Nil³ twist:
 Nil³ isotropic twist scan  (R=1.0, η=-2.0)
 =================================================================
 
-[Step 1] Running TwistNil3S1Engine symbolically...
-  Done (0.4s)
+[Step 1] Running Nil3 isotropic twist engine symbolically...
+  Done (0.2s)
   V_eff = (-64*pi**4*L**5*alpha*kappa**2*omega**4 + 12*pi**4*L**3*R**4*omega**2 - 128*pi**4*L**3*R**2*alpha*kappa**2*omega**2 + 144*pi**4*L*R**6*eta**2 + 12*pi**4*L*R**6 - 64*pi**4*L*R**4*alpha*kappa**2)/(3*R**5*kappa**2)
 
 [Step 2] Lambdifying R_{abcd} and V_eff...
   R argument order: ['R', 'omega', 'eta', 'L', 'kappa', 'theta_NY', 'alpha']
-  Done (0.0s)
+  Done (0.1s)
 
 [Step 3] Numerical scan of P(ω) (R=1.0, η=-2.0)
 
@@ -77,7 +79,3 @@ Overall summary
        R       η          max|P|      P=0?     m²>0?
   ------  ------  --------------  --------  --------
     1.00   -2.00      0.0000e+00       YES       YES
-
-Computation time: 0.4s
-
-*Script: scripts/paper03/pontryagin_scan_nil3.py

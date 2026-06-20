@@ -1,113 +1,98 @@
 # Torsion Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group defining torsion structures.
+Module group defining torsion modes, torsion tensor ansatz construction, torsion scalar, and Nieh-Yan variants.
 
 ## Overview
 
-Provides torsion ansatz and Nieh-Yan density computation.
+The torsion layer supplies the `AX`, `VT`, and `MX` torsion branches used by the EC+NY engine and reduced-sector helpers.  The runtime constructor is `construct_torsion_tensor(...)`; it supports both the legacy Euclidean convention and the Lorentzian `lz_native` convention.
 
 ## Modules
 
-### mode.py
+### `mode.py`
 
 Torsion mode definitions.
 
-**Mode Enum:**
-
 | Mode | Description | Parameters |
-|------|-------------|-----------|
-| `AX` | Axial torsion only | η |
-| `VT` | Vector trace only | V |
-| `MX` | Mixed mode | η, V |
+|------|-------------|------------|
+| `AX` | axial torsion only | `eta` |
+| `VT` | vector-trace torsion only | `V` |
+| `MX` | mixed torsion | `eta`, `V` |
 
 ```python
-from dppu.torsion import Mode
+from dppu.torsion.mode import Mode
 
-mode = Mode.MX  # Mixed mode
+mode = Mode.MX
 ```
 
-### nieh_yan.py
+### `nieh_yan.py`
 
-Nieh-Yan variant definitions and NY density computation.
+Nieh-Yan variant definitions and density computation.
 
-**NyVariant Enum:**
+| Variant | Definition | Meaning |
+|---------|------------|---------|
+| `TT` | `T^a wedge T_a` | torsion-torsion term |
+| `REE` | `e^a wedge e^b wedge R_ab` | curvature-derived term |
+| `FULL` | `TT - REE` | full Nieh-Yan density |
 
-| Variant | Definition | Physical Meaning |
-|---------|-----------|-----------------|
-| `TT` | T^a ∧ T_a | Torsion-torsion term |
-| `REE` | e^a ∧ e^b ∧ R_ab | Curvature-derived term |
-| `FULL` | TT - REE | Full Nieh-Yan density |
+**Key API:**
 
-**Key functions:**
+- `NyVariant.TT`
+- `NyVariant.REE`
+- `NyVariant.FULL`
+- `NyVariant.includes_tt`
+- `NyVariant.includes_ree`
 
-- `compute_nieh_yan_TT(T)`: Compute TT term
-- `compute_nieh_yan_REE(R)`: Compute REE term
-- `compute_nieh_yan_full(T, R)`: Full NY density
+The density itself is assembled in the engine pipeline step `E4.10` from the available torsion and curvature tensors.
 
-### ansatz.py
+### `ansatz.py`
 
 Torsion tensor ansatz construction.
 
-**T1: Totally antisymmetric (axial)**
+**Key function:**
 
+- `construct_torsion_tensor(mode, r, eta, V, metric, dim=4, logger=None, frame_convention="legacy_euclidean", signature="euclidean")`: construct `T^a_{bc}` for `AX`, `VT`, or `MX`.
+
+For Lorentzian LZ-native construction, use:
+
+```python
+from sympy import Matrix, symbols
+from dppu.torsion.ansatz import construct_torsion_tensor
+from dppu.torsion.mode import Mode
+
+q = symbols("q", positive=True)
+eta, V = symbols("eta V", real=True)
+metric = Matrix.diag(-1, 1, 1, 1)
+
+T = construct_torsion_tensor(
+    Mode.MX,
+    q,
+    eta,
+    V,
+    metric,
+    dim=4,
+    frame_convention="lz_native",
+    signature="lorentzian",
+)
 ```
-T^{ijk} = (2η/r) ε^{ijk}  (i,j,k ∈ {0,1,2})
-```
 
-Exists only in spatial directions, defining the axial vector S^μ:
-```
-S^μ = (1/6) ε^{μνρσ} T_{νρσ}
-```
-
-**T2: Vector trace**
-
-```
-T^{abc} = (1/3)(η^{ac}T^b - η^{ab}T^c)
-T^μ = (0, 0, 0, V)
-```
-
-Exists only in the S¹ direction.
-
-**Key functions:**
-
-- `build_torsion_tensor(mode, eta, V, r)`: Construct T^{abc} from ansatz
-
-### scalar.py
+### `scalar.py`
 
 Torsion scalar computation.
 
-**Torsion scalar T:**
-
-```
-T = T_{abc} T^{abc}
+```text
+T = T_abc T^abc
 ```
 
-## Usage
+## Notes
 
-```python
-from dppu.torsion import Mode, NyVariant, build_torsion_tensor
-
-# Construct torsion tensor
-T = build_torsion_tensor(Mode.MX, eta=-1.0, V=2.0, r=1.0)
-
-# Nieh-Yan density
-from dppu.torsion import compute_nieh_yan_full
-N = compute_nieh_yan_full(T, R)
-```
-
-## Physical Meaning
-
-- **Axial torsion (AX)**: Related to spin-spin interactions
-- **Vector torsion (VT)**: Related to mass generation mechanisms
-- **Mixed mode (MX)**: General setting including both effects
+- `AX` and `VT` are the single-channel active torsion branches.
+- `MX` carries both `eta` and `V`.
+- Lorentzian LZ-native callers should use `signature="lorentzian"` and `frame_convention="lz_native"`.
 
 ## Dependencies
 
-- [utils](../utils/README.md): Levi-Civita symbol
-
-## Related Modules
-
-- [connection](../connection/README.md): Compute contortion from torsion
-- [curvature](../curvature/README.md): REE part of Nieh-Yan term
+- [utils](../utils/README.md): epsilon tensors and symbolic helpers.
+- [engine](../engine/README.md): contortion and EC connection construction.
+- [curvature](../curvature/README.md): curvature data for the `REE` Nieh-Yan term.

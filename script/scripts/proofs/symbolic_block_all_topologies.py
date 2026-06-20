@@ -13,7 +13,7 @@ Date: 2026-02-07
 import sys
 from pathlib import Path
 import sympy as sp
-from sympy import symbols, simplify, S, factor
+from sympy import simplify, S
 from sympy.tensor.array import MutableDenseNDimArray
 import warnings
 
@@ -25,7 +25,7 @@ import time as _time
 _t_start = _time.time()
 
 from dppu.torsion import Mode, NyVariant
-from dppu.topology import UnifiedEngine, DOFConfig
+from dppu.topology import TopologyType, UnifiedEngine, make_config
 
 def levi_civita_4d(i, j, k, l):
     """4D Levi-Civita symbol with epsilon_{0123} = +1."""
@@ -46,7 +46,7 @@ def cd_block(c, d):
         return 'M'
     return 'S'
 
-def analyze_topology(engine_name, topo_name, mode, ny_variant):
+def analyze_topology(topology, topo_name, mode, ny_variant, **config_kwargs):
     """Analyze block structure for one topology."""
     print(f"\n{'=' * 70}")
     print(f"# Topology: {topo_name}")
@@ -54,9 +54,12 @@ def analyze_topology(engine_name, topo_name, mode, ny_variant):
 
     # Build engine
     print(f"Building {topo_name} engine ({mode.value} + {ny_variant.value} mode)...")
-    cfg = DOFConfig.from_engine(engine_name)
-    cfg.torsion_mode = mode
-    cfg.ny_variant = ny_variant
+    cfg = make_config(
+        topology,
+        torsion_mode=mode,
+        ny_variant=ny_variant,
+        **config_kwargs,
+    )
     engine = UnifiedEngine(cfg)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -162,13 +165,15 @@ results = []
 
 # Test all topologies
 topologies = [
-    ('S3S1Engine',   "S^3 x S^1"),
-    ('T3S1Engine',   "T^3 x S^1"),
-    ('Nil3S1Engine', "Nil^3 x S^1"),
+    (TopologyType.S3,   "S^3 x S^1",   {'enable_squash': True}),
+    (TopologyType.T3,   "T^3 x S^1",   {}),
+    (TopologyType.NIL3, "Nil^3 x S^1", {'enable_squash': True}),
 ]
 
-for engine_name, topo_name in topologies:
-    result = analyze_topology(engine_name, topo_name, Mode.MX, NyVariant.FULL)
+for topology, topo_name, config_kwargs in topologies:
+    result = analyze_topology(
+        topology, topo_name, Mode.MX, NyVariant.FULL, **config_kwargs
+    )
     results.append(result)
 
 # Summary

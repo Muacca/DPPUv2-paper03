@@ -16,9 +16,10 @@
 | $G_{\omega\omega}$ | 236.870435 | raw kinetic metric |
 | $G_{\delta\delta}$ | 532.958162 | raw kinetic metric |
 | $G_{\omega\delta}$ | -355.305547 | raw kinetic metric |
-| $H_{\rm phys}$ | 3223.06 | physical spin-1 Hessian |
-| $G_{\rm phys}$ | 769.8286 | physical spin-1 kinetic metric |
-| $\lambda_{\rm phys}$ | 4.1867 | physical generalized eigenvalue |
+| $H_{XX}$ | 3223.06 | spin-1 $X$-block Hessian before auxiliary elimination |
+| $G_{XX}$ | 769.8286 | spin-1 $X$-block kinetic metric |
+| $H_{\rm cross}$ | $24081847/3750 \approx 6421.8$ | physical-auxiliary Hessian cross term |
+| $\lambda_{\rm phys}$ | $\approx -0.4183$ | finite generalized eigenvalue after Schur elimination; tachyonic, non-ghost |
 | $H_{\rm null}$ | 894.845 | auxiliary curvature |
 | $c_\omega$ | 105.28 | $h\omega\omega$ cubic coupling |
 | $c_\delta$ | 1894.96 | $h\delta\delta$ cubic coupling |
@@ -75,7 +76,7 @@ $L$ は安定な質量を持つ通常の scalar 自由度ではなく、 $r$ お
 | variable | classification | numerical anchor | note |
 |---|---|---|---|
 | $q_A$ | spin-2 | $\mu_q^2=48\pi^2$ at $\varepsilon=0$ | final basis |
-| $X_k$ | spin-1 physical | $\lambda_{\rm phys}=4.1867$ | quadratic decoupled |
+| $X_k$ | spin-1 physical | $\lambda_{\rm phys}\approx -0.4183<0$ | quadratic decoupled; tachyonic, non-ghost |
 | $Y_k$ | spin-1 auxiliary | $G\,Y_k=0,\ H_{\rm null}=894.845$ | not gauge |
 | $\eta$ | torsion scalar | AX control parameter | physical input |
 | $V$ | torsion scalar | VT control parameter | physical input |
@@ -204,7 +205,7 @@ ghost/metastable 側についても補助的な可視化は可能であるが、
 本付録の数値表を生成するスクリプトは以下の通りである。
 
 - `paper03/spin0_torsion_cross_hessian.py`：spin-2 × torsion、radial × torsion の cross-Hessian、torsion block $H^{(\eta,V)}$（H.2 対応）
-- `paper03/spin0_reta_block_eigenvalues.py`：$(r,\eta)$ 連立ブロックの固有値解析（H.3 対応）
+- `paper03/spin0_reta_block_eigenvalues.py`： $(r,\eta)$ 連立ブロックの固有値解析（H.3 対応）
 - `paper03/spin0_rLetaV_hessian.py`：4×4 Hessian $H^{(r,L,\eta,V)}$（H.2A 対応）
 
 ### H.7 Remarks

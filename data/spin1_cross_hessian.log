@@ -56,7 +56,7 @@ Max |cross-Hessian| over all 21 components = 0.0000e+00
 
 Case A: all mixed Hessians at zero level
   physical spin-1 mode X_k decouples from other sectors at quadratic order
-  λ_phys = 4.1867 > 0 indicates local stability within spin-1 sector
+  spin-1 stability is fixed by the separate Schur-reduced X-Y block
 
 ── Numerical details ──
          M(ε ,X0):   0.0000e+00
@@ -64,7 +64,3 @@ Case A: all mixed Hessians at zero level
          M(ε ,X2):   0.0000e+00
          M(s ,X0):   0.0000e+00
          M(s ,X1):   0.0000e+00
-
-Computation time: 0.0s
-
-*Script: scripts/paper03/spin1_cross_hessian.py

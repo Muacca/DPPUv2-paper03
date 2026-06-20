@@ -78,14 +78,14 @@ def compute_torsion_pseudoscalar(
         Torsion pseudoscalar as SymPy expression
     """
     from sympy import Rational
-    from ..utils.levi_civita import levi_civita_4d
+    from ..utils.epsilon import epsilon_4d
 
     T_pseudo = S.Zero
     for a in range(dim):
         for b in range(dim):
             for c in range(dim):
                 for d in range(dim):
-                    eps = levi_civita_4d(a, b, c, d)
+                    eps = epsilon_4d(a, b, c, d)
                     if eps != 0:
                         sum_term = S.Zero
                         for e in range(dim):

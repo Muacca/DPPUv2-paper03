@@ -102,6 +102,6 @@ Summary: closed-form spin-2 diagonal Hessians
     ε_c−  (T₂ soft, H₂₂=0):  2a⁶=1   →  ε_c− = 1/√2 − 1 = -0.292893  (exact)
     ε_c+  (T₁ soft, H₁₁=0):  5a⁶=11  →  ε_c+ = √(11/5) − 1 = 0.483240  (exact)
 
-Total computation time: 28.0s
+Total computation time: 63.3s
 
 *Script: scripts/paper03/spin2_diagonal_hessians.py

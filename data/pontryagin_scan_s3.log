@@ -1,3 +1,5 @@
+C:\dev\DPPU\20_paper\20_arXiv\40_第三論文_v2\script\scripts\paper03\pontryagin_scan_s3.py:69: DeprecationWarning: compute_hodge_dual is non-metric-aware (uses epsilon_symbol only). Use hodge_dual_2form() for Lorentzian computations.
+  R_dual = compute_hodge_dual(R_abcd)
 =================================================================
 S³ isotropic twist — Pontryagin & V_eff scan (App B.7)
 =================================================================
@@ -6,13 +8,13 @@ S³ isotropic twist — Pontryagin & V_eff scan (App B.7)
 S³ isotropic twist scan  (r=1.0, η=-2.0)
 =================================================================
 
-[Step 1] Running TwistS3S1Engine symbolically...
-  Done (0.4s)
+[Step 1] Running S3 isotropic twist engine symbolically...
+  Done (0.3s)
   V_eff = (-6144*pi**2*L**5*alpha*kappa**2*omega**4 + 24*pi**2*L**3*omega**2*r**4 + 6*pi**2*L*eta**2*r**6 - 24*pi**2*L*r**6)/(kappa**2*r**5)
 
 [Step 2] Lambdifying R_{abcd} and V_eff...
   R argument order: ['r', 'omega', 'eta', 'L', 'kappa', 'theta_NY', 'alpha']
-  Done (0.0s)
+  Done (0.1s)
 
 [Step 3] P(ω) scan (r=1.0, η=-2.0)
   ω ∈ [-1.0, 1.0], 41 points
@@ -30,10 +32,10 @@ S³ isotropic twist scan  (r=1.0, η=-2.0)
      1.000      0.000000e+00
 
 [Step 4] ω → -ω symmetry check
-  max|P| = 5.53e-15 → P is numerically zero; odd/even test skipped
+  max|P| = 7.07e-14 → P is numerically zero; odd/even test skipped
 
 [Step 5] Polynomial order fit of P(ω) (P ≈ c₁ω + c₃ω³)
-  max|P| = 5.53e-15 → P is numerically zero; polynomial fit skipped
+  max|P| = 7.07e-14 → P is numerically zero; polynomial fit skipped
 
 [Step 6] Scan of m²(r) = ∂²V_eff/∂ω²|_{ω=0}
        r           m²(r)     stability
@@ -54,7 +56,7 @@ Done condition check (plan v5.0 §4.5)
   [N/A (P≡0)] ω → -ω symmetry (odd function property) verified
   [OK] sign of m²(r*) computed
 
-  max|P(ω)|: 5.5280e-15
+  max|P(ω)|: 7.0742e-14
 
 =================================================================
 Overall summary
@@ -62,8 +64,4 @@ Overall summary
 
      r       η        max|P|            c₁    odd?
   ------  ------  ------------  ------------  ------
-    1.00   -2.00    5.5280e-15           N/A      NO
-
-Computation time: 0.5s
-
-*Script: scripts/paper03/pontryagin_scan_s3.py
+    1.00   -2.00    7.0742e-14           N/A      NO

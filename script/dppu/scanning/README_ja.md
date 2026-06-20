@@ -2,11 +2,13 @@
 
 ⇒ [English](README.md)
 
-パラメータ空間の走査とPhase1統合を担当するモジュール群。
+パラメータ空間の走査と scan-result integration を担当するモジュール群。
 
 ## 概要
 
-(V, η, θ)パラメータ空間のスキャン、Phase1結果の読み込み・補間、SD診断との統合を提供。
+(V, eta, theta) パラメータ空間のスキャン、scan result の読み込み・補間、SD 診断との統合を提供。
+
+この layer は現在の実装では `S3/T3/Nil3` scans に接続されています。`Sol3` support は topology layer にはありますが、この scan helper 群には未統合です。
 
 ## モジュール
 
@@ -46,31 +48,17 @@ results = run_scan(
 | delta_V | バリア高さまたは井戸深さ |
 | stability_type | type-I, type-II, type-III |
 
-### potentials.py
+### scan_results_loader.py
 
-トポロジー別の有効ポテンシャル関数。
+スキャン結果の読み込みと補間。
 
-**POTENTIAL_FUNCTIONS辞書:**
-
-```python
-from dppu.scanning import POTENTIAL_FUNCTIONS
-
-# トポロジー別ポテンシャル取得
-V_func = POTENTIAL_FUNCTIONS['S3_FULL']
-V_value = V_func(r=1.0, eta=-1.0, V_param=2.0, theta=0.0)
-```
-
-### phase1_loader.py
-
-Phase1スキャン結果の読み込みと補間。
-
-**Phase1ResultsLoader:**
+**ScanResultsLoader:**
 
 ```python
-from dppu.scanning import Phase1ResultsLoader
+from dppu.scanning import ScanResultsLoader
 
 # CSVから読み込み
-loader = Phase1ResultsLoader.from_csv(
+loader = ScanResultsLoader.from_csv(
     'output/dppu_scan_S3_FULL.csv',
     theta_fixed=0.0
 )
@@ -92,17 +80,17 @@ phase = loader.get_phase_type(V=2.0, eta=-1.0)
 - `regular`: 規則グリッド → RegularGridInterpolator使用
 - `irregular`: 不規則グリッド → LinearNDInterpolator使用
 
-### sd_audit.py
+### scan_sd_diagnostics.py
 
-SD診断とPhase1の統合。
+SD診断とスキャン結果の統合。
 
-**SDDiagnosticsWithPhase1:**
+**SDScanDiagnostics:**
 
 ```python
-from dppu.scanning import SDDiagnosticsWithPhase1, Phase1ResultsLoader
+from dppu.scanning import SDScanDiagnostics, ScanResultsLoader
 
-loader = Phase1ResultsLoader.from_csv('scan.csv', theta_fixed=0.0)
-sd_diag = SDDiagnosticsWithPhase1(engine, phase1_loader=loader)
+loader = ScanResultsLoader.from_csv('scan.csv', theta_fixed=0.0)
+sd_diag = SDScanDiagnostics(engine, scan_loader=loader)
 
 # r*でのSD評価
 result = sd_diag.evaluate_at_rstar(V=2.0, eta=-1.0, theta_NY=0.0)
@@ -110,7 +98,7 @@ print(f"r* = {result.r_star:.3f}")
 print(f"SD residual = {result.sd_residual:.4f}")
 
 # (η, V)平面のスキャン
-results = sd_diag.scan_with_phase1_rstar(
+results = sd_diag.scan_with_rstar(
     eta_range=(-5, 3, 100),
     V_range=(0.5, 5, 50),
     theta_NY=0.0
@@ -136,23 +124,40 @@ class SDScanResult:
     is_nontrivial_asd: bool
 ```
 
+### stability.py
+
+有効ポテンシャル極小点の安定性分類。
+
+**安定性タイプ:**
+
+| タイプ | 条件 | 物理的解釈 |
+|--------|------|-----------|
+| type-I | V''(r*) > 0, V(r*) > 0 | 準安定（バリアあり） |
+| type-II | V''(r*) > 0, V(r*) < 0 | 真の極小（真空より低い） |
+| type-III | 極小なし or V''(r*) ≤ 0 | 不安定 |
+
+**主要関数:**
+
+- `classify_stability(V, r_star)`: 安定性を分類
+- `StabilityResult`: 分類結果のデータクラス
+
+```python
+from dppu.scanning import classify_stability
+
+result = classify_stability(V_eff, r_star=1.5)
+print(f"Type: {result.stability_type}")
+print(f"r* = {result.r_star:.3f}")
+```
+
 ## ワークフロー
 
-### Phase1 → Phase2 統合
+### Scan -> SD Diagnostics Integration
 
-1. **Phase1**: パラメータスキャンで安定点r*(V, η)を特定
-2. **Phase2**: r*でのSD診断を実行
+1. **Scan**: パラメータスキャンで安定点 `r*(V, eta)` を特定
+2. **Diagnostics**: `r*` での SD 診断を実行
 3. **分析**: SD曲線と安定領域の交差を調査
 
-```bash
-# Phase1: パラメータスキャン
-python scripts/run_parameter_scan.py --output-dir output/
-
-# Phase2: SD解析
-python scripts/run_sd_analysis.py \
-    --phase1-csv output/dppu_scan_S3_FULL.csv \
-    --theta 0.0
-```
+Project-specific driver script から Python APIs（`run_scan`, `ScanResultsLoader`, `SDScanDiagnostics`）を呼び出して使います。
 
 ## 依存関係
 
@@ -163,4 +168,4 @@ python scripts/run_sd_analysis.py \
 
 ## 関連モジュール
 
-- [action](../action/README_ja.md): 安定性分類
+- [action](../action/README_ja.md): ラグランジアンとポテンシャル計算

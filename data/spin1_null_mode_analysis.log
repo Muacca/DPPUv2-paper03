@@ -1,184 +1,33 @@
-=================================================================
-Null mode interpretation / physical subspace analysis (App E.6)
-=================================================================
-
-=================================================================
-§1. Eigendecomposition of G and null mode extraction
-=================================================================
-
-[Eigenvalues of G (6×6)]
-  g_0 =      -0.0000
-  g_1 =      -0.0000
-  g_2 =      -0.0000
-  g_3 =     769.8286
-  g_4 =     769.8286
-  g_5 =     769.8286
-
-  Zero eigenvalue indices (|g| < 7.70e-04): [0, 1, 2]
-  Physical eigenvalue indices: [3, 4, 5]
-
-[Zero eigenvalue directions of G (null modes)]
-
-  g_0 = -7.69e-08, eigenvector:
-        omega1: +0.778284
-        omega2: -0.281237
-        omega3: -0.086534
-        delta0: +0.518856
-        delta1: -0.187491
-        delta2: -0.057690
-
-  g_1 = -7.69e-08, eigenvector:
-        omega2: +0.244694
-        omega3: -0.795256
-        delta1: +0.163130
-        delta2: -0.530171
-
-  g_2 = -7.69e-08, eigenvector:
-        omega1: +0.294249
-        omega2: +0.743867
-        omega3: +0.228882
-        delta0: +0.196166
-        delta1: +0.495912
-        delta2: +0.152588
-
-[Canonical null basis (per-axis): n_k = (v_omega_k=1, v_delta_k=2L/r0) for k=0,1,2]
-  (eigh returns an arbitrary orthogonal basis within the null space; the following is the physically natural basis)
-  n_0 = (omega1=1, delta0=0.6667): |G n_0| = 1.27e-04
-  n_1 = (omega2=1, delta1=0.6667): |G n_1| = 1.27e-04
-  n_2 = (omega3=1, delta2=0.6667): |G n_2| = 1.27e-04
-  (For each k: C^3_{3k} = 2/r0 - 0.6667/L = 0 holds)
-
-=================================================================
-§1b. Physical content of null mode (compute delta e^a)
-=================================================================
-
-  r0 = 3.0, L = 1.0
-  Null direction: (v_omega_k, v_delta_k) = (1.0000, 0.6667)
-  C^3_{3k} velocity term = 2*v_omega/r0 - v_delta/L = 0.666667 - 0.666667 = 0.00e+00 [OK]
-
-  [Analytic computation of delta e^a (for axis k=0)]
-  Coframe at isotropic point (omega=delta=epsilon=s=0, r=r0, L=L):
-    e^0 = (r0/2) sigma^0
-    e^1 = (r0/2) sigma^1
-    e^2 = (r0/2) sigma^2
-    e^3 = L dtau
-
-  Variation along null direction: (delta_omega1, delta_delta0) = (1, 2L/r0) = (1, 2/3)
-
-  Change from twist (delta_omega1 = 1):
-    delta e^3 = L * sigma^0 = (2L/r0) e^0 = +0.6667 e^0
-    delta e^0 = 0
-
-  Change from mixing (delta_delta0 = 0.6667):
-    delta e^0 = +delta_delta0 * e^3 = +0.6667 e^3
-    delta e^3 = -delta_delta0 * e^0 = -0.6667 e^0
-
-  [Total delta e^a (null direction)]
-    delta e^0 = +0.6667 e^3 = +0.6667 dtau component
-    delta e^3 = +0.000000 e^0  (= twist + mixing = +0.6667 + -0.6667)
-    delta e^1 = delta e^2 = 0
-
-  [Physical metric change delta g_{mu nu}]
-    delta g_{tau, sigma^0} = (delta e^0)_tau * (e^0)_{sigma^0}
-                             = 0.6667 * 1.0 * 1.5000
-                             = 1.0000   (non-zero!)
-    delta g_{sigma^0, tau} = 1.0000  (symmetric)
-    Others: = 0
-
-  delta e^3 = 0 → g_{3,3} component does not change
-
-  [Determination]
-    delta g_{mu nu} != 0  →  null mode is not a pure gauge transformation
-    However delta e^3 = 0  →  cannot be called gauge in terms of torsion/twist
-    → Case B candidate: non-dynamical auxiliary (non-propagating direction with zero kinetic term)
-=================================================================
-§2. Projection onto physical subspace and lambda_phys
-=================================================================
-
-  Physical subspace dimension: 3
-  G eigenvalues of physical directions: [769.82859708 769.82859708 769.82859708]
-
-[Eigenvectors of physical directions (positive eigenvalue directions of G)]
-  u_0 (g=769.83): +0.4139*omega2, +0.3692*omega3, -0.6209*delta1, -0.5539*delta2
-  u_1 (g=769.83): +0.3692*omega2, -0.4139*omega3, -0.5539*delta1, +0.6209*delta2
-  u_2 (g=769.83): -0.5547*omega1, +0.8321*delta0
-
-[H_phys (3×3, projected Hessian)]
-[[3223.0588   -0.       -0.    ]
- [  -0.     3223.0588   -0.    ]
- [  -0.       -0.     3223.0588]]
-
-[G_phys (3×3, projected metric, should be diagonal)]
-[[769.8286  -0.      -0.    ]
- [ -0.     769.8286  -0.    ]
- [ -0.      -0.     769.8286]]
-
-  G_phys eigenvalues: [769.8286 769.8286 769.8286]
-  G_phys positive definite: YES
-
-[Generalized eigenvalues lambda_phys = H_phys v / G_phys v]
-  lambda_0 =     4.1867  (> 0: stable direction)
-  lambda_1 =     4.1867  (> 0: stable direction)
-  lambda_2 =     4.1867  (> 0: stable direction)
-
-[Manual verification: physical direction u = (-2, 3) for 1-axis (k=0)]
-  u = (-2, 3),  u^T H u = 41899.7699,  u^T G u = 10007.7718
-  lambda_phys (manual) = 41899.7699 / 10007.7718 = 4.186723
-
-=================================================================
-§3. Dimensional and normalization interpretation of lambda_phys
-=================================================================
-  [Known mass^2 values (same conventions)]
-  spin-2 isotropic point mu^2    = 48 pi^2 ~= 473.7410
-  spin-1 omega  mu^2   = 52.6379
-  spin-1 delta  mu^2   = 3789.9295
-  lambda_phys          = 4.1867
-
-  Ratio lambda_phys / mu^2_spin2 = 0.008838
-  Ratio lambda_phys / mu^2_omega = 0.079538
-
-  [Basis rescaling invariance]
-  For omega_k → c * omega_k, delta_k → c * delta_k:
-  H_ij → H_ij / c^2, G_ij → G_ij / c^2
-  → lambda_phys = (u^T H u / c^2) / (u^T G u / c^2) = u^T H u / u^T G u
-  → lambda_phys is invariant under isotropic rescaling
-
-  Anisotropic scaling: omega → a*omega, delta → b*delta:
-  a=2.0, b=0.5: lambda_phys (manual) = 1.8318
-  → lambda_phys changes under anisotropic scaling (4.1867 → 1.8318)
-
-=================================================================
-§4. Interpretation of omega-delta mixing in physical basis
-=================================================================
-
-  Physical basis X (propagating direction):  (-0.5547, +0.8321)
-    omega component = -0.5547, delta component = +0.8321
-    |delta/omega| = 1.5000  (large delta component)
-
-  Null basis Y (non-propagating direction): (+0.8321, +0.5547)
-    omega component = +0.8321, delta component = +0.5547
-    |delta/omega| = 0.6667  (omega dominant)
-=================================================================
-§5. Summary of determinations
-=================================================================
-
-  [1] Null mode of G
-  Physical subspace dimension: 3
-  Null eigenvector: Y_k ∝ (omega_k, delta_k) = (1, 2L/r0) = (1, 0.6667)
-    → C^3_{3k} = 2*v_omega_k/r0 - v_delta_k/L = 0.00e+00  (= 0: kinetic term zero)
-    → delta g_{mu nu} != 0  (physically distinct configuration)
-
-  [2] Physical subspace
-  Physical basis: X_k = (-2 omega_k + 3 delta_k)/sqrt(13)  (k=0,1,2)
-  lambda_phys = 4.1867  > 0 [OK]  (3-fold degenerate)
-
-  [3] Mass^2 comparison
-  mu^2_omega = 52.6379,  mu^2_delta = 3789.9295,  lambda_phys = 4.1867
-
-=================================================================
-Done
-=================================================================
-
-Computation time: 0.2s
-
-*Script: scripts/paper03/spin1_null_mode_analysis.py
+{
+  "script": "C:\\dev\\DPPU\\20_paper\\20_arXiv\\40_第三論文_v2\\script\\scripts\\paper03\\spin1_null_mode_analysis.py",
+  "status": "PASS",
+  "exit_label": "PAPER03_SPIN1_NULL_AUXILIARY_SCHUR_PASS",
+  "null_direction_Y": [
+    "1",
+    "2/3"
+  ],
+  "non_null_coordinate_X": [
+    "-2",
+    "3"
+  ],
+  "G_YY": "-1/9000000",
+  "H_YY": "80536063/90000",
+  "H_XY": "24081847/3750",
+  "lambda_phys_schur": "-0.418299497181",
+  "lambda_phys_display": "-0.4183",
+  "corrected_mode_unit": [
+    "0.98161543",
+    "0.19086943"
+  ],
+  "corrected_kinetic_norm": "114.516883926",
+  "interpretation": "Y is a second-class non-dynamical auxiliary; the finite spin-1 eigenvalue is obtained only after Schur elimination.",
+  "checks": {
+    "G_null_zero_roundoff": true,
+    "H_null_positive": true,
+    "metric_variation_nonzero": true,
+    "lambda_eff_diverges": true,
+    "H_XY_nonzero": true,
+    "schur_lambda_negative": true,
+    "kinetic_norm_positive": true
+  }
+}

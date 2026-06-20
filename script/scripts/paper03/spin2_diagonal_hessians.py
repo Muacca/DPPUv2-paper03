@@ -66,6 +66,8 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from dppu.utils.tee_logger import setup_log, teardown_log
+setup_log(__file__, log_dir='output')
 
 import numpy as np
 from sympy import (
@@ -293,14 +295,22 @@ print("[3] Sign calibration and Schur degeneracy")
 print()
 
 # Reference: FA engine at isotropic point
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
-cfg = DOFConfig.from_engine('FullyAnisotropicS3S1Engine')
-cfg.torsion_mode = Mode.MX
-cfg.ny_variant   = NyVariant.FULL
+cfg = make_config(
+    TopologyType.S3,
+    enable_squash=True,
+    enable_shear=True,
+    fiber_mode=FiberMode.TWIST,
+    isotropic_twist=False,
+    torsion_mode=Mode.MX,
+    ny_variant=NyVariant.FULL,
+    weyl_source=CurvatureSource.LC,
+    riemann_source=CurvatureSource.LC,
+)
 eng_ref = UnifiedEngine(cfg, NullLogger())
 eng_ref.run()
 
@@ -517,3 +527,4 @@ print()
 print(f"Total computation time: {time.time() - t0_total:.1f}s")
 print()
 print("*Script: scripts/paper03/spin2_diagonal_hessians.py")
+teardown_log()

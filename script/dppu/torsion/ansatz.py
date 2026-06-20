@@ -29,7 +29,7 @@ from sympy import S, Rational, cancel
 from sympy.tensor.array import MutableDenseNDimArray
 
 from .mode import Mode
-from ..utils.levi_civita import epsilon_symbol
+from ..utils.epsilon import epsilon_3d
 
 
 def construct_torsion_tensor(
@@ -39,7 +39,9 @@ def construct_torsion_tensor(
     V: Any,
     metric: Any,
     dim: int = 4,
-    logger: Optional[Any] = None
+    logger: Optional[Any] = None,
+    frame_convention: str = "legacy_euclidean",
+    signature: str = "euclidean",
 ) -> MutableDenseNDimArray:
     """
     Construct torsion tensor T_{abc} based on mode.
@@ -52,6 +54,8 @@ def construct_torsion_tensor(
         metric: Frame metric η_{ab}
         dim: Dimension (default 4)
         logger: Optional logger
+        frame_convention: "legacy_euclidean" or "lz_native"
+        signature: "euclidean" or "lorentzian"
 
     Returns:
         Torsion tensor T_{abc} as MutableDenseNDimArray
@@ -60,7 +64,12 @@ def construct_torsion_tensor(
         - For AX mode: Only T1 component is non-zero
         - For VT mode: Only T2 component is non-zero
         - For MX mode: Both T1 and T2 are non-zero
+        - For signature="lorentzian" + frame_convention="lz_native":
+            AX spatial block is {1,2,3}; VT trace vector is at time index 0.
     """
+    if signature == "lorentzian" and frame_convention == "lz_native":
+        return _construct_torsion_tensor_lz_native(mode, r, eta, V, metric, dim, logger)
+
     if logger:
         logger.info(f"Constructing Torsion T_abc (Mode: {mode.value})...")
 
@@ -100,7 +109,7 @@ def _add_axial_torsion(
     dim: int
 ) -> MutableDenseNDimArray:
     """
-    Add axial (T1) torsion component.
+    Add axial (T1) torsion component (legacy_euclidean convention).
 
     Formula for M³×S¹:
         T_{ijk} = (2η/r) ε_{ijk} for i,j,k ∈ {0,1,2}
@@ -110,7 +119,7 @@ def _add_axial_torsion(
     for i in range(3):
         for j in range(3):
             for k in range(3):
-                eps = epsilon_symbol(i, j, k)
+                eps = epsilon_3d(i, j, k)
                 if eps != 0:
                     T[i, j, k] = T[i, j, k] + 2 * eta * eps / r
 
@@ -179,6 +188,106 @@ def extract_torsion_parameters(
         V_param = S.Zero
 
     return {'eta': eta, 'V': V_param}
+
+
+# ---------------------------------------------------------------------------
+# LZ-native torsion ansatz (signature="lorentzian", frame_convention="lz_native")
+# ---------------------------------------------------------------------------
+
+def _construct_torsion_tensor_lz_native(
+    mode: Mode,
+    r: Any,
+    eta: Any,
+    V: Any,
+    metric: Any,
+    dim: int,
+    logger: Optional[Any] = None,
+) -> MutableDenseNDimArray:
+    """
+    Lorentzian DPPU-LZ native torsion ansatz.
+
+    Index convention:
+        time index   = 0
+        spatial indices = {1, 2, 3}
+
+    AX:  T_{ijk} = (2η/r) ε_{i-1,j-1,k-1}  for i,j,k ∈ {1,2,3}
+    VT:  T_{abc} = (1/3)(g_{ac} V_b - g_{ab} V_c)  with V_a = V δ^0_a
+    """
+    if logger:
+        logger.info(f"Constructing Torsion T_abc [LZ-native] (Mode: {mode.value})...")
+
+    T_tensor = MutableDenseNDimArray.zeros(dim, dim, dim)
+
+    if mode.has_axial and eta != S.Zero:
+        if logger:
+            logger.info("  Adding T1 (Axial, LZ-native spatial {1,2,3})...")
+        T_tensor = _add_axial_torsion_lz_native(T_tensor, r, eta, dim)
+
+    if mode.has_vector_trace and V != S.Zero:
+        if logger:
+            logger.info("  Adding T2 (Vector Trace, LZ-native time index 0)...")
+        T_tensor = _add_vector_trace_torsion_lz_native(T_tensor, V, metric, dim)
+
+    if logger:
+        nonzero = sum(
+            1 for a in range(dim)
+            for b in range(dim)
+            for c in range(dim)
+            if T_tensor[a, b, c] != S.Zero
+        )
+        logger.info(f"  Non-zero torsion components: {nonzero}")
+        logger.success("Torsion constructed [LZ-native]")
+
+    return T_tensor
+
+
+def _add_axial_torsion_lz_native(
+    T: MutableDenseNDimArray,
+    r: Any,
+    eta: Any,
+    dim: int,
+) -> MutableDenseNDimArray:
+    """
+    Add axial (T1) torsion component in LZ-native convention.
+
+    Formula:
+        T_{ijk} = (2η/r) ε_{i-1,j-1,k-1}  for i,j,k ∈ {1,2,3}
+
+    Spatial block {1,2,3} maps to epsilon_3d with 0-indexed offset.
+    """
+    for i in range(1, 4):
+        for j in range(1, 4):
+            for k in range(1, 4):
+                eps = epsilon_3d(i - 1, j - 1, k - 1)
+                if eps != 0:
+                    T[i, j, k] = T[i, j, k] + 2 * eta * eps / r
+    return T
+
+
+def _add_vector_trace_torsion_lz_native(
+    T: MutableDenseNDimArray,
+    V: Any,
+    metric: Any,
+    dim: int,
+) -> MutableDenseNDimArray:
+    """
+    Add vector-trace (T2) torsion component in LZ-native convention.
+
+    Formula:
+        T_{abc} = (1/3)(g_{ac} V_b - g_{ab} V_c)
+
+    V_a = V · δ^0_a  (time component only in LZ-native).
+    """
+    T_vec = [V, S.Zero, S.Zero, S.Zero]
+
+    for a in range(dim):
+        for b in range(dim):
+            for c in range(dim):
+                val = (metric[a, c] * T_vec[b] - metric[a, b] * T_vec[c]) * Rational(1, 3)
+                if val != S.Zero:
+                    T[a, b, c] = T[a, b, c] + val
+
+    return T
 
 
 def torsion_trace(

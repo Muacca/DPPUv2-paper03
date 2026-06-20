@@ -24,12 +24,12 @@ import time
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 
-from sympy import S, simplify, symbols, Matrix, factor, cancel
+from sympy import S, simplify, symbols, Matrix
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 
 # ===========================================================================
@@ -42,15 +42,21 @@ def task1_consistency_check():
     """
     print("=" * 65)
     print("  Task 1: Consistency check")
-    print("  VectorTwist(ω₁=ω₂=ω₃=ω) == TwistS3S1Engine(ω) ?")
+    print("  S3 vector twist with omega1=omega2=omega3 matches isotropic twist?")
     print("=" * 65)
 
     # Isotropic twist engine (reference)
     print("\n  [Isotropic twist] Running isotropic twist engine...")
     t0 = time.time()
-    _cfg_eng_iso = DOFConfig.from_engine('TwistS3S1Engine')
-    _cfg_eng_iso.torsion_mode = Mode.AX
-    _cfg_eng_iso.ny_variant = NyVariant.FULL
+    _cfg_eng_iso = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     eng_iso = UnifiedEngine(_cfg_eng_iso, NullLogger())
     eng_iso.run()
     print(f"  Done ({time.time()-t0:.1f}s)")
@@ -58,9 +64,15 @@ def task1_consistency_check():
     # Vector twist engine
     print("\n  [Vector Twist] Running general vector twist engine...")
     t0 = time.time()
-    _cfg_eng_vec = DOFConfig.from_engine('VectorTwistS3S1Engine')
-    _cfg_eng_vec.torsion_mode = Mode.AX
-    _cfg_eng_vec.ny_variant = NyVariant.FULL
+    _cfg_eng_vec = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=False,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     eng_vec = UnifiedEngine(_cfg_eng_vec, NullLogger())
     eng_vec.run()
     print(f"  Done ({time.time()-t0:.1f}s)")
@@ -126,7 +138,7 @@ def task2_compute_P(eng_vec):
     print("=" * 65)
 
     # Compute Pontryagin density directly from Riemann tensor
-    R = eng_vec.data['riemann_abcd']
+    R = eng_vec.data['riemann_abcd_LC']
     vol = eng_vec.data.get('total_volume', S.One)
 
     print("\n  Recomputing P from Riemann tensor...")
@@ -236,7 +248,7 @@ def task3_veff_analysis(eng_vec):
     I2 = symbols('I2', real=True)
     # Check if V_eff can be expressed via ω₁²+ω₂²+ω₃² = I₂
     # Evaluate V at ω₁=ω₂=ω₃=√(I₂/3)
-    from sympy import sqrt, Rational
+    from sympy import sqrt
     w = sqrt(I2 / 3)
     V_iso_check = simplify(V.subs({omega1: w, omega2: w, omega3: w}))
     print(f"  V(√(I₂/3), √(I₂/3), √(I₂/3)) = {V_iso_check}")
@@ -256,7 +268,7 @@ def task4_pfaffian(eng_vec):
     print("  Task 4: Pfaffian verification (decomposability)")
     print("=" * 65)
 
-    R = eng_vec.data['riemann_abcd']
+    R = eng_vec.data['riemann_abcd_LC']
 
     print(f"\n  {'(c,d)':>6}  {'type':>4}  {'Pf':>6}  {'Rank':>6}  {'decomp?':>10}")
     print(f"  {'-'*45}")
@@ -309,9 +321,15 @@ def task5_nil3():
     print("=" * 65)
 
 
-    _cfg_eng_nil3 = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_eng_nil3.torsion_mode = Mode.AX
-    _cfg_eng_nil3.ny_variant = NyVariant.FULL
+    _cfg_eng_nil3 = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     eng_nil3 = UnifiedEngine(_cfg_eng_nil3, NullLogger())
     eng_nil3.run()
 
@@ -332,7 +350,7 @@ def task5_nil3():
     print(f"    contribute to structure constants (confirms prediction of instruction Task 5)")
 
     # Also verify P = 0 for Nil³
-    R = eng_nil3.data['riemann_abcd']
+    R = eng_nil3.data['riemann_abcd_LC']
     P_nil3 = S.Zero
     for c in range(4):
         for d in range(4):
@@ -390,8 +408,9 @@ def main():
 
 
 if __name__ == '__main__':
-    _t_start = time.time()
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
-    print(f"\nComputation time: {time.time() - _t_start:.1f}s")
-    print()
-    print("*Script: scripts/paper03/pontryagin_anisotropic_twist.py")
+    teardown_log()

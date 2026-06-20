@@ -18,10 +18,7 @@ Date: 2026-02-07
 
 import time as _time
 import sympy as sp
-from sympy import symbols, sqrt, simplify, expand, Rational, S
-from sympy.tensor.array import MutableDenseNDimArray
-import numpy as np
-from itertools import product
+from sympy import simplify, expand, Rational, S
 
 _t_start = _time.time()
 
@@ -368,15 +365,18 @@ sys.path.insert(0, str(PHASE2_DIR))
 
 try:
     from dppu.torsion import Mode, NyVariant
-    from dppu.topology import UnifiedEngine, DOFConfig
+    from dppu.topology import TopologyType, UnifiedEngine, make_config
     from dppu.curvature import SDExtensionMixin
     import warnings
 
     # Build engine
     print("Building S3xS1 engine (MX + FULL mode)...")
-    _cfg = DOFConfig.from_engine('S3S1Engine')
-    _cfg.torsion_mode = Mode.MX
-    _cfg.ny_variant = NyVariant.FULL
+    _cfg = make_config(
+        TopologyType.S3,
+        enable_squash=True,
+        torsion_mode=Mode.MX,
+        ny_variant=NyVariant.FULL,
+    )
     engine = UnifiedEngine(_cfg)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")

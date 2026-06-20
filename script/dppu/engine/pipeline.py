@@ -15,11 +15,11 @@ import numpy as np
 
 from ..torsion.mode import Mode
 from ..torsion.nieh_yan import NyVariant
-from ..utils.levi_civita import epsilon_symbol, levi_civita_4d
+from ..utils.epsilon import epsilon_3d, epsilon_4d
 from ..curvature.riemann import (
     verify_antisymmetry_strict, compute_riemann_tensor, lower_first_index
 )
-from .logger import NullLogger
+from ..utils.logger import NullLogger
 from .checkpoint import CheckpointManager
 
 
@@ -39,6 +39,8 @@ class BaseFrameEngine:
         logger: Optional[Any] = None,
         checkpoint_mgr: Optional[CheckpointManager] = None,
         skip_antisymmetry_check: bool = False,
+        weyl_source: Any = "ec",
+        riemann_source: Any = "ec",
     ):
         if not isinstance(mode, Mode):
             raise TypeError(f"mode must be Mode enum, got {type(mode)}")
@@ -50,6 +52,8 @@ class BaseFrameEngine:
         self.logger = logger or NullLogger()
         self.ckpt = checkpoint_mgr
         self.skip_antisymmetry_check = skip_antisymmetry_check
+        self.weyl_source = self._normalize_curvature_source(weyl_source)
+        self.riemann_source = self._normalize_curvature_source(riemann_source)
         self.data: Dict[str, Any] = {}
 
         self.steps = [
@@ -63,6 +67,7 @@ class BaseFrameEngine:
             ("E4.6", self.step_E4_6_ec_connection_frame),
             ("E4.7", self.step_E4_7_riemann_tensor_frame),
             ("E4.8", self.step_E4_8_ricci_scalar_frame),
+            ("E4.8b", self.step_E4_7b_weyl_ec),
             ("E4.9", self.step_E4_9_torsion_scalar_frame),
             ("E4.10", self.step_E4_10_nieh_yan_frame),
             ("E4.11", self.step_E4_11_lagrangian),
@@ -70,6 +75,17 @@ class BaseFrameEngine:
             ("E4.13", self.step_E4_13_effective_potential),
             ("E4.15", self.step_E4_15_summary),
         ]
+
+    @staticmethod
+    def _normalize_curvature_source(source: Any) -> str:
+        """Normalize LC/EC curvature source enums or strings to lowercase keys."""
+        value = getattr(source, "value", source)
+        key = str(value).strip().lower()
+        if key not in {"lc", "ec"}:
+            raise ValueError(
+                f"curvature source must be 'lc' or 'ec', got {source!r}"
+            )
+        return key
 
     def run(self, start_step: str = "E4.1"):
         """Execute computation pipeline."""
@@ -106,8 +122,8 @@ class BaseFrameEngine:
 
     def step_E4_3_christoffel_frame(self):
         """Compute LC connection via Koszul formula."""
-        from ..connection.levi_civita import compute_christoffel_frame
-        from ..geometry.metric import verify_metric_compatibility
+        from .levi_civita import compute_christoffel_frame
+        from .metric import verify_metric_compatibility
 
         dim = self.data['dim']
         C = self.data['structure_constants']
@@ -183,24 +199,29 @@ class BaseFrameEngine:
         eta = self.data['params']['eta']
         V = self.data['params']['V']
         metric = self.data['metric_frame']
+        fc  = getattr(self.config, 'frame_convention', 'legacy_euclidean')
+        sig = getattr(self.config, 'signature', 'euclidean')
 
         T = construct_torsion_tensor(
-            self.mode, r, eta, V, metric, dim, self.logger
+            self.mode, r, eta, V, metric, dim, self.logger,
+            frame_convention=fc,
+            signature=sig,
         )
         self.data['torsion_tensor'] = T
 
     def step_E4_5_contortion_frame(self):
         """Compute contortion from torsion."""
-        from ..connection.contortion import compute_contortion
+        from .contortion import compute_contortion
 
-        dim = self.data['dim']
-        T = self.data['torsion_tensor']
-        K = compute_contortion(T, dim, self.logger)
+        dim    = self.data['dim']
+        T      = self.data['torsion_tensor']
+        metric = self.data['metric_frame']
+        K = compute_contortion(T, dim, metric=metric, logger=self.logger)
         self.data['contortion'] = K
 
     def step_E4_6_ec_connection_frame(self):
         """Compute EC connection = LC + contortion."""
-        from ..connection.ec_connection import compute_ec_connection
+        from .ec_connection import compute_ec_connection
 
         dim = self.data['dim']
         Gamma_LC = self.data['connection_LC']
@@ -227,6 +248,19 @@ class BaseFrameEngine:
         self.data['riemann_abcd'] = R_abcd
 
         self.logger.success("Riemann Tensor computed and verified")
+
+    def step_E4_7b_weyl_ec(self):
+        """Compute Weyl scalar for EC connection (C²_EC) and store as weyl_scalar_EC.
+
+        Requires: data['riemann'], data['riemann_abcd'], data['ricci_scalar'],
+                  data['metric_frame'], data['dim']  (all available after E4.8).
+
+        C²_EC = C²_LC + 16V²η²/(3r²) for MX mode; equals C²_LC for AX/VT (Theorem 1).
+        data['weyl_scalar'] (C²_LC, from E4.3b) is kept unchanged so that proof
+        scripts can still compare LC vs EC Weyl scalars explicitly.
+        """
+        from ..action.ec_action import compute_c2_ec
+        self.data['weyl_scalar_EC'] = compute_c2_ec(self.data)
 
     def step_E4_8_ricci_scalar_frame(self):
         """Compute Ricci scalar."""
@@ -260,7 +294,7 @@ class BaseFrameEngine:
             for b in range(dim):
                 for c in range(dim):
                     for d in range(dim):
-                        eps = levi_civita_4d(a, b, c, d)
+                        eps = epsilon_4d(a, b, c, d)
                         if eps != 0:
                             for e in range(dim):
                                 N_TT += Rational(1, 4) * eps * T[e, a, b] * T[e, c, d]
@@ -272,7 +306,7 @@ class BaseFrameEngine:
             for b in range(dim):
                 for c in range(dim):
                     for d in range(dim):
-                        eps = levi_civita_4d(a, b, c, d)
+                        eps = epsilon_4d(a, b, c, d)
                         if eps != 0:
                             N_Ree += Rational(1, 4) * eps * R_abcd[a, b, c, d]
         self.data['ny_density_Ree'] = cancel(N_Ree)
@@ -294,12 +328,18 @@ class BaseFrameEngine:
         """Construct Lagrangian."""
         from ..action.lagrangian import compute_lagrangian
 
+        weyl_key = 'weyl_scalar' if self.weyl_source == 'lc' else 'weyl_scalar_EC'
+        weyl_scalar = self.data.get(weyl_key, S.Zero)
+        self.data['weyl_scalar_action'] = weyl_scalar
+        self.data['weyl_source_action'] = self.weyl_source
+        self.logger.info(f"Weyl source for action: {self.weyl_source.upper()}")
+
         L = compute_lagrangian(
             self.data['ricci_scalar'],
             self.data['nieh_yan_density'],
             self.data['params']['kappa'],
             self.data['params']['theta_NY'],
-            weyl_scalar=self.data.get('weyl_scalar', S.Zero),
+            weyl_scalar=weyl_scalar,
             alpha=self.data['params'].get('alpha', S.Zero),
             logger=self.logger
         )
@@ -328,15 +368,33 @@ class BaseFrameEngine:
         self.logger.info("Computation complete.")
 
     def get_effective_potential_function(self):
-        """Get lambdified V(r) for numerical evaluation."""
+        """Get lambdified V(r) for numerical evaluation.
+
+        Returns a callable with signature:
+            f(r, V, eta, theta_NY, L, kappa, epsilon, alpha) -> float
+
+        Parameters that are fixed constants (e.g. epsilon=0 for T3) are
+        accepted but ignored, so callers always use the same 8-arg signature.
+        """
         if 'potential' not in self.data:
             raise RuntimeError("Run engine first.")
 
+        from sympy import Symbol
         params = self.data['params']
-        args = [params['r'], params['V'], params['eta'],
-                params['theta_NY'], params['L'], params['kappa'],
-                params['epsilon'], params['alpha']]
-        return lambdify(args, self.data['potential'], modules='numpy', cse=True)
+        _KEYS = ['r', 'V', 'eta', 'theta_NY', 'L', 'kappa', 'epsilon', 'alpha']
+        all_vals = [params[k] for k in _KEYS]
+
+        # Only Symbol entries become lambdify arguments
+        active_indices = [i for i, v in enumerate(all_vals) if isinstance(v, Symbol)]
+        active_args = [all_vals[i] for i in active_indices]
+
+        inner_func = lambdify(active_args, self.data['potential'], modules='numpy', cse=True)
+
+        def wrapper(r, V, eta, theta_NY, L, kappa, epsilon, alpha):
+            full = [r, V, eta, theta_NY, L, kappa, epsilon, alpha]
+            return inner_func(*[full[i] for i in active_indices])
+
+        return wrapper
 
     def get_potential_decomposition(self) -> Dict:
         """Decompose potential by powers of r."""

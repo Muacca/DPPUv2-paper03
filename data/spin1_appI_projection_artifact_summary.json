@@ -1,0 +1,15 @@
+{
+  "script": "C:\\dev\\DPPU\\20_paper\\20_arXiv\\40_第三論文_v2\\script\\scripts\\paper03\\spin1_appI_projection_artifact.py",
+  "witness_source": "C:\\dev\\DPPU\\20_paper\\20_arXiv\\40_第三論文_v2\\script\\scripts\\paper03\\spin1_auxiliary_exclusion.py",
+  "status": "PASS",
+  "exit_label": "PAPER03_APP_I_PROJECTION_QUOTIENT_REPRODUCED_PASS",
+  "lambda_proj": "4.1867231684",
+  "det_H_minus_lambda_proj_G": "-2196206.20501",
+  "residual_norm2": "28550680.6651",
+  "interpretation": "The projected quotient is reproduced, but the projected direction does not solve the finite generalized eigenvalue equation.",
+  "checks": {
+    "lambda_proj_positive": true,
+    "det_at_projection_nonzero": true,
+    "projected_direction_not_eigenvector": true
+  }
+}

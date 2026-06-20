@@ -1,177 +1,129 @@
 # Utils Layer
 
-⇒ [English](README.md)
+-> [English](README.md)
 
-共通ユーティリティを提供するモジュール群。
+Tensor algebra、symbolic verification、logging、artifact I/O、formatted output のための共通 utility 群です。
 
 ## 概要
 
-Levi-Civita記号、シンボリック計算ヘルパー、可視化ユーティリティなど、複数モジュールで使用される共通機能。
+utils layer は小さく、依存を軽く保つための共通層です。次の utility を提供します。
+
+- `tee_logger.py`: timestamped script logs。
+- `epsilon.py`: metric-aware epsilon tensor contractions。
+- `symbolic.py`: zero-proof helpers と tensor inventory checks。
+- `io.py`: CSV/JSON/text が必要な場合の UTF-8 artifact I/O。
 
 ## モジュール
 
-### levi_civita.py
+### `epsilon.py`
 
-Levi-Civita記号（完全反対称テンソル）。
+Totally antisymmetric epsilon symbols と metric-aware raised/lowered epsilon tensors。
 
-**主要関数:**
+**主な関数:**
 
-- `epsilon_symbol(i, j, k)`: 3次元Levi-Civita記号
-- `levi_civita_4d(a, b, c, d)`: 4次元Levi-Civita記号
+- `epsilon_symbol(a, b, c, d)`: lower-index orientation を持つ 4D Levi-Civita symbol。
+- `epsilon_4d(mu, nu, rho, sigma)`: 4D epsilon symbol。
+- `epsilon_3d(i, j, k)`: 3D epsilon symbol。
+- `epsilon_nd(indices)`: n-dimensional epsilon symbol。
+- `metric_signature_sign(metric)`: metric determinant の sign。
+- `epsilon_tensor_down(metric, a, b, c, d)`: lowered epsilon tensor。
+- `epsilon_tensor_up(metric_inv, a, b, c, d)`: raised epsilon tensor。
 
-**3次元:**
+`epsilon_tensor_up` は metric-aware epsilon contraction を含む symbolic diagnostics で利用できます。
 
-```python
-from dppu.utils import epsilon_symbol
+### `symbolic.py`
 
-eps = epsilon_symbol(0, 1, 2)  # = +1
-eps = epsilon_symbol(1, 0, 2)  # = -1
-eps = epsilon_symbol(0, 0, 2)  # = 0
-```
+Symbolic simplification、zero-proving、witness search、tensor inventory helper。
 
-**4次元:**
+**主な関数:**
 
-```python
-from dppu.utils import levi_civita_4d
+- `prove_zero(expr, assumptions_dict=None, timeout_seconds=10)`: symbolic zero proof を試みます。
+- `generate_test_points(symbols_list, n_points=10)`: numerical test points を生成します。
+- `find_nonzero_witness(expr, symbols_list, n_points=10, precision=50)`: numerical nonzero witness を探索します。
+- `normalize_expression(expr)`: canonical simplification pass。
+- `derivative_inventory(expr, symbol_pairs)`: expression 内に現れる symbols を報告します。
+- `nonzero_component_count(array_expr, subs=None)`: tensor の nonzero components を数えます。
+- `canonical_simplify(expr)`: paper07 標準正規化 — `factor(cancel(simplify(expr)))`。
+- `series_coefficients(expr, variable, order=4)`: Taylor 係数を `{degree: value_str}` dict で返します。
+- `derivative_degree_classifier(expr, derivative_symbols)`: lambda スケーリングによる微分次数判定。
 
-eps = levi_civita_4d(0, 1, 2, 3)  # = +1
-eps = levi_civita_4d(1, 0, 2, 3)  # = -1
-```
+### `logger.py`
 
-**性質:**
+Engine pipeline 用の step-oriented logger。
 
-- 完全反対称: 任意の2インデックス交換で符号反転
-- 重複インデックスでゼロ
-- 正規化: ε₀₁₂₃ = +1（または ε₀₁₂ = +1）
+**主なクラス:**
 
-### symbolic.py
+- `ComputationLogger`: file と console に progress を記録します。
+- `NullLogger`: tests や batch use のために log output を抑制します。
 
-シンボリック計算のヘルパー関数。
+`ComputationLogger` と `NullLogger` は backward compatibility のため `dppu.engine` からも re-export されます。
 
-**主要関数:**
+### `tee_logger.py`
 
-- `prove_zero(expr)`: 式がゼロであることを証明
-- `find_nonzero_witness(expr, params)`: 非ゼロの反例を探索
-- `generate_test_points(param_ranges, n_points)`: テスト点を生成
+Script 用の tee-style stdout logger。
 
-**ゼロ証明:**
+**主な関数 / クラス:**
 
-```python
-from dppu.utils import prove_zero
-import sympy as sp
+- `setup_log(script_file, log_dir="logs")`: stdout を console と timestamped log file の両方へ redirect します。
+- `teardown_log()`: stdout を復元し、runtime metadata を出力します。
+- `LogTee`: `setup_log` / `teardown_log` の context-manager wrapper。
 
-x = sp.Symbol('x')
-expr = x**2 - x**2
+Environment variables:
 
-is_zero, proof_type = prove_zero(expr)
-# is_zero=True, proof_type='symbolic'
-```
+- `DPPU_LOG_DIR`: log directory を上書きします。
+- `DPPU_LOG_STDOUT=0`: console echo を抑制し、log file のみに出力します。
 
-**反例探索:**
+呼び出し側は `log_dir` または `DPPU_LOG_DIR` により log directory を指定できます。
 
-```python
-from dppu.utils import find_nonzero_witness
+### `io.py`
 
-expr = some_complex_expression
-witness = find_nonzero_witness(expr, {'r': (0.1, 5.0), 'eta': (-5, 5)})
+UTF-8 artifact I/O helpers。
 
-if witness:
-    print(f"Non-zero at: {witness['params']}")
-    print(f"Value: {witness['value']}")
-else:
-    print("No non-zero witness found")
-```
+**主な関数:**
 
-### visualization.py
+- `now_utc_iso()`: UTC ISO-8601 timestamp。
+- `read_text(path)` / `write_text(path, text)`: UTF-8 text I/O。
+- `read_json(path)` / `write_json(path, payload)`: deterministic UTF-8 JSON I/O。
+- `read_csv(path, missing_ok=False)` / `write_csv(path, fieldnames, rows)`: CSV helpers。
+- `upsert_csv_rows(path, fieldnames, rows, key_fields)`: stable keyed CSV upsert。
 
-論文図表用の標準化プロットスタイルとヘルパー関数。
+### `printing.py`
 
-**主要関数:**
+Formatted console output helpers。
 
-- `set_style()`: matplotlib グローバルスタイルを設定（seaborn whitegrid, serif フォント, 300 dpi）
-- `save_plot(filename, output_dir="output")`: 標準設定でプロットを保存
+**主な関数:**
 
-**使用例:**
-
-```python
-from dppu.utils.visualization import set_style, save_plot
-import matplotlib.pyplot as plt
-
-set_style()
-plt.plot(x, y)
-plt.xlabel(r'$\varepsilon$')
-plt.ylabel(r'$\mu^2$')
-save_plot("spin2_spectrum.pdf", output_dir="output")
-```
+- `hline(char="=", width=70)`: horizontal separator。
+- `print_header(title, width=70)`: section header。
+- `print_sub(title)`: subsection label。
+- `mat_str(mat)`: SymPy matrix を bracket/semicolon 形式の文字列に変換します。
+- `print_json_rows(label, rows, fields)`: `label_begin / label_row JSON / label_end` 機械可読出力。
 
 ## 使用例
 
-### トーション構成でのLevi-Civita
+```python
+from dppu.utils.tee_logger import setup_log, teardown_log
+
+setup_log(__file__, log_dir="../data")
+try:
+    print("verification output")
+finally:
+    teardown_log()
+```
 
 ```python
-from dppu.utils import epsilon_symbol
+from dppu.utils.epsilon import epsilon_tensor_up
 
-# 軸性トーション T^{ijk} = (2η/r) ε^{ijk}
-def build_axial_torsion(eta, r):
-    T = {}
-    for i in range(3):
-        for j in range(3):
-            for k in range(3):
-                T[(i,j,k)] = (2*eta/r) * epsilon_symbol(i, j, k)
-    return T
-```
-
-### Hodge dualでの4次元Levi-Civita
-
-```python
-from dppu.utils import levi_civita_4d
-
-# (*R)^{ab}_{cd} = (1/2) ε_{cdef} R^{ab,ef}
-def hodge_dual(R):
-    R_star = np.zeros((4,4,4,4))
-    for a in range(4):
-        for b in range(4):
-            for c in range(4):
-                for d in range(4):
-                    for e in range(4):
-                        for f in range(4):
-                            R_star[a,b,c,d] += 0.5 * levi_civita_4d(c,d,e,f) * R[a,b,e,f]
-    return R_star
-```
-
-## 数学的背景
-
-### Levi-Civita記号の定義
-
-**3次元:**
-```
-ε_{ijk} = { +1  (i,j,k)が(0,1,2)の偶置換
-          { -1  (i,j,k)が(0,1,2)の奇置換
-          {  0  いずれかのインデックスが重複
-```
-
-**4次元:**
-```
-ε_{abcd} = { +1  (a,b,c,d)が(0,1,2,3)の偶置換
-           { -1  (a,b,c,d)が(0,1,2,3)の奇置換
-           {  0  いずれかのインデックスが重複
-```
-
-### 恒等式
-
-```
-ε_{ijk} ε_{ilm} = δ_{jl}δ_{km} - δ_{jm}δ_{kl}
-ε_{abcd} ε_{abef} = 2(δ_{ce}δ_{df} - δ_{cf}δ_{de})
+eps = epsilon_tensor_up(metric_inv, 0, 1, 2, 3)
 ```
 
 ## 依存関係
 
-- SymPy（シンボリック計算）
-- NumPy（数値計算）
-- matplotlib + seaborn（可視化）
-- mpmath（高精度演算、オプション）
+- SymPy: symbolic expressions。
+- NumPy: numerical witness generation。
 
 ## 関連モジュール
 
-- [curvature](../curvature/README_ja.md): Hodge dual計算
-- [torsion](../torsion/README_ja.md): トーション構成
+- [curvature](../curvature/README_ja.md): Hodge and Pontryagin contractions。
+- [torsion](../torsion/README_ja.md): torsion ansatz construction。
+- [engine](../engine/README_ja.md): pipeline logging and checkpoint integration。

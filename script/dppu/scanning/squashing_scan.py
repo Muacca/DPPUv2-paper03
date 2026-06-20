@@ -10,19 +10,29 @@ from typing import Dict, Any, Tuple, Optional
 
 from ..torsion.mode import Mode
 from ..torsion.nieh_yan import NyVariant
-from ..topology.s3s1 import S3S1Engine
-from ..topology.t3s1 import T3S1Engine
-from ..topology.nil3s1 import Nil3S1Engine
+from ..topology import CurvatureSource, TopologyType, make_engine
 
 
 def get_engine(topology: str, mode: Mode, ny_variant: NyVariant):
     """Factory for topology engines."""
     if topology == 'S3':
-        return S3S1Engine(mode, ny_variant)
+        return make_engine(
+            TopologyType.S3, mode, ny_variant, enable_squash=True,
+            weyl_source=CurvatureSource.LC,
+            riemann_source=CurvatureSource.LC,
+        )
     elif topology == 'T3':
-        return T3S1Engine(mode, ny_variant)
+        return make_engine(
+            TopologyType.T3, mode, ny_variant,
+            weyl_source=CurvatureSource.LC,
+            riemann_source=CurvatureSource.LC,
+        )
     elif topology == 'Nil3':
-        return Nil3S1Engine(mode, ny_variant)
+        return make_engine(
+            TopologyType.NIL3, mode, ny_variant, enable_squash=True,
+            weyl_source=CurvatureSource.LC,
+            riemann_source=CurvatureSource.LC,
+        )
     else:
         raise ValueError(f"Unknown topology: {topology}")
 

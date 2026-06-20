@@ -2,11 +2,13 @@
 
 ⇒ [日本語](README_ja.md)
 
-Module group for parameter space scanning and Phase 1 integration.
+Module group for parameter space scanning and scan-result integration.
 
 ## Overview
 
-Provides (V, η, θ) parameter space scanning, Phase 1 result loading/interpolation, and SD diagnostics integration.
+Provides (V, eta, theta) parameter space scanning, scan result loading/interpolation, and SD diagnostics integration.
+
+This layer is currently wired for `S3/T3/Nil3` scans. `Sol3` support exists in the topology layer but is not integrated into these scan helpers.
 
 ## Modules
 
@@ -46,31 +48,17 @@ results = run_scan(
 | delta_V | Barrier height or well depth |
 | stability_type | type-I, type-II, type-III |
 
-### potentials.py
+### scan_results_loader.py
 
-Topology-specific effective potential functions.
+Loading and interpolation of scan results.
 
-**POTENTIAL_FUNCTIONS dictionary:**
-
-```python
-from dppu.scanning import POTENTIAL_FUNCTIONS
-
-# Get potential by topology
-V_func = POTENTIAL_FUNCTIONS['S3_FULL']
-V_value = V_func(r=1.0, eta=-1.0, V_param=2.0, theta=0.0)
-```
-
-### phase1_loader.py
-
-Loading and interpolation of Phase 1 scan results.
-
-**Phase1ResultsLoader:**
+**ScanResultsLoader:**
 
 ```python
-from dppu.scanning import Phase1ResultsLoader
+from dppu.scanning import ScanResultsLoader
 
 # Load from CSV
-loader = Phase1ResultsLoader.from_csv(
+loader = ScanResultsLoader.from_csv(
     'output/dppu_scan_S3_FULL.csv',
     theta_fixed=0.0
 )
@@ -92,17 +80,17 @@ phase = loader.get_phase_type(V=2.0, eta=-1.0)
 - `regular`: Regular grid → Uses RegularGridInterpolator
 - `irregular`: Irregular grid → Uses LinearNDInterpolator
 
-### sd_audit.py
+### scan_sd_diagnostics.py
 
-SD diagnostics integrated with Phase 1.
+SD diagnostics integrated with scan results.
 
-**SDDiagnosticsWithPhase1:**
+**SDScanDiagnostics:**
 
 ```python
-from dppu.scanning import SDDiagnosticsWithPhase1, Phase1ResultsLoader
+from dppu.scanning import SDScanDiagnostics, ScanResultsLoader
 
-loader = Phase1ResultsLoader.from_csv('scan.csv', theta_fixed=0.0)
-sd_diag = SDDiagnosticsWithPhase1(engine, phase1_loader=loader)
+loader = ScanResultsLoader.from_csv('scan.csv', theta_fixed=0.0)
+sd_diag = SDScanDiagnostics(engine, scan_loader=loader)
 
 # Evaluate SD at r*
 result = sd_diag.evaluate_at_rstar(V=2.0, eta=-1.0, theta_NY=0.0)
@@ -110,7 +98,7 @@ print(f"r* = {result.r_star:.3f}")
 print(f"SD residual = {result.sd_residual:.4f}")
 
 # Scan the (η, V) plane
-results = sd_diag.scan_with_phase1_rstar(
+results = sd_diag.scan_with_rstar(
     eta_range=(-5, 3, 100),
     V_range=(0.5, 5, 50),
     theta_NY=0.0
@@ -136,23 +124,40 @@ class SDScanResult:
     is_nontrivial_asd: bool
 ```
 
+### stability.py
+
+Stability classification of effective potential minima.
+
+**Stability types:**
+
+| Type | Condition | Physical Interpretation |
+|------|-----------|------------------------|
+| type-I | V''(r*) > 0, V(r*) > 0 | Metastable (with barrier) |
+| type-II | V''(r*) > 0, V(r*) < 0 | True minimum (below vacuum) |
+| type-III | No minimum or V''(r*) ≤ 0 | Unstable |
+
+**Key functions:**
+
+- `classify_stability(V, r_star)`: Classify stability
+- `StabilityResult`: Data class for classification results
+
+```python
+from dppu.scanning import classify_stability
+
+result = classify_stability(V_eff, r_star=1.5)
+print(f"Type: {result.stability_type}")
+print(f"r* = {result.r_star:.3f}")
+```
+
 ## Workflow
 
-### Phase 1 → Phase 2 Integration
+### Scan -> SD Diagnostics Integration
 
-1. **Phase 1**: Parameter scan to identify stable points r*(V, η)
-2. **Phase 2**: Execute SD diagnostics at r*
+1. **Scan**: parameter scan to identify stable points `r*(V, eta)`.
+2. **Diagnostics**: execute SD diagnostics at `r*`.
 3. **Analysis**: Investigate intersection of SD curve and stable region
 
-```bash
-# Phase 1: Parameter scan
-python scripts/pipeline/run_parameter_scan.py --output-dir output/
-
-# Phase 2: SD analysis
-python scripts/pipeline/run_sd_analysis.py \
-    --phase1-csv output/dppu_scan_S3_FULL.csv \
-    --theta 0.0
-```
+Use the Python APIs (`run_scan`, `ScanResultsLoader`, and `SDScanDiagnostics`) from a project-specific driver script.
 
 ## Dependencies
 
@@ -163,4 +168,4 @@ python scripts/pipeline/run_sd_analysis.py \
 
 ## Related Modules
 
-- [action](../action/README.md): Stability classification
+- [action](../action/README.md): Lagrangian and potential computation

@@ -30,13 +30,13 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import FiberMode, TopologyType, UnifiedEngine, make_config
 
-from sympy import S, simplify, symbols, factor
+from sympy import S, simplify
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
-from dppu.utils.levi_civita import levi_civita_4d
+from dppu.utils.logger import NullLogger
+from dppu.utils.epsilon import epsilon_4d
 
 
 # ===========================================================================
@@ -99,7 +99,7 @@ def compute_P_by_blocks(engine_name: str, engine) -> dict:
                         for f in range(dim):
                             if e >= f:
                                 continue
-                            eps = levi_civita_4d(a, b, e, f)
+                            eps = epsilon_4d(a, b, e, f)
                             if eps == 0:
                                 continue
                             R_efcd = R_sym[e, f, c, d]
@@ -216,7 +216,7 @@ def trace_hodge_action_on_33(engine_name: str, engine):
             dual_val = S.Zero
             for e in range(dim):
                 for f in range(dim):
-                    eps = levi_civita_4d(i, 3, e, f)
+                    eps = epsilon_4d(i, 3, e, f)
                     if eps == 0:
                         continue
                     R_efj3 = R_sym[e, f, j, 3]
@@ -250,7 +250,7 @@ def test_independent_block_cancellation(engine_name: str, engine):
         val = S.Zero
         for e in range(dim):
             for f in range(dim):
-                eps = levi_civita_4d(a, b, e, f)
+                eps = epsilon_4d(a, b, e, f)
                 if eps == 0:
                     continue
                 val += eps * R_sym[e, f, c, d]
@@ -312,16 +312,24 @@ def main():
     print("=" * 65)
 
     print("\n[Running engines...]")
-    _cfg_eng_s3 = DOFConfig.from_engine('TwistS3S1Engine')
-    _cfg_eng_s3.torsion_mode = Mode.AX
-    _cfg_eng_s3.ny_variant = NyVariant.FULL
+    _cfg_eng_s3 = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_s3 = UnifiedEngine(_cfg_eng_s3, NullLogger())
     eng_s3.run()
     print("  S³ engine complete")
 
-    _cfg_eng_nil3 = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_eng_nil3.torsion_mode = Mode.AX
-    _cfg_eng_nil3.ny_variant = NyVariant.FULL
+    _cfg_eng_nil3 = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_nil3 = UnifiedEngine(_cfg_eng_nil3, NullLogger())
     eng_nil3.run()
     print("  Nil³ engine complete")

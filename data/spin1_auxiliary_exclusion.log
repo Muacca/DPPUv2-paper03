@@ -57,10 +57,10 @@ Divergence of effective eigenvalue lambda_eff = (n^T H n) / (n^T G n)
 =================================================================
   G_null  = n^T G n = -0.000000
   H_null  = n^T H n = 894.845144
-  G_phys  = u^T G u = 10007.7718
-  H_phys  = u^T H u = 41899.7699
+  G_XX    = u^T G u = 10007.7718
+  H_XX    = u^T H u = 41899.7699
   H_cross = n^T H u = 6421.8259
-  lambda_phys = H_phys / G_phys = 4.186723
+  lambda_proj = H_XX / G_XX = 4.186723  (pre-Schur projection quotient)
 
   lambda_eff when varying t/s ratio (mixed direction):
        t/s             G_v             H_v      lambda_eff

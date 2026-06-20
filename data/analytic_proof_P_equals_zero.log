@@ -157,6 +157,6 @@ Block structure of R^{ab}_{cd}:
    ensures <R, *R> = 0 as an algebraic identity.
 
 
-Computation time: 0.8s
+Computation time: 1.4s
 
 *Script: scripts/proofs/analytic_proof_P_equals_zero.py

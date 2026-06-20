@@ -1,104 +1,113 @@
 # Action Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group for action and stability analysis.
+Module group for Einstein-Cartan action, effective potential, and reduced-sector branch extraction.
 
 ## Overview
 
-Provides Lagrangian construction, effective potential, and stability classification.
+The action layer provides symbolic action utilities used by the topology engines and downstream callers.  The reduced-sector entry point is `reduced_sector.py`, which extracts the static branch function `F_branch`, derives `chi` from topology data, and solves the auxiliary torsion shell for the `EH/AX/VT/MX` branches.
 
 ## Modules
 
-### lagrangian.py
+### `lagrangian.py`
 
 Einstein-Cartan + Nieh-Yan Lagrangian construction.
 
 **Action:**
 
-```
-S = ∫ d⁴x √|g| L
-L = R/(2κ²) + θ_NY × N
-```
-
-**Key functions:**
-
-- `build_lagrangian(R, N, kappa, theta_NY)`: Construct Lagrangian
-- `integrate_angular(L, topology)`: Integrate over angular directions
-
-### potential.py
-
-Effective potential computation.
-
-**Effective potential:**
-
-After angular integration, extract the r-dependent effective potential V(r):
-
-```
-S = ∫ dr × V_eff(r)
+```text
+S = integral d^4x sqrt(|g|) L
+L = R/(2 kappa^2) + theta_NY * N + alpha * C^2
 ```
 
 **Key functions:**
 
-- `extract_effective_potential(S_integrated)`: Extract effective potential
-- `find_extrema(V, r_range)`: Search for extrema
-- `compute_barrier_height(V, r_min)`: Compute barrier height
+- `compute_lagrangian(ricci_scalar, nieh_yan_density, kappa, theta_NY, weyl_scalar=0, alpha=0, logger=None)`: construct the EC+NY(+Weyl) Lagrangian density.
+- `compute_action(L_density, volume_factor)`: multiply by the supplied volume factor.
 
-### stability.py
+### `potential.py`
 
-Stability analysis and classification.
-
-**Stability types:**
-
-| Type | Condition | Physical Interpretation |
-|------|-----------|------------------------|
-| type-I | V''(r*) > 0, V(r*) > 0 | Metastable (with barrier) |
-| type-II | V''(r*) > 0, V(r*) < 0 | True minimum (below vacuum) |
-| type-III | No minimum or V''(r*) ≤ 0 | Unstable |
+Effective potential extraction and decomposition.
 
 **Key functions:**
 
-- `classify_stability(V, r_star)`: Classify stability
-- `StabilityResult`: Data class for classification results
+- `subs_zero_modes(expr, params)`: substitute inactive symbols by zero.
+- `compute_effective_potential(action, logger=None)`: compute `V_eff = -action`.
+- `get_potential_function(potential, param_symbols)`: build a numerical function.
+- `decompose_potential(potential, r)`: separate useful symbolic pieces.
 
-```python
-@dataclass
-class StabilityResult:
-    stability_type: str  # 'type-I', 'type-II', 'type-III'
-    r_star: float        # Position of stable point
-    V_star: float        # Potential value at stable point
-    V_second: float      # Second derivative
-    barrier_height: float  # Barrier height (type-I only)
+### `ec_action.py`
+
+Einstein-Cartan effective-potential helpers used by the engine pipeline.
+
+**Key functions:**
+
+- `compute_c2_ec(data)`: compute the EC curvature/torsion coefficient package.
+- `build_veff_ec(topology_type, torsion_mode=None, ny_variant=None, ...)`: build the symbolic EC effective potential.
+- `build_veff_ec_func(V_eff, symbols)`: lambdify an effective-potential expression.
+
+### `palatini_first_order.py`
+
+Minimal first-order Palatini / Einstein-Hilbert density computation for class-A minisuperspace models (paper07).
+
+**Convention note**: The Levi-Civita connection uses the class-A Koszul formula
+``[e_i, e_j] = +C^k_{ij} e_k``, which uses the **opposite sign** from the DPPU
+engine in ``dppu/engine/levi_civita.py`` (CONVENTIONS 3.2: ``[E_b, E_c] = -C^a_{bc} E_a``).
+These two implementations must not be merged.
+
+**Key functions:**
+
+- `eh_density(topology, scales, deltas=None)`: first-order EH density coefficient.
+- `palatini_reduced_density(topology, vector)`: EH density with connection fluctuations solved out.
+- `minisuperspace_dewitt_metric()`: trace-free DeWitt metric ``diag(s2*s3, s1*s3, s1*s2)``.
+
+### `reduced_sector.py`
+
+Reduced-sector extraction helper.
+
+This module keeps topology dependence in a small set of symbolic branch functions and auxiliary equations.
+
+**Key objects and functions:**
+
+- `TOPOLOGIES`: canonical topology list, `("S3", "T3", "Nil3", "Sol3")`.
+- `MODES`: reduced branch list, `("EH", "AX", "VT", "MX")`.
+- `StaticBranchResult`: dataclass containing the engine-derived branch result.
+- `chi_for_topology(topology)`: derive `chi` from the LZ-native topology specialization.
+- `derive_static_branch_result(topology, mode)`: return full branch metadata.
+- `derive_static_branch_function(topology, mode)`: return only `F_branch`.
+- `auxiliary_variables(expr)`: identify active auxiliary torsion variables.
+- `solve_auxiliary_shell(expr)`: solve auxiliary equations and return Hessian/on-shell data.
+
+Callers can use these helpers to verify the reduced-sector identity
+
+```text
+F_branch | auxiliary shell = chi
+qdot^2 + chi = 0
 ```
 
 ## Usage
 
 ```python
-from dppu.action import build_lagrangian, classify_stability
+import sympy as sp
 
-# Construct Lagrangian
-L = build_lagrangian(R, N, kappa=1.0, theta_NY=0.5)
+from dppu.action.reduced_sector import (
+    TOPOLOGIES,
+    MODES,
+    chi_for_topology,
+    derive_static_branch_function,
+    solve_auxiliary_shell,
+)
 
-# Classify stability
-result = classify_stability(V_eff, r_star=1.5)
-print(f"Type: {result.stability_type}")
-print(f"r* = {result.r_star:.3f}")
-```
-
-## Phase 1 Integration
-
-Phase 1 scan results are saved as CSV and used for SD analysis in Phase 2:
-
-```csv
-topology,ny_variant,V,eta,theta,r0,delta_V,stability_type
-S3,FULL,2.0,-1.0,0.0,1.234,0.056,type-I
+for topology in TOPOLOGIES:
+    for mode in MODES:
+        branch_f = derive_static_branch_function(topology, mode)
+        shell = solve_auxiliary_shell(branch_f)
+        assert sp.simplify(shell["on_shell"] - chi_for_topology(topology)) == 0
 ```
 
 ## Dependencies
 
-- [curvature](../curvature/README.md): Ricci scalar
-- [torsion](../torsion/README.md): Nieh-Yan density
-
-## Related Modules
-
-- [scanning](../scanning/README.md): Parameter space scanning
+- [curvature](../curvature/README.md): spatial curvature and `chi` derivation.
+- [topology](../topology/README.md): topology engines and LZ-native structure constants.
+- [torsion](../torsion/README.md): torsion mode definitions and ansatz construction.

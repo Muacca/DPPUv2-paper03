@@ -1,164 +1,119 @@
 # Curvature Layer
 
-⇒ [English](README.md)
+-> [English](README.md)
 
-曲率テンソルの計算と解析を担当するモジュール群。
+Curvature tensor computation、Pontryagin diagnostics、Hodge operations、Weyl tensors、および spatial-curvature helpers のためのモジュール群です。
 
 ## 概要
 
-Riemannテンソル、Ricciスカラー、Hodge双対、自己双対性診断、Pontryagin内積、Weylテンソルを提供。
+curvature layer は EC+NY engine と downstream callers が利用する symbolic tensor routines を提供します。この layer には次の要素が含まれます。
+
+- `spatial_lie.py`: scale-stripped 3D scalar curvature と `chi` を導出します。
+- `pontryagin_lz.py`: `P_form` check に使う Lorentzian form-Hodge Pontryagin density を計算します。
+
+これらのモジュールは、form-Hodge Pontryagin density と script-level diagnostic contraction を分離して扱うための基盤です。
 
 ## モジュール
 
-### riemann.py
+### `riemann.py`
 
-Riemannテンソルの計算と反対称性検証。
+Non-coordinate frame における Riemann tensor computation。strict antisymmetry checks と first-index lowering を含みます。
 
-**主要クラス・関数:**
+**主なクラス / 関数:**
 
-- `compute_riemann_tensor(connection)`: Riemannテンソルを計算
-- `verify_antisymmetry(R)`: 反対称性を3レベルで検証
-- `RiemannAntisymmetryError`: 反対称性違反時の例外
+- `RiemannAntisymmetryError`: strict verification が失敗した場合の exception。
+- `verify_antisymmetry_strict(R, dim, ...)`: Riemann antisymmetry identities を検証します。
+- `compute_riemann_tensor(gamma, structure_constants, dim, ...)`: `R^a_{bcd}` を計算します。
+- `lower_first_index(Riemann, metric, dim)`: first index を下げて `R_abcd` を得ます。
 
-**反対称性検証（3レベル）:**
+### `ricci.py`
 
-1. **Level 1**: SymPyでのシンボリック証明
-2. **Level 2**: 高精度数値での反例探索
-3. **Level 3**: デバッグモード（開発用）
+Ricci tensor、Ricci scalar、decomposition helpers。
 
-**Riemann曲率の定義:**
+**主な関数:**
 
-```
-R^a_{bcd} = ∂_c Γ^a_{bd} - ∂_d Γ^a_{bc} + Γ^a_{ec}Γ^e_{bd} - Γ^a_{ed}Γ^e_{bc}
-```
+- `compute_ricci_tensor(Riemann, dim)`: Ricci contraction。
+- `compute_ricci_scalar(Riemann, dim, logger=None, metric_inv=None)`: Riemann data から Ricci scalar を計算します。
+- `compute_ricci_scalar_from_tensor(Ricci, metric_inv, dim)`: Ricci tensor から scalar を計算します。
+- `decompose_ricci_tensor(Ricci, metric, dim)`: trace/traceless decomposition。
 
-### ricci.py
+### `hodge.py`
 
-Ricciテンソルとスカラーの計算。
+Hodge dual と 2-form block helpers。
 
-**主要関数:**
+**主な関数:**
 
-- `compute_ricci_tensor(R)`: Ricci縮約
-- `compute_ricci_scalar(Ric, metric)`: Ricciスカラー
+- `hodge_dual_2form(F_down, metric, metric_inv=None, signature="lorentzian")`: 2-form の Hodge dual。
+- `basis_2form(a, b)`: basis 2-form。
+- `compute_hodge_dual(R_tensor)`: legacy Riemann Hodge dual helper。
+- `classify_lz_2form_block(c, d)`: LZ-native block classification。
+- `hodge_swaps_blocks()`: block-swap sanity check。
 
-**定義:**
+### `pontryagin.py`
 
-```
-R_{ab} = R^c_{acb}
-R = η^{ab} R_{ab}
-```
+Legacy numerical Pontryagin helper。
 
-### hodge.py
+**主な関数:**
 
-Hodge双対演算子の実装。
+- `compute_P_from_riemann(R_arr)`: numerical array に対して `P=<R,*R>` を計算します。
+- `get_riemann_numeric(...)`: lambdified engine result から numerical Riemann data を抽出します。
 
-**主要関数:**
+### `pontryagin_lz.py`
 
-- `compute_hodge_dual(R)`: R^{ab}_{cd} の Hodge双対を計算
-- `cd_block(a, b)`: 6成分ブロック分類
+Lorentzian/LZ-native Pontryagin density helper。
 
-**Hodge双対の定義:**
+**主な関数:**
 
-```
-(*R)^{ab}_{cd} = (1/2) ε_{cdef} R^{ab,ef}
-```
+- `pontryagin_density_lorentzian(R_abcd, metric, simplify_result=True)`: form-Hodge `P_form=<R,*R>` density を計算します。
+- `pontryagin_density_lorentzian_by_epsilon(...)`: epsilon-contraction による cross-check route。
+- `classify_pontryagin_expression(expr, zero_tol=None)`: exact-zero/nonzero symbolic result を分類します。
+- `classify_pontryagin_expression_deep(expr, zero_tol=None)`: より深い simplification と classification route。
 
-### self_duality.py
+このモジュールは form-Hodge `P_form=<R,*R>` computation と exact-zero classification のためのものです。個別 script が実装する custom internal-pair diagnostic contraction とは別の量です。
 
-自己双対性（SD/ASD）の診断。
+### `spatial_lie.py`
 
-**主要クラス:**
+Scale-stripped spatial Lie-frame curvature helper。
 
-- `SDExtensionMixin`: エンジンにSD機能を追加
-- `CurvatureSDDiagnostics`: SD残差の計算と評価
+**主な関数:**
 
-**SD/ASD条件:**
+- `spatial_structure_constants_3d(params=None)`: five-parameter LZ family の 3D structure constants を構成します。
+- `scalar_curvature_q2_from_structure_constants(structure_constants)`: `R^(3) q^2` を計算します。
+- `chi_from_lz_parameters(params)`: `chi = R^(3) q^2 / 6` を計算します。
 
-```
-R = *R   (自己双対: SD)
-R = -*R  (反自己双対: ASD)
-```
+### `sd_extension.py`
 
-**主要メトリクス:**
+Engine 用の self-duality（SD/ASD）mixin。
 
-- `sd_residual`: ||R - *R||
-- `asd_residual`: ||R + *R||
-- `is_sd`: sd_residual < ε
-- `is_asd`: asd_residual < ε
+**主なクラス:**
 
-### pontryagin.py
+- `SDExtensionMixin`: topology engine に SD functionality を付与します。
 
-Pontryagin内積の計算と診断。
+### `sd_diagnostics.py`
 
-**主要クラス・関数:**
+Self-duality と Pontryagin diagnostic evaluation。
 
-- `compute_pontryagin_inner_product(R)`: P = ⟨R, *R⟩ を計算
-- `evaluate_sd_status(params)`: SD状態の完全診断
+**主なクラス / 関数:**
 
-**Pontryagin 保護定理（paper 03）:**
+- `CurvatureSDDiagnostics`: SD/ASD residuals と関連 curvature diagnostics を評価します。
 
-| トーションモード | 結果 | 証明手法 |
-|---|---|---|
-| AX（軸性） | P ≡ 0（厳密） | Plücker 型消去 |
-| VT（ベクトル-トレース） | P ≡ 0（厳密） | Pfaffian 分解可能性 |
-| MX（混合） | 一般に P ≠ 0 | — |
+### `weyl.py`
 
-AX・VT モードでは、全トポロジー（S³, T³, Nil³）・全パラメータ値で消去が成立する。MX モードでは:
+Weyl tensor と Weyl scalar の計算。
 
-```
-P₀ = 2Vη(V²r² + 9η² − 36) / (9r³)
-```
+**主な関数:**
 
-P ≠ 0 の源はトーション混合（Vη 結合）であり、twist ではない。
+- `compute_weyl_tensor(R_abcd, Ricci, R_scalar, metric, dim)`: `C_abcd` を計算します。
+- `compute_weyl_scalar(C_abcd, metric)`: `C^2` を計算します。
 
-P = 0 の場合:
-```
-SD_residual / ||R|| = √2
-ASD_residual / ||R|| = √2
-```
+## 注記
 
-### weyl.py
-
-Weylテンソル（共形曲率）の計算。
-
-**主要関数:**
-
-- `compute_weyl_tensor(R_abcd, Ricci, R_scalar, metric, dim)`: Weylテンソル C_{abcd} を計算
-- `compute_weyl_scalar(C_abcd, metric)`: Weylスカラー C² を計算
-
-**定義:**
-
-```
-C_{abcd} = R_{abcd}
-         - (1/2)(g_{ac}R_{bd} - g_{ad}R_{bc} - g_{bc}R_{ad} + g_{bd}R_{ac})
-         + (R/6)(g_{ac}g_{bd} - g_{ad}g_{bc})
-```
-
-**性質:**
-
-- トレースフリー: C^a_{bad} = 0
-- Riemannテンソルと同じ対称性
-
-## 使用例
-
-```python
-from dppu.curvature import SDExtensionMixin, CurvatureSDDiagnostics
-
-# エンジンにSD拡張を付加
-SDExtensionMixin.attach_to(engine)
-
-# SD診断
-diag = CurvatureSDDiagnostics(engine)
-result = diag.evaluate_sd_status({
-    'r': 1.0, 'L': 1.0, 'eta': -1.0, 'V': 2.0,
-    'kappa': 1.0, 'theta_NY': 0.0
-})
-
-print(f"P = {result['P_RstarR']:.2e}")
-print(f"SD/||R|| = {result['sd_residual']/result['curvature_norm']:.4f}")
-```
+- `P_form` は `pontryagin_lz.py` で計算される form-Hodge density です。
+- Internal-pair diagnostic contraction は script-level quantity であり、true form-Hodge Pontryagin density と混同しないでください。
+- `chi` は `spatial_lie.py` により LC/spatial-curvature sector から導出されます。
 
 ## 依存関係
 
-- [connection](../connection/README_ja.md): EC接続
-- [utils](../utils/README_ja.md): Levi-Civita記号
+- [engine](../engine/README_ja.md): LC/EC connection data と frame pipeline。
+- [topology](../topology/README_ja.md): LZ-native structure constants。
+- [utils](../utils/README_ja.md): epsilon tensors と symbolic utilities。

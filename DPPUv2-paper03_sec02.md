@@ -151,7 +151,7 @@ graph TD
     S2 --> qA["q_A  (A=1..5)<br/>full shear quintet<br/>μq²=48π²"]
 
     S1 --> raw["raw: ω_k, δ_k"]
-    raw -->|"gen. eigenvalue<br/>(§5)"| Xk["X_k  physical mode<br/>λ_phys=4.19>0"]
+    raw -->|"Schur / gen. eigenvalue<br/>(§5)"| Xk["X_k  physical mode<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
     raw -->|"null mode<br/>(§5)"| Yk["Y_k  auxiliary mode<br/>non-dynamical"]
     
     classDef default fill:none,stroke:black

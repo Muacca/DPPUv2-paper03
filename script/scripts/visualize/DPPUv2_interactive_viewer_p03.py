@@ -380,7 +380,7 @@ class DPPUv2Paper03Viewer:
         from dppu.topology.unified import UnifiedEngine, DOFConfig, TopologyType, FiberMode
         from dppu.torsion.mode import Mode
         from dppu.torsion.nieh_yan import NyVariant
-        from dppu.engine.logger import NullLogger
+        from dppu.utils.logger import NullLogger
         from sympy import lambdify, S
 
         print("Initialising S3xS1 squash engine (Mode.MX, NyVariant.FULL) ...")

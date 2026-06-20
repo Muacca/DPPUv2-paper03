@@ -1,0 +1,165 @@
+%==============================================================================
+% Appendix I: Reduction-order Artifact in the Spin-1 Sector
+%==============================================================================
+\section{Reduction-order Artifact in the Spin-1 Sector}
+\label{app:I}
+
+This appendix records a concrete example of a reduction-order artifact in a
+sector with a rank-deficient field-space metric.  If one projects to a
+complementary direction before eliminating the auxiliary direction, a quantity
+that is not a finite generalised eigenvalue can appear to be a physical
+eigenvalue.  The purpose is to clarify why the Schur reduction used in
+Appendix~\ref{app:E} must retain the auxiliary coupling.
+
+\subsection{Projected Quotient Before Auxiliary Elimination}
+
+For each spin-1 axis, the raw variables $(\omega_k,\delta_k)$ give the witness
+matrices
+\begin{equation}
+  H_2 =
+  \begin{pmatrix}
+    52.6379 & -631.6544 \\
+    -631.6544 & 3789.9295
+  \end{pmatrix},
+  \qquad
+  G_2 =
+  \begin{pmatrix}
+    236.870435 & -355.305547 \\
+    -355.305547 & 532.958162
+  \end{pmatrix}.
+\end{equation}
+The kinetic metric has the null direction
+\begin{equation}
+  n=\left(1,\frac{2}{3}\right)^T.
+\end{equation}
+A simple complementary direction is
+\begin{equation}
+  u=(-2,3)^T.
+\end{equation}
+The Rayleigh quotient along this direction is
+\begin{equation}
+  \lambda_\mathrm{proj}
+  =\frac{u^T H_2u}{u^T G_2u}
+  =\frac{41899.77}{10007.77}
+  \simeq 4.1867>0.
+\end{equation}
+This quotient is a ratio of projected pre-elimination coefficients.  It is not,
+by itself, the finite generalised eigenvalue of the rank-deficient pencil.
+
+\subsection{Test Against the Generalised Eigenvalue Equation}
+
+Because $G_2$ is rank-deficient and $G_2n\simeq 0$, a projected Rayleigh quotient
+need not solve the degenerate pencil equation
+\begin{equation}
+  \det(H_2-\lambda G_2)=0.
+\end{equation}
+Indeed, substituting the projected value gives
+\begin{equation}
+  \det(H_2-\lambda_\mathrm{proj}G_2)\simeq -2.2\times 10^6\neq 0,
+\end{equation}
+and also
+\begin{equation}
+  (H_2-\lambda_\mathrm{proj}G_2)u\neq 0.
+\end{equation}
+Thus $u=(-2,3)$ is not a generalised eigenvector, and
+$\lambda_\mathrm{proj}\simeq 4.1867$ is not a finite generalised eigenvalue.
+
+\subsection{Missing Auxiliary Coupling}
+
+The difference between the projected quotient and the Schur-reduced eigenvalue
+comes from the Hessian cross term with the non-dynamical auxiliary direction:
+\begin{equation}
+  H_{YY}=n^TH_2n\simeq 894.845>0,
+  \qquad
+  H_{XY}=n^TH_2u
+    =\frac{24081847}{3750}
+    \simeq 6421.8\neq 0.
+\end{equation}
+Consequently the $n$ direction is not gauge or redundancy but a second-class
+auxiliary direction.  It must be eliminated by its algebraic equation of motion
+before a physical spin-1 eigenvalue is assigned.  A reduction that drops
+$H_{XY}$ omits the auxiliary backreaction.
+
+\subsection{Comparison with the Schur-reduced Result}
+
+The correct order of reduction is:
+\begin{enumerate}
+  \item identify the null direction $Y_k$ of the rank-deficient kinetic metric;
+  \item verify that $Y_k$ is a second-class auxiliary direction;
+  \item solve the algebraic equation of motion for $Y$ in the quadratic form
+        including the $X$--$Y$ cross term;
+  \item evaluate the physical finite eigenvalue using the Schur complement
+        \begin{equation}
+          H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}}.
+        \end{equation}
+\end{enumerate}
+This gives
+\begin{equation}
+  \lambda_\phys
+  =\frac{H_{XX}-H_{XY}^2/H_{YY}}{G_{XX}}
+  \simeq -0.4183<0.
+\end{equation}
+The same Schur-reduced structure in the symbolic Ricci normalisation gives
+\begin{equation}
+  \lambda_\phys^\mathrm{symbolic}
+  =-\frac{56L^2}{3r^2}<0.
+\end{equation}
+Thus the positive projected quotient before auxiliary elimination and the finite
+Schur-reduced eigenvalue have different signs and different physical
+classifications.  The correct classification is a tachyonic non-ghost mode.
+
+\subsection{Basis-independence Lesson}
+
+Using the complementary direction $u=(-2,3)$ is not the essential problem.  The
+problem is identifying a pre-elimination projected quotient with the physical
+generalised eigenvalue in a rank-deficient sector.  Starting from the same
+complementary coordinate still gives a negative finite eigenvalue once the
+auxiliary direction is eliminated correctly.
+
+The practical lesson is therefore:
+\begin{quote}
+In a sector with a rank-deficient field-space metric, the naive Rayleigh quotient
+on a complementary direction must not be identified with a physical generalised
+eigenvalue.  If a second-class auxiliary direction is present, one must use
+Schur elimination, or equivalently the finite eigenvalue of the degenerate
+pencil after retaining the auxiliary coupling.
+\end{quote}
+
+\subsection{Relation to Reproducibility Checks}
+
+In the first version of this manuscript the pre-Schur projected quotient was
+identified with the physical generalised eigenvalue.  In the present version the
+finite eigenvalue after Schur elimination is used instead.  The affected
+verification targets are:
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{X l}
+\toprule
+Verification target & Section/appendix \\
+\midrule
+The value $4.1867>0$ is a projected quotient and not a finite generalised
+eigenvalue. & Appendix~\ref{app:I} \\
+After Schur elimination, the finite generalised eigenvalue is
+$\lambda_\phys\simeq -0.4183<0$ in the witness normalisation and
+$-56L^2/(3r^2)<0$ in the symbolic normalisation. &
+\S\ref{sec:spin1}, Appendix~\ref{app:E} \\
+The corrected spin-1 mode is a tachyonic non-ghost mode with positive kinetic
+norm. & \S\ref{sec:spin1}, Appendix~\ref{app:E} \\
+The spin-1 instability is a curvature-scale tachyonic non-ghost mode, distinct
+from frame-degeneracy endpoint divergences and radial decompactification. &
+\S\ref{sec:spin1}, \S\ref{sec:discussion} \\
+\bottomrule
+\end{tabularx}
+\caption{Reproducibility checks associated with the spin-1 reduction-order
+artifact.}
+\label{tab:appI_checks}
+\end{table}
+
+\subsection{Computational Verification}
+
+\begin{itemize}
+  \item Reproduces the pre-Schur projected quotient 
+        and verifies that it is not a finite generalised eigenvalue:
+        \texttt{paper03/spin1\_appI\_projection\_artifact.py}
+\end{itemize}

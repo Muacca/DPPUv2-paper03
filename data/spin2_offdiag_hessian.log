@@ -45,6 +45,6 @@ Summary
   H₄₄^q > 0 for all ε ∈ [-0.30, 0.60]:  [OK]
   m=±1 doublet (T₄,T₅) remains massive at ε_c:  [OK]
 
-Total computation time: 28.9s
+Total computation time: 64.9s
 
 *Script: scripts/paper03/spin2_offdiag_hessian.py

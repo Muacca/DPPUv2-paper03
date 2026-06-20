@@ -75,3 +75,24 @@ class Mode(Enum):
             Mode.MX: "Mixed (T1 + T2)",
         }
         return descriptions[self]
+
+
+def normalize_mode(label: str) -> str:
+    """Normalize a torsion mode label to "AX", "VT", "MX", or "NA".
+
+    Args:
+        label: Case-insensitive mode string ("ax", "VT", "MX", "NA", ...).
+
+    Returns:
+        Canonical uppercase label.
+
+    Raises:
+        ValueError: If *label* does not match any known mode.
+    """
+    key = label.strip().upper()
+    if key == "NA":
+        return "NA"
+    try:
+        return Mode[key].value
+    except KeyError:
+        raise ValueError(f"unknown torsion mode label: {label!r}")

@@ -408,7 +408,8 @@ Y_blocks = [np.array([1, 0, 0, 2*L/r0, 0, 0]) / norm_Y,   # k=0
 # ... (see scripts/paper03/spin1_kinetic_metric.py for full implementation)
 
 eigenvalues, _ = eigh(H_phys, G_phys)
-# lambda_phys > 0 confirms no tachyon in the physical spin-1 sector
+# Note: the above naive projection gives a pre-Schur Rayleigh quotient (~4.19), NOT the physical eigenvalue.
+# After Schur elimination lambda_phys < 0 (≈ −0.4183): tachyonic but non-ghost spin-1 mode
 ```
 
 > **Warning**: Do not use `eigh(H_full, G_full)` directly; $G$ is singular and `scipy` will raise a `LinAlgError`. Always project to the physical subspace first.

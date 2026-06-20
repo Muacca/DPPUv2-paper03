@@ -1,113 +1,98 @@
 # Torsion Layer
 
-⇒ [English](README.md)
+-> [English](README.md)
 
-トーション（ねじれ）構造を定義するモジュール群。
+Torsion modes、torsion tensor ansatz construction、torsion scalar、Nieh-Yan variants を定義するモジュール群です。
 
 ## 概要
 
-トーションansatz、Nieh-Yan密度の計算を提供。
+torsion layer は EC+NY engine と reduced-sector helpers が使う `AX`, `VT`, `MX` torsion branches を提供します。runtime constructor は `construct_torsion_tensor(...)` です。この関数は legacy Euclidean convention と Lorentzian `lz_native` convention の両方をサポートします。
 
 ## モジュール
 
-### mode.py
+### `mode.py`
 
-トーションモードの定義。
+Torsion mode definitions。
 
-**Mode Enum:**
-
-| モード | 説明 | パラメータ |
-|--------|------|-----------|
-| `AX` | 軸性トーションのみ | η |
-| `VT` | ベクトルトレースのみ | V |
-| `MX` | 混合モード | η, V |
+| Mode | 説明 | Parameters |
+|------|------|------------|
+| `AX` | axial torsion only | `eta` |
+| `VT` | vector-trace torsion only | `V` |
+| `MX` | mixed torsion | `eta`, `V` |
 
 ```python
-from dppu.torsion import Mode
+from dppu.torsion.mode import Mode
 
-mode = Mode.MX  # 混合モード
+mode = Mode.MX
 ```
 
-### nieh_yan.py
+### `nieh_yan.py`
 
-Nieh-Yanバリアントの定義とNY密度計算。
+Nieh-Yan variant definitions と density computation。
 
-**NyVariant Enum:**
+| Variant | Definition | Meaning |
+|---------|------------|---------|
+| `TT` | `T^a wedge T_a` | torsion-torsion term |
+| `REE` | `e^a wedge e^b wedge R_ab` | curvature-derived term |
+| `FULL` | `TT - REE` | full Nieh-Yan density |
 
-| バリアント | 定義 | 物理的意味 |
-|-----------|------|-----------|
-| `TT` | T^a ∧ T_a | トーション-トーション項 |
-| `REE` | e^a ∧ e^b ∧ R_ab | 曲率由来項 |
-| `FULL` | TT - REE | 完全なNieh-Yan密度 |
+**主な API:**
 
-**主要関数:**
+- `NyVariant.TT`
+- `NyVariant.REE`
+- `NyVariant.FULL`
+- `NyVariant.includes_tt`
+- `NyVariant.includes_ree`
 
-- `compute_nieh_yan_TT(T)`: TT項を計算
-- `compute_nieh_yan_REE(R)`: REE項を計算
-- `compute_nieh_yan_full(T, R)`: 完全なNY密度
+density 自体は engine pipeline の `E4.10` step で、利用可能な torsion tensor と curvature tensor から組み立てます。
 
-### ansatz.py
+### `ansatz.py`
 
-トーションテンソルのansatz構成。
+Torsion tensor ansatz construction。
 
-**T1: 完全反対称（軸性）**
+**主な関数:**
 
-```
-T^{ijk} = (2η/r) ε^{ijk}  (i,j,k ∈ {0,1,2})
-```
+- `construct_torsion_tensor(mode, r, eta, V, metric, dim=4, logger=None, frame_convention="legacy_euclidean", signature="euclidean")`: `AX`, `VT`, `MX` に対応する `T^a_{bc}` を構成します。
 
-空間方向のみに存在し、軸性ベクトルS^μを定義:
-```
-S^μ = (1/6) ε^{μνρσ} T_{νρσ}
-```
-
-**T2: ベクトルトレース**
-
-```
-T^{abc} = (1/3)(η^{ac}T^b - η^{ab}T^c)
-T^μ = (0, 0, 0, V)
-```
-
-S¹方向のみに存在。
-
-**主要関数:**
-
-- `build_torsion_tensor(mode, eta, V, r)`: ansatzからT^{abc}を構成
-
-### scalar.py
-
-トーションスカラーの計算。
-
-**トーションスカラー T:**
-
-```
-T = T_{abc} T^{abc}
-```
-
-## 使用例
+Lorentzian LZ-native construction では次の形で使います。
 
 ```python
-from dppu.torsion import Mode, NyVariant, build_torsion_tensor
+from sympy import Matrix, symbols
+from dppu.torsion.ansatz import construct_torsion_tensor
+from dppu.torsion.mode import Mode
 
-# トーションテンソル構成
-T = build_torsion_tensor(Mode.MX, eta=-1.0, V=2.0, r=1.0)
+q = symbols("q", positive=True)
+eta, V = symbols("eta V", real=True)
+metric = Matrix.diag(-1, 1, 1, 1)
 
-# Nieh-Yan密度
-from dppu.torsion import compute_nieh_yan_full
-N = compute_nieh_yan_full(T, R)
+T = construct_torsion_tensor(
+    Mode.MX,
+    q,
+    eta,
+    V,
+    metric,
+    dim=4,
+    frame_convention="lz_native",
+    signature="lorentzian",
+)
 ```
 
-## 物理的意味
+### `scalar.py`
 
-- **軸性トーション (AX)**: スピン-スピン相互作用に関連
-- **ベクトルトーション (VT)**: 質量生成機構に関連
-- **混合モード (MX)**: 両方の効果を含む一般的設定
+Torsion scalar computation。
+
+```text
+T = T_abc T^abc
+```
+
+## 注記
+
+- `AX` と `VT` は single-channel active torsion branches です。
+- `MX` は `eta` と `V` の両方を持ちます。
+- Lorentzian LZ-native callers では `signature="lorentzian"` と `frame_convention="lz_native"` を使います。
 
 ## 依存関係
 
-- [utils](../utils/README_ja.md): Levi-Civita記号
-
-## 関連モジュール
-
-- [connection](../connection/README_ja.md): トーションからcontortionを計算
-- [curvature](../curvature/README_ja.md): Nieh-Yan項のREE部分
+- [utils](../utils/README_ja.md): epsilon tensors と symbolic helpers。
+- [engine](../engine/README_ja.md): contortion と EC connection construction。
+- [curvature](../curvature/README_ja.md): `REE` Nieh-Yan term に使う curvature data。

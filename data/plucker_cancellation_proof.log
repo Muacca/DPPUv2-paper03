@@ -127,6 +127,6 @@ Tracing the algebraic reason why P_SS = 0 (App B.2.4–B.2.6)
 
   P_S3 total: 0
 
-Computation time: 0.7s
+Computation time: 0.6s
 
 *Script: scripts/proofs/plucker_cancellation_proof.py

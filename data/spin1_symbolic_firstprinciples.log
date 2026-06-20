@@ -1,0 +1,75 @@
+spin1_symbolic_firstprinciples: starting first-principles symbolic derivation
+G_raw =
+Matrix([[8/r**2, -4/(L*r)], [-4/(L*r), 2/L**2]])
+H_raw =
+Matrix([[-16*L**2/r**4, -32*L/r**3], [-32*L/r**3, 48/r**2]])
+G_XX = 2*(4*L**2 + r**2)/(L**2*r**2)
+G_XY = 0
+G_YY = 0
+H_XX = 16*(-4*L**4 + 8*L**2*r**2 + 3*r**4)/(r**4*(4*L**2 + r**2))
+H_XY = 32*L*(5*L**2 + 2*r**2)/(r**3*(4*L**2 + r**2))
+H_YY = 48*L**2/(r**2*(4*L**2 + r**2))
+H_eff (Schur) = -112*(4*L**2 + r**2)/(3*r**4)
+lambda_phys = -56*L**2/(3*r**2)
+lambda_phys matches -56*L**2/(3*r**2): True
+lambda_phys at r=3, L=1: -56/27 < 0: True
+finite root of det(H-lambda*G)=0: -56*L**2/(3*r**2)
+finite root matches lambda_phys: True
+G[0,0] * vol_factor = 236.870506, witness = 236.870435, relerr = 2.98e-07, match = True
+G[1,1] * vol_factor = 532.958638, witness = 532.958162, relerr = 8.92e-07, match = True
+G[0,1] * vol_factor = -355.305758, witness = -355.305547, relerr = 5.95e-07, match = True
+Normalization: witness_G = pi^2 * L * r^3 * G_Ricci (volume factor from action integral)
+G_XX (Ricci, sqrt(13)-normalized, r=3,L=1) = 2.888889
+G_XX (Ricci, unnormalized u=(-2,3), r=3,L=1) = 37.555556
+G_XX (action-integral, sqrt(13)-normalized, r=3,L=1) = 769.8291  [App E.3: ~769.83]
+G_XX (action-integral, unnormalized u=(-2,3), r=3,L=1) = 10007.7789  [= 13 * 769.83]
+Note: lambda_phys = H_eff/G_XX is normalization-independent; all normalizations give -56/27 at r=3,L=1.
+G_YY = 0 (exact): True
+H_YY > 0 at r=3,L=1: True
+H_XY != 0 at r=3,L=1: True
+G_XX > 0 at r=3,L=1: True
+{
+  "script": "C:\\dev\\DPPU\\20_paper\\20_arXiv\\40_第三論文_v2\\script\\scripts\\paper03\\spin1_symbolic_firstprinciples.py",
+  "status": "PASS",
+  "exit_label": "PAPER03_SPIN1_SYMBOLIC_FIRSTPRINCIPLES_PASS",
+  "derivation_method": "first_principles_via_dppu_action_spin1_gradient",
+  "hardcoded_witness_inputs_used": false,
+  "normalization": "Ricci-scalar normalization for symbolic derivation. Witness G is in action-integral normalization: witness_G = pi^2*L*r^3 * G_Ricci. G_XX (action, sqrt(13)-normalized) ~ 769.83 at r=3,L=1. G_XX (action, unnormalized u=(-2,3)) ~ 10008 at r=3,L=1. lambda_phys = H_eff/G_XX is normalization-independent.",
+  "G_XX_symbolic": "2*(4*L**2 + r**2)/(L**2*r**2)",
+  "G_XY_symbolic": "0",
+  "G_YY_symbolic": "0",
+  "H_XX_symbolic": "16*(-4*L**4 + 8*L**2*r**2 + 3*r**4)/(r**4*(4*L**2 + r**2))",
+  "H_XY_symbolic": "32*L*(5*L**2 + 2*r**2)/(r**3*(4*L**2 + r**2))",
+  "H_YY_symbolic": "48*L**2/(r**2*(4*L**2 + r**2))",
+  "H_eff_schur_symbolic": "-112*(4*L**2 + r**2)/(3*r**4)",
+  "lambda_phys_symbolic_derived": "-56*L**2/(3*r**2)",
+  "lambda_phys_expected_form": "-56*L**2/(3*r**2)",
+  "lambda_phys_at_r3_l1": "-56/27",
+  "finite_pencil_root_symbolic": "-56*L**2/(3*r**2)",
+  "vol_normalization_factor": "pi^2 * L * r^3",
+  "G_oo_scaled_at_r3_l1": "236.870506",
+  "G_dd_scaled_at_r3_l1": "532.958638",
+  "G_od_scaled_at_r3_l1": "-355.305758",
+  "witness_G_oo": "236.870435",
+  "witness_G_dd": "532.958162",
+  "witness_G_od": "-355.305547",
+  "G_oo_rel_error": "2.982e-07",
+  "G_dd_rel_error": "8.925e-07",
+  "G_od_rel_error": "5.951e-07",
+  "G_XX_action_normalized_at_r3_l1": "769.8291",
+  "G_XX_action_unnormalized_at_r3_l1": "10007.7789",
+  "checks": {
+    "g_yy_exactly_zero": true,
+    "h_yy_positive_at_sample": true,
+    "h_xy_nonzero_at_sample": true,
+    "g_xx_positive_at_sample": true,
+    "lambda_phys_matches_formula": true,
+    "lambda_phys_negative_at_sample": true,
+    "pencil_root_matches_lambda": true,
+    "g_oo_firstprinciples_matches_witness": true,
+    "g_dd_firstprinciples_matches_witness": true,
+    "g_od_firstprinciples_matches_witness": true
+  }
+}
+status=PASS
+exit_label=PAPER03_SPIN1_SYMBOLIC_FIRSTPRINCIPLES_PASS

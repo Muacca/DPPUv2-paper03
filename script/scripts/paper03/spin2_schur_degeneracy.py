@@ -33,18 +33,26 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from dppu.utils.tee_logger import setup_log, teardown_log
+setup_log(__file__, log_dir='output')
 
 from sympy import (
-    symbols, sqrt, Rational, Matrix, pi, S, exp, ln, cancel, diff,
-    simplify, factor, Integer
+    symbols, sqrt, Rational, Matrix, S, exp, cancel, diff,
+    simplify
 )
 import numpy as np
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig, TopologyType, FiberMode
+from dppu.topology.unified import (
+    CurvatureSource,
+    DOFConfig,
+    FiberMode,
+    TopologyType,
+    UnifiedEngine,
+)
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
 
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 t0 = time.time()
 
@@ -135,6 +143,8 @@ cfg = DOFConfig(
     fiber_mode=FiberMode.NONE,   # no twist/mixing — pure spin-2 Hessian
     torsion_mode=Mode.AX,
     ny_variant=NyVariant.FULL,
+    weyl_source=CurvatureSource.LC,
+    riemann_source=CurvatureSource.LC,
 )
 eng = UnifiedEngine(cfg, NullLogger())
 eng.run()
@@ -331,3 +341,4 @@ print()
 print(f"Computation time: {dt_total:.1f}s")
 print()
 print("*Script: script/paper03/spin2_schur_degeneracy.py")
+teardown_log()

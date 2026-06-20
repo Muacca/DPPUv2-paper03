@@ -27,12 +27,12 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import FiberMode, TopologyType, UnifiedEngine, make_config
 
 from sympy import S, simplify, Matrix
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 
 # ===========================================================================
@@ -241,14 +241,22 @@ def main():
     print("=" * 65)
 
     print("\n[Running engines...]")
-    _cfg_eng_s3 = DOFConfig.from_engine('TwistS3S1Engine')
-    _cfg_eng_s3.torsion_mode = Mode.AX
-    _cfg_eng_s3.ny_variant = NyVariant.FULL
+    _cfg_eng_s3 = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_s3 = UnifiedEngine(_cfg_eng_s3, NullLogger())
     eng_s3.run()
-    _cfg_eng_nil3 = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_eng_nil3.torsion_mode = Mode.AX
-    _cfg_eng_nil3.ny_variant = NyVariant.FULL
+    _cfg_eng_nil3 = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_nil3 = UnifiedEngine(_cfg_eng_nil3, NullLogger())
     eng_nil3.run()
     print("  Done\n")

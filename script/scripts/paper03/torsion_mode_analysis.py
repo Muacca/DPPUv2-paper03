@@ -23,13 +23,13 @@ import time
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 
-from sympy import (S, simplify, symbols, Matrix, factor, expand,
-                   collect, sqrt, Rational, pprint, oo)
+from sympy import (S, simplify, symbols, Matrix, expand,
+                   collect, sqrt)
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 
 def compute_pfaffian_sum(R):
@@ -61,14 +61,20 @@ def task1_p_at_omega_zero():
     # --- S³×S¹ ---
     print("\n  [S³×S¹ MX mode] Running engine...")
     t0 = time.time()
-    _cfg_eng_s3 = DOFConfig.from_engine('VectorTwistS3S1Engine')
-    _cfg_eng_s3.torsion_mode = Mode.MX
-    _cfg_eng_s3.ny_variant = NyVariant.FULL
+    _cfg_eng_s3 = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=False,
+        torsion_mode=Mode.MX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     eng_s3 = UnifiedEngine(_cfg_eng_s3, NullLogger())
     eng_s3.run()
     print(f"  Done ({time.time()-t0:.1f}s)")
 
-    R_s3 = eng_s3.data['riemann_abcd']
+    R_s3 = eng_s3.data['riemann_abcd_LC']
     params_s3 = eng_s3.data['params']
     omega1 = params_s3['omega1']
     omega2 = params_s3['omega2']
@@ -95,14 +101,20 @@ def task1_p_at_omega_zero():
     # --- Nil³×S¹ ---
     print("\n  [Nil³×S¹ MX mode] Running engine...")
     t0 = time.time()
-    _cfg_eng_nil3 = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_eng_nil3.torsion_mode = Mode.MX
-    _cfg_eng_nil3.ny_variant = NyVariant.FULL
+    _cfg_eng_nil3 = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.MX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     eng_nil3 = UnifiedEngine(_cfg_eng_nil3, NullLogger())
     eng_nil3.run()
     print(f"  Done ({time.time()-t0:.1f}s)")
 
-    R_nil3 = eng_nil3.data['riemann_abcd']
+    R_nil3 = eng_nil3.data['riemann_abcd_LC']
     params_nil3 = eng_nil3.data['params']
     omega_nil3 = params_nil3.get('omega', None)
 
@@ -454,4 +466,9 @@ def main():
 
 
 if __name__ == '__main__':
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
+    teardown_log()

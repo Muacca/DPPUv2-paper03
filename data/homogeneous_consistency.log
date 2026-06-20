@@ -19,6 +19,6 @@ Homogeneous ansatz consistency (App F.7)
     Nil3: antisymmetry residuals = 0, Jacobi residuals = 0
 
 
-Computation time: 3.9s
+Computation time: 4.5s
 
 *Script: scripts/paper03/homogeneous_consistency.py

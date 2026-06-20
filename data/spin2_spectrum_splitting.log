@@ -22,9 +22,9 @@ spin-2 spectrum splitting and soft mode identification (App D.9)
 
 [2] Compute H₁₁^q(ε), H₂₂^q(ε) (FA engine, finite difference)
 
-  Engine run: 27.9s
+  Engine run: 62.4s
   Substituting ω=0...
-  Substitution done: 0.8s
+  Substitution done: 1.0s
   Isotropic point equilibrium radius r₀ = 3.000000, V₀ = -355.3058
   ε=0: H₁₁^q = 1894.9644, H₂₂^q = 1894.9644
   Theoretical 64π²Lr/κ² = 1894.9643
@@ -82,6 +82,6 @@ spin-2 spectrum splitting and soft mode identification (App D.9)
   H₂₂^q does not change sign in grid range [0, 0.55] (remains > 0)
   → s ≠ 0 phase transition occurs at ε > 0.55 or as an independent s variable
 
-Computation time: 28.8s
+Computation time: 65.8s
 
 *Script: script/paper03/spin2_spectrum_splitting.py

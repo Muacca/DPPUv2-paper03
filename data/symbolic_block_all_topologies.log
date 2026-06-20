@@ -62,6 +62,6 @@ THEOREM VERIFIED FOR ALL TOPOLOGIES:
 ======================================================================
 
 
-Computation time: 2.6s
+Computation time: 2.9s
 
 *Script: scripts/proofs/symbolic_block_all_topologies.py

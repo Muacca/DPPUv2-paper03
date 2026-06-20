@@ -54,23 +54,37 @@ $$
 
 ここで $k=0,1,2$ は 3 本の spin-1 軸ラベルであり、空間テンソル指標 $i,j=1,2,3$ とは別物である。さらに $Y_k$ が null になる幾何学的理由は単純である。固定した $k$ に対して、twist $\omega_k$ は $e^k$ に時間方向成分を混入させ、mixing $\delta_k$ は逆に $e^0$ に空間方向成分を混入させる。 $Y_k$ はこの 2 つの変形が metric の二次形式では相殺する方向であり、その結果 $G\,Y_k=0$ が生じる。一方で coframe 変形そのものは消えないので、この方向は gauge ではなく constraint-like auxiliary として残る。
 
-この基底で
+この基底で、 $X$ 方向の kinetic coefficient と消去前の Hessian coefficient は
 
 $$
 G\,Y_k=0,
 \qquad
-G_{\rm phys}=769.8286\,I_3,
+G_{XX}=769.8286\,I_3,
 \qquad
-H_{\rm phys}=3223.06\,I_3
+H_{XX}=3223.06\,I_3
 $$
 
-となり、physical generalized eigenvalue は
+となる。ここで $H_{XX}$ は $Y_k$ を消去する前の $X$-block であり、physical finite eigenvalue は $X$ - $Y$ system 全体から得る必要がある。 $Y_k$ は kinetic term を持たない second-class auxiliary であり、 $G_{YY}=0$、 $H_{YY}=H_{\rm null}=894.845>0$、かつ
 
 $$
-\lambda_{\rm phys}=\frac{u^THu}{u^TGu}\bigg|_{u=(-2,3)}=\frac{41899.77}{10007.77}=4.1867>0
+H_{XY}=H_{\rm cross}=\frac{24081847}{3750}\simeq6421.8\neq0
 $$
 
-である。したがって physical spin-1 triplet は局所的に安定である。
+であるため、Schur 消去後の physical Hessian は
+
+$$
+H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}}
+$$
+
+となる。したがって有限一般化固有値は
+
+$$
+\lambda_{\rm phys}\simeq
+\frac{H_{\rm eff}}{G_{XX}}
+\simeq -0.4183<0
+$$
+
+を得る。対応する corrected mode は概ね $(0.9816,0.1909)$ 方向であり、kinetic norm は正である。したがって physical spin-1 triplet は非ゴースト・タキオン的であり、等方背景は spin-1 twist 方向に局所不安定である。
 
 **Fig. 10** Decomposition from raw spin-1 basis to physical/auxiliary basis. The rank-deficiency of $G$ is the origin of the decomposition.
 
@@ -79,12 +93,12 @@ flowchart TD
     raw["raw spin-1 basis<br/>(ω_k, δ_k)   k=0,1,2"]
 
     raw -->|"G·Y_k = 0<br/>(null direction)"| Yk["Y_k ∝ (1, 2L/r₀) = (1, 2/3)<br/>non-dynamical auxiliary<br/>H_null = 894.85 > 0"]
-    raw -->|"G·X_k ≠ 0<br/>(physical direction)"| Xk["X_k = (−2ω_k+3δ_k)/√13<br/>propagating spin-1 triplet<br/>λ_phys = 4.1867 > 0"]
+    raw -->|"G·X_k ≠ 0<br/>(non-null kinetic)"| Xk["corrected physical spin-1 mode<br/>≈(0.9816ω_k+0.1909δ_k)<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
 
     classDef default fill:none,stroke:black
 ```
 
-**Fig. 11** Eigenvalue spectrum of the field-space metric $G$ in the spin-1 sector. Three eigenvalues are exactly zero (null directions $Y_k$) and three are degenerate at $G_{\rm phys}=769.83$ (physical directions $X_k$), reflecting the SO(3) Schur structure.
+**Fig. 11** Eigenvalue spectrum of the field-space metric $G$ in the spin-1 sector. Three eigenvalues are exactly zero (null directions $Y_k$) and three are degenerate at $G_{XX}=769.83$ (non-null directions $X_k$), reflecting the SO(3) Schur structure.
 
 ![Fig. 11: G eigenvalue spectrum](LaTeX/figures/fig11_G_spectrum.png)
 
@@ -132,7 +146,7 @@ $$
 
 である。よって $Y_k$ は kinetic term を持たない補助方向、すなわち non-dynamical auxiliary と解釈するのが正しい。
 
-variable redundancy 排除の詳細（ $\delta g$ の明示的導出、 $H_{\rm null}=894.845>0$ の確認、 $\lambda_{\rm eff}\to\infty$ の計算過程）は Appendix E.4 を参照のこと。
+variable redundancy 排除の詳細（ $\delta g$ の明示的導出、 $H_{\rm null}=894.845>0$ の確認、 $\lambda_{\rm eff}\to\infty$ の計算過程）は Appendix E.2 を参照のこと。
 
 ### 5.4 quadratic decoupling
 
@@ -168,16 +182,32 @@ $$
 
 ### 5.5 Final quadratic sector for spin-1
 
-以上をまとめると、spin-1 sector の quadratic 寄与は
+以上をまとめると、spin-1 sector の quadratic 寄与は、intra-sector の $X$ - $Y$ cross term を含めて
 
 $$
-\mathcal{L}_{X}+\mathcal{L}_{Y}=\frac12 \dot{X}^T G_{\rm phys}\dot{X}-\frac12 X^T H_{\rm phys}X-\frac12 Y^TH_{\rm null}Y
+\mathcal{L}_{X,Y}
+=\frac12 \dot{X}^T G_{XX}\dot{X}
+-\frac12 X^T H_{XX}X
+-X^T H_{XY}Y
+-\frac12 Y^TH_{YY}Y
 $$
 
-で与えられる。 $Y$ には kinetic term がなく、raw basis で見えていた負方向は physical instability ではない。全 sector を含む完全な $\mathcal{L}_{\rm quad}$ のブロック分解は §6.2 にまとめる。
+で与えられる。 $Y$ には kinetic term がないため、代数 EOM
+
+$$
+Y=-\frac{H_{XY}}{H_{YY}}X
+$$
+
+により消去できる。したがって physical mode の有効質量項は
+
+$$
+H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}}
+$$
+
+であり、 $\lambda_{\rm phys}=H_{\rm eff}/G_{XX}\simeq -0.4183<0$ となる。したがって corrected physical mode は負の質量二乗を持つ非ゴースト・タキオンであり、auxiliary 由来の見かけの負方向ではなく真の spin-1 不安定である。全 sector を含む完全な $\mathcal{L}_{\rm quad}$ のブロック分解は §6.2 にまとめる。
 
 本節の結論は 以下3 点の通りである。
 
 1. raw basis $(\omega_i,\delta_i)$ はfinal physical basis ではない。
 2. $Y_k$ は gauge でも redundancy でもなく non-dynamical auxiliary である。
-3. $X_k$ は唯一の propagating spin-1 triplet であり、二次レベルで他 sector と decouple する。
+3. corrected $X_k$ は唯一の propagating spin-1 triplet であり、二次レベルで他 sector と decouple するが、非ゴースト・タキオン的である。

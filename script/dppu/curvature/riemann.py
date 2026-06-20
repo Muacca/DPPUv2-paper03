@@ -185,13 +185,14 @@ def verify_antisymmetry_strict(
 def compute_riemann_tensor(
     Gamma: MutableDenseNDimArray,
     C: MutableDenseNDimArray,
-    dim: int
+    dim: int,
+    frame_deriv: Optional[Any] = None
 ) -> MutableDenseNDimArray:
     """
     Compute Riemann tensor R^a_{bcd} from connection and structure constants.
 
     Formula (frame basis):
-        R^a_{bcd} = Γ^a_{ec} Γ^e_{bd} - Γ^a_{ed} Γ^e_{bc} + Γ^a_{be} C^e_{cd}
+        R^a_{bcd} = e_c(Γ^a_{bd}) - e_d(Γ^a_{bc}) + Γ^a_{ec} Γ^e_{bd} - Γ^a_{ed} Γ^e_{bc} + Γ^a_{be} C^e_{cd}
 
     Optimization (Option S):
         Since C^e_{cd} is antisymmetric in (c,d), the identity
@@ -209,7 +210,7 @@ def compute_riemann_tensor(
         This function will exhaust memory (OOM) before completing, even on
         machines with 64 GB RAM.
 
-        Do NOT run the full pipeline with SquashedOffDiagS3S1Engine or any
+        Do NOT run the full pipeline with an S3 off-diagonal shear
         configuration that activates more than one off-diagonal qi simultaneously.
         For off-diagonal Hessian computations, use the single-variable Method 2
         approach (z = exp(q/√2) rational substitution, one qi at a time) or a
@@ -219,6 +220,7 @@ def compute_riemann_tensor(
         Gamma: Connection coefficients Γ^a_{bc}
         C: Structure constants C^a_{bc}
         dim: Dimension
+        frame_deriv: Optional callable f(index, expr) computing the frame derivative e_{index}(expr)
 
     Returns:
         Riemann tensor R^a_{bcd} as MutableDenseNDimArray
@@ -231,6 +233,9 @@ def compute_riemann_tensor(
             for c in range(dim):
                 for d in range(c + 1, dim):
                     term = S.Zero
+
+                    if frame_deriv is not None:
+                        term += frame_deriv(c, Gamma[a, b, d]) - frame_deriv(d, Gamma[a, b, c])
 
                     # Γ^a_{ec} Γ^e_{bd} - Γ^a_{ed} Γ^e_{bc}
                     for e in range(dim):

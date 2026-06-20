@@ -1,177 +1,170 @@
 # Topology Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group providing topology-specific computation engines.
+Module group providing topology-specific computation engines and LZ-native topology invariants.
 
 ## Overview
 
-The topology layer implements the geometry of $M^3 \times S^1$ manifolds ($M^3$ = S³, T³, or Nil³) within the 15-step EC+NY computation pipeline. Paper 03 consolidates all topology engines into a unified configurable interface (`UnifiedEngine` + `DOFConfig`), replacing the individual `S3S1Engine`, `T3S1Engine`, `Nil3S1Engine` classes from paper 02.
+The topology layer implements the geometry of `M^3 x S^1` manifolds for the DPPUv7 EC+NY pipeline.  Runtime code uses the unified configurable interface (`UnifiedEngine` + `DOFConfig`) with explicit topology, signature, frame convention, deformation, fiber, and torsion fields.
+
+The canonical topology labels available through the unified interface are:
+
+```text
+S3 / T3 / Nil3 / Sol3
+```
+
+`Nil3` and `Sol3` support local Lie-frame reductions in this package.  Global quotient, spin-structure, and spectral data are separate layers of analysis.
 
 ## Class Hierarchy
 
-```
-BaseFrameEngine          (dppu/engine/pipeline.py)
-    └── TopologyEngine   (base_topology.py)   ← abstract
-            ├── S3Geometry    (s3.py)
-            ├── T3Geometry    (t3.py)
-            └── Nil3Geometry  (nil3.py)
+```text
+BaseFrameEngine            (dppu/engine/pipeline.py)
+`-- TopologyEngine         (base_topology.py)
+    |-- S3Geometry         (s3.py)
+    |-- T3Geometry         (t3.py)
+    |-- Nil3Geometry       (nil3.py)
+    `-- Sol3Geometry       (sol3.py)
 ```
 
-`UnifiedEngine` (in `unified.py`) is a factory that selects the appropriate subclass based on a `DOFConfig` instance.
+`UnifiedEngine` selects the concrete implementation from a `DOFConfig`.
 
 ---
 
 ## Modules
 
-### unified.py — UnifiedEngine and DOFConfig
+### `unified.py` - UnifiedEngine and DOFConfig
 
-Entry point for all paper 03 computations.
+Primary runtime entry point.
 
-**Key classes:**
+**Key classes and functions:**
 
-- `UnifiedEngine`: Factory creating the appropriate topology engine from a `DOFConfig`
-- `DOFConfig`: Configuration dataclass specifying active geometric DOFs
-- `TopologyType`: Enum — `S3` / `T3` / `NIL3`
-- `FiberMode`: Enum — `NONE` / `TWIST` / `MIXING` / `BOTH`
+- `TopologyType`: enum with `S3`, `T3`, `NIL3`, `SOL3`.
+- `FiberMode`: enum with `NONE`, `TWIST`, `MIXING`, `BOTH`.
+- `CurvatureSource`: enum with `LC`, `EC`.
+- `DOFConfig`: explicit configuration dataclass.
+- `make_config(...)`: build a `DOFConfig` from topology/configuration fields.
+- `make_engine(...)`: build the concrete topology engine.
+- `normalize_topology_str(label)`: normalize labels to `S3`, `T3`, `Nil3`, or `Sol3`.
 
-**DOFConfig parameters:**
+**Lorentzian LZ-native usage:**
 
-| Parameter | Type | Meaning |
-|---|---|---|
-| `topology` | `TopologyType` | Base topology |
-| `enable_squash` | `bool` | Activate ε deformation |
-| `enable_shear` | `bool` | Activate s (T₂) shear |
-| `fiber_mode` | `FiberMode` | Fiber DOF selection |
-| `isotropic_twist` | `bool` | Use single ω for all three directions |
-| `torsion_mode` | `Mode` | `AX` / `VT` / `MX` |
-| `ny_variant` | `NyVariant` | Nieh-Yan variant |
-| `enable_velocity` | `bool` | Activate velocity symbols for G metric |
-
-**Usage:**
+Use `signature="lorentzian"` and `frame_convention="lz_native"` for Lorentzian LZ-native computations.
 
 ```python
-from dppu.topology.unified import UnifiedEngine, DOFConfig, TopologyType, FiberMode
+from dppu.topology import FiberMode, make_engine
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
 
-cfg = DOFConfig(
-    topology=TopologyType.S3,
-    enable_squash=False,
-    fiber_mode=FiberMode.BOTH,
-    isotropic_twist=False,
+engine = make_engine(
+    "Sol3",
     torsion_mode=Mode.MX,
     ny_variant=NyVariant.FULL,
+    signature="lorentzian",
+    frame_convention="lz_native",
+    fiber_mode=FiberMode.NONE,
+    enable_squash=False,
 )
-engine = UnifiedEngine(cfg)
-engine.run()
-
-Veff = engine.data['potential']
-fp   = engine.get_free_params()
-```
-
-**Preset names (backward compatibility):**
-
-```python
-cfg = DOFConfig.from_engine('S3S1Engine')    # S³, squash=True, fiber=NONE
-cfg = DOFConfig.from_engine('T3S1Engine')    # T³, fiber=NONE
-cfg = DOFConfig.from_engine('Nil3S1Engine')  # Nil³, squash=True, fiber=NONE
-```
-
-See the docstring of `unified.py` for the complete equivalence table (13 legacy engines).
-
----
-
-### base_topology.py — TopologyEngine Abstract Base
-
-Abstract base class implementing the Template Method pattern for steps E4.1/E4.2.
-
-**Abstract methods (subclasses must implement):**
-
-- `_build_radial_and_deformation_params(params)` — define r/R, ε, s symbols
-- `_build_structure_constants(params, C)` — fill structure constant array C
-- `_compute_volume(params)` — return volume factor expression
-
-**Common concrete helpers:**
-
-- `_build_fiber_params(params)` — add ω / δ / cd / sd symbols (TWIST/MIXING/BOTH modes)
-- `_add_s3_twist_C(C, ...)` — embed twist terms $C^3_{jk}$
-- `_apply_s3_mixing_rotation_to_C(C, params)` — apply mixing rotation $M(\delta_0,\delta_1,\delta_2)$
-- `get_free_params()` — return dict of active SymPy Symbols
-- `get_riemann_lambdified()` — return lambdified $R_{abcd}$ for numerical scanning
-
----
-
-### s3.py — S³×S¹ (S3Geometry)
-
-**Mathematical structure:**
-
-- Lie group: SU(2)
-- Structure constants: $C^i_{jk} = (4/r)\,\lambda_i\,\varepsilon_{ijk}$ (scaling by ε, s)
-- Metric: bi-invariant
-- Background curvature: $R_{\rm LC} = 24/r^2$
-
-**Supported DOFs:** ε (squash), s (shear), q₃,q₄,q₅ (off-diagonal shear), TWIST (ω₁,ω₂,ω₃), MIXING (δ₀,δ₁,δ₂)
-
-**Volume:** $V = 2\pi^2 L r^3$
-
-**Usage:**
-
-```python
-from dppu.topology.s3 import S3Geometry
-from dppu.topology.unified import DOFConfig, TopologyType
-
-cfg = DOFConfig.from_engine('S3S1Engine')
-engine = S3Geometry(cfg)
 engine.run()
 ```
 
----
+### `base_topology.py` - TopologyEngine
 
-### t3.py — T³×S¹ (T3Geometry)
+Abstract base class implementing topology-specific hooks for the engine pipeline.
 
-**Mathematical structure:**
+**Subclass hooks:**
 
-- Lie group: U(1)³ (Abelian)
-- Structure constants: all zero
-- Metric: flat
-- Background curvature: $R_{\rm LC} = 0$
+- `_build_radial_and_deformation_params(params)`: define scale/deformation symbols.
+- `_build_structure_constants(params, C)`: fill frame structure constants.
+- `_compute_volume(params)`: return the topology volume factor.
 
-**Volume:** $V = (2\pi)^4 L r^3$ (isotropic scaling $R_1 = R_2 = R_3 = r$)
+### `s3.py` - S3Geometry
 
----
+`S3 x S1` engine based on the SU(2) Lie group.
 
-### nil3.py — Nil³×S¹ (Nil3Geometry)
+- LZ reduced-sector specialization: `(a,b,c,u,v) = (4,4,4,0,0)`.
+- LZ scalar `chi`: `4`.
+- Closed isotropic reference topology.
 
-**Mathematical structure:**
+### `t3.py` - T3Geometry
 
-- Lie group: Heisenberg group
-- Structure constants: $[E_0, E_1] = (1/R)E_2$
-- Metric: left-invariant (**NOT bi-invariant**)
-- Background curvature: $R_{\rm LC} = -1/(2R^2)$
+`T3 x S1` engine for the abelian flat three-torus.
 
-**Important:** Nil³ does not admit a bi-invariant metric, so the general Koszul formula is used (see CONVENTIONS §5).
+- LZ reduced-sector specialization: `(a,b,c,u,v) = (0,0,0,0,0)`.
+- LZ scalar `chi`: `0`.
+- Flat reference topology.
 
-**Volume:** $V = (2\pi)^4 L R^3$
+### `nil3.py` - Nil3Geometry
+
+`Nil3 x S1` engine for the Heisenberg nilmanifold.
+
+- LZ reduced-sector specialization: `(a,b,c,u,v) = (0,0,-1,0,0)`.
+- LZ scalar `chi`: `-1/12`.
+- Supports a local isotropic-scale reduction.
+- General Koszul formula is used because `Nil3` is not bi-invariant.
+
+### `sol3.py` - Sol3Geometry
+
+`Sol3 x S1` engine for the solvable Thurston geometry.
+
+- LZ reduced-sector specialization: `(a,b,c,u,v) = (0,0,0,1,-1)`.
+- LZ scalar `chi`: `-1/3`.
+- Supports a local isotropic-scale reduction.
+- Spatial structure constants are rigid under the diagonal frame scaling used here.
+
+### `lz_invariants.py`
+
+LZ-native topology invariant extraction.
+
+**Key objects and functions:**
+
+- `A, B, C, U, W`: five-parameter LZ-native symbols.
+- `Q`: positive isotropic scale symbol.
+- `CANONICAL_TOPOLOGIES`: `("S3", "T3", "Nil3", "Sol3")`.
+- `engine_lz_structure_constants(topology)`: return LZ-native dense structure constants and the engine scale symbol.
+- `extract_lz_five_parameter_specialization(topology)`: extract `(a,b,c,u,v)`.
+- `topology_lz_parameter_table()`: return all canonical specializations.
+
+This module is used by chi/scalar-curvature derivations and reduced-sector helpers.
+
+### `class_a.py`
+
+Class-A topology invariants for the four canonical Bianchi class-A homogeneous three-topologies: T3, Nil3, Sol3, S3.
+
+**Key functions:**
+
+- `structure_entries_class_a(topology)`: nonzero structure constants ``{(up, i, j): coeff}`` (1-based).
+- `structure_constants_array(topology)`: dense 3×3×3 array (0-based).
+- `n_matrix_from_structure_constants(structure)`: Bianchi n-matrix ``n^{ij} = (1/2) ε^{ikl} C^j_{kl}``.
+- `exterior_derivative_matrix_d1(structure)`: closedness operator for constant left-invariant 1-forms (equals n-matrix).
+- `topology_n_data(topology)`: full dict with rank, kernel dimension, and d_zero.
+- `rational_orthogonal_matrix()`: fixed rational SO(3) element for frame-rotation checks.
+- `rotate_n_matrix(n_mat, rotation)`: apply frame rotation ``R n R^T``.
+- `vector_norm(metric, vector)`: scalar ``v^T G v``.
+- `crosscheck_class_a_against_engine(topology)`: development-time validation — checks class-A entries agree with LZ engine up to a global scale factor.
+
+### `lz_adapter.py`
+
+Legacy-to-LZ index conversion helpers and verification utilities for earlier convention transitions.
+
+### `bianchi_ix.py`
+
+Auxiliary Bianchi IX / anisotropy helper used for comparison and guardrail calculations.  It is not part of the main `UnifiedEngine` topology dispatch.
 
 ---
 
 ## Topology Comparison
 
-| Property | S³×S¹ | T³×S¹ | Nil³×S¹ |
-|----------|-------|-------|---------|
-| Structure constants | $\varepsilon_{ijk}$ | 0 | $[E_0,E_1]=E_2$ |
-| Background curvature | +24/r² | 0 | −1/(2R²) |
-| bi-invariant | Yes | Yes | **No** |
-| Koszul formula | Simplified | Trivial | General |
-| Supported squash | Yes | No | Yes |
-| Supported fiber | TWIST/MIXING/BOTH | TWIST | TWIST |
+| Topology | LZ specialization `(a,b,c,u,v)` | `chi` | note |
+|----------|---------------------------------|------:|----------------|
+| `S3` | `(4,4,4,0,0)` | `4` | closed isotropic reference |
+| `T3` | `(0,0,0,0,0)` | `0` | flat reference |
+| `Nil3` | `(0,0,-1,0,0)` | `-1/12` | local isotropic-scale reduction |
+| `Sol3` | `(0,0,0,1,-1)` | `-1/3` | local isotropic-scale reduction |
 
 ## Dependencies
 
-- [engine](../engine/README.md): `BaseFrameEngine`
-- [geometry](../geometry/README.md): Metric definitions
-- [connection](../connection/README.md): Connection computation
-- [curvature](../curvature/README.md): Curvature computation
-- [torsion](../torsion/README.md): Torsion construction
-- [action](../action/README.md): Action and stability
+- [engine](../engine/README.md): `BaseFrameEngine`, metric, connection, and pipeline infrastructure.
+- [curvature](../curvature/README.md): curvature computation and spatial curvature helpers.
+- [torsion](../torsion/README.md): torsion mode construction.
+- [action](../action/README.md): action and effective-potential helpers.

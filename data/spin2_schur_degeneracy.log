@@ -24,7 +24,7 @@ spin-2 five-fold degeneracy at isotropic point (App D.9)
 
 [4] Symbolic computation of H_εε and H_ss (FAEngine, LC only)
 
-  Engine computation time: 4.9s
+  Engine computation time: 6.7s
 
   H_εε (α=0, ε=s=0) = 128*pi**2*L*r/(3*kappa**2)
   H_ss (α=0, ε=s=0) = 128*pi**2*L*r/kappa**2
@@ -100,6 +100,6 @@ Results summary (App D.9)
      μ₁² = H₁₁^(q)/G₁₁^(q) = H_εε/G_εε = 48π² (known result (App D.9))
      All 5 components: μ_A² = 48π² for A=1,...,5  confirmed [OK]
 
-Computation time: 5.8s
+Computation time: 7.6s
 
 *Script: script/paper03/spin2_schur_degeneracy.py

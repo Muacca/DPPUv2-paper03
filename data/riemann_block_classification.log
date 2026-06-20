@@ -194,6 +194,6 @@ Running [Nil³×S¹ with Isotropic Twist]...
 
   Related analysis: Index contraction analysis for P=Σ R_{abcd} (*R)^{abcd}
 
-Computation time: 2.9s
+Computation time: 0.5s
 
 *Script: scripts/proofs/riemann_block_classification.py

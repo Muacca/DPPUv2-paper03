@@ -1,15 +1,17 @@
 %==============================================================================
-% Appendix E: Spin-1 Sector: H, G, and Generalised Eigenvalue Analysis
+% Appendix E: Spin-1 Sector: Schur Reduction and Finite Generalised Eigenvalue
 %==============================================================================
-\section{Spin-1 Sector: $H$, $G$, and Generalised Eigenvalue Analysis}
+\section{Spin-1 Sector: Schur Reduction and Finite Generalised Eigenvalue}
 \label{app:E}
 
-This appendix summarises the raw quadratic form and the transformation to the
-final basis for the spin-1 sector.
+This appendix summarises the raw quadratic form of the spin-1 sector, the
+rank-deficient kinetic metric, the identification of the non-dynamical auxiliary
+direction, and the finite generalised eigenvalue obtained after Schur
+elimination.
 
 \subsection{Raw Quadratic Blocks}
 
-At the isotropic point $r_0=3$, $L=1$,
+At the isotropic point $r_0=3$, $L=1$, each axis $k=0,1,2$ has
 \begin{equation}
   H_2 =
   \begin{pmatrix}
@@ -23,117 +25,164 @@ At the isotropic point $r_0=3$, $L=1$,
     -355.305547 & 532.958162
   \end{pmatrix}.
 \end{equation}
-The raw Hessian alone is insufficient for determining physical (in)stability; the
-full pair $(H,G)$ must be treated as a generalised eigenvalue problem.
+Here $H_2$ is the potential Hessian and $G_2$ is the field-space kinetic metric.
+The raw Hessian alone is insufficient for determining physical mass.  The
+quadratic form must be treated together with the rank-deficient kinetic metric
+and the auxiliary constraint.
 
-\subsection{Null Mode and Physical Mode}
-
-The null direction is
-\begin{equation}
-  Y_k \propto (\omega_k,\delta_k) = \!\left(1,\frac{2}{3}\right),
-  \qquad k=0,1,2,
-\end{equation}
-and the physical direction is
-\begin{equation}
-  X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}}.
-\end{equation}
-In this basis,
-\begin{equation}
-  G\,Y_k = 0,
-  \qquad
-  G_\phys = 769.8286\,I_3,
-  \qquad
-  H_\phys = 3223.06\,I_3,
-  \qquad
-  \lambda_\phys = 4.1867 > 0.
-\end{equation}
-
-\subsection{Auxiliary Interpretation Summary}
-
-$Y_k$ is neither gauge nor variable redundancy.  Indeed,
-\begin{equation}
-  \delta g_{\tau,\sigma^0} \neq 0,
-  \qquad
-  H_\mathrm{null} = 894.845 > 0,
-  \qquad
-  \lambda_\mathrm{eff} \to +\infty,
-\end{equation}
-so $Y_k$ is interpreted as a non-dynamical auxiliary without a kinetic term.
-
-\subsection{Detailed Exclusion of Variable Redundancy}
+\subsection{Null Direction and Auxiliary Character}
 \label{app:E:Yk}
 
-We detail the exclusion of $Y_k$ as variable redundancy (elaborating
-\S\ref{sec:spin1:notgauge}).
-
-\paragraph{Necessary conditions for variable redundancy:}
-\begin{enumerate}
-  \item $\delta g_{\mu\nu}=0$ (metric variation vanishes),
-  \item $H_\mathrm{null}=0$ (Hessian along the null direction vanishes),
-  \item $\lambda_\mathrm{eff}$ finite.
-\end{enumerate}
-None of these are satisfied, as we now show.
-
-\paragraph{Exclusion of condition~1 ($\delta g_{\tau,\sigma^0}\neq 0$):}
-
-For axis $k=0$, the variation along $Y_0$ direction gives
+The kinetic metric has the null direction
 \begin{equation}
-  \delta e^3_\text{twist} = +\frac{2L}{r_0} e^0,
+  Y_k \propto (\omega_k,\delta_k)=\left(1,\frac{2}{3}\right),
+\end{equation}
+with
+\begin{equation}
+  G_2Y_k\simeq 0,
   \qquad
-  \delta e^3_\text{mixing} = -\frac{2L}{r_0} e^0,
+  H_{YY}=Y_k^T H_2Y_k\simeq 894.845>0.
 \end{equation}
-so $\delta e^3 = 0$.  However,
+Thus $Y_k$ has no kinetic term but has non-zero potential curvature.  It is a
+second-class auxiliary direction.
+
+The direction $Y_k$ is neither gauge nor variable redundancy.  For axis $k=0$,
+the variation along $Y_0$ gives
 \begin{equation}
-  \delta e^0 = +\frac{2L}{r_0} e^3
+  \delta e^3_\text{twist}=+\frac{2L}{r_0}e^0,
+  \qquad
+  \delta e^3_\text{mixing}=-\frac{2L}{r_0}e^0,
 \end{equation}
-remains, yielding
+so the total variation of $e^3$ vanishes.  However, the coframe variation
 \begin{equation}
-  \delta g_{\tau,\sigma^0}
-  = (\delta e^0)_\tau\,(e^0)_{\sigma^0}
-  = \frac{2L}{r_0}\,(e^3)_\tau\,(e^0)_{\sigma^0} \neq 0.
+  \delta e^0=+\frac{2L}{r_0}e^3
 \end{equation}
-At $r_0=3$, $L=1$ this gives $2L/r_0=2/3\neq 0$.  Condition~1 is excluded.
-The same conclusion holds for $k=1,2$.
-
-\paragraph{Exclusion of condition~2 ($H_\mathrm{null}>0$):}
-
-The Hessian along the null direction $Y=(1,\,2/3)^T$ is
+remains and therefore produces
 \begin{equation}
-  H_\mathrm{null} = Y^T H_2\, Y = 894.845 > 0.
+  \delta g_{\tau,\sigma^0}\neq 0.
 \end{equation}
-Condition~2 is excluded.
+Moreover, since $H_{YY}>0$ while $G_2Y_k=0$, the effective Rayleigh quotient
+along $Y_k$ diverges, $\lambda_\mathrm{eff}\to\infty$.  Hence $Y_k$ is correctly
+interpreted as a non-dynamical auxiliary, not as variable redundancy.
 
-\paragraph{Exclusion of condition~3 ($\lambda_\mathrm{eff}\to+\infty$):}
+\subsection{Non-null Coordinate and Schur Data}
 
-The Rayleigh quotient at $v=Y_k$ gives denominator $G_2 Y_k = 0$, while the
-numerator $H_\mathrm{null} = 894.845 > 0$, so
+As a complementary non-null coordinate we use
 \begin{equation}
-  \lambda_\mathrm{eff}(Y_k) = \frac{Y^T H_2 Y}{Y^T G_2 Y} \to +\infty.
+  X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}}.
 \end{equation}
-Condition~3 is excluded.
+This coordinate spans the non-zero kinetic direction.  Its pre-elimination block
+coefficients are
+\begin{equation}
+  G_{XX}\simeq 769.8286,
+  \qquad
+  H_{XX}\simeq 3223.06.
+\end{equation}
+However, $Y_k$ remains in the same quadratic form as an auxiliary direction, so
+the finite physical eigenvalue is determined by the Schur reduction of the full
+$X$--$Y$ system, not by the $X$-block alone.
 
-All three necessary conditions for variable redundancy are excluded; $Y_k$ is
-confirmed to be a \textbf{non-dynamical auxiliary}.
+The remaining required coefficients are
+\begin{equation}
+  H_{YY}\simeq 894.845,
+  \qquad
+  H_{XY}
+    =\frac{24081847}{3750}
+    \simeq 6421.8\neq 0.
+\end{equation}
+The non-zero $H_{XY}$ is an auxiliary coupling that must not be discarded before
+elimination.
+
+\subsection{Schur Elimination}
+
+For each axis, the spin-1 quadratic Lagrangian can be written as
+\begin{equation}
+  \mathcal{L}_{X,Y}
+  =\frac{1}{2}\dot X^T G_{XX}\dot X
+   -\frac{1}{2}X^T H_{XX}X
+   -X^T H_{XY}Y
+   -\frac{1}{2}Y^T H_{YY}Y .
+\end{equation}
+Since $Y$ has no kinetic term, its algebraic equation of motion is
+\begin{equation}
+  \frac{\partial V}{\partial Y}=0,
+  \qquad\Rightarrow\qquad
+  Y=-\frac{H_{XY}}{H_{YY}}X.
+\end{equation}
+Substitution gives the physical Hessian
+\begin{equation}
+  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
+\end{equation}
+and hence the finite generalised eigenvalue
+\begin{equation}
+  \lambda_\phys
+  =\frac{H_\mathrm{eff}}{G_{XX}}
+  =\frac{H_{XX}-H_{XY}^2/H_{YY}}{G_{XX}}
+  \simeq -0.4183<0.
+\end{equation}
+In the symbolic Ricci normalisation the same Schur structure gives
+\begin{equation}
+  \lambda_\phys^\mathrm{symbolic}
+  =-\frac{56L^2}{3r^2}<0.
+\end{equation}
+The two magnitudes should not be identified directly because the normalisations
+differ, but the sign and physical classification agree.
+
+\subsection{Corrected Mode and Ghost Test}
+
+The corrected mode corresponding to the finite generalised eigenvalue is,
+in Euclidean unit normalisation,
+\begin{equation}
+  v_\mathrm{corr}\simeq (0.9816,\;0.1909)
+\end{equation}
+in the raw $(\omega_k,\delta_k)$ coordinates.  Its kinetic norm is
+\begin{equation}
+  v_\mathrm{corr}^T G_2 v_\mathrm{corr}\simeq 114.5>0.
+\end{equation}
+Thus the corrected spin-1 mode is not a ghost; it is a tachyonic mode with
+negative mass squared and positive kinetic norm.
 
 \subsection{Final Statement}
 
-The final conclusions for the spin-1 sector are the following two points.
+The spin-1 conclusion is:
 \begin{enumerate}
-  \item The propagating triplet is $X_k$ alone.
-  \item $Y_k$ is a constraint-like auxiliary direction and is not included in the
-        physical mass spectrum.
+  \item $Y_k$ is neither gauge nor redundancy, but a non-dynamical auxiliary.
+  \item The $X$--$Y$ cross term $H_{XY}$ is non-zero, so Schur elimination is
+        required for the finite physical eigenvalue.
+  \item After eliminating $Y_k$, the finite generalised eigenvalue is
+        $\lambda_\phys\simeq -0.4183<0$.
+  \item The corrected physical mode has positive kinetic norm and is therefore
+        a tachyonic non-ghost mode.
 \end{enumerate}
-The negative eigenvalue of the raw basis cannot be read directly as a physical
-instability.
 
 \subsection{Computational Verification}
 
+The scripts verify the following values:
 \begin{itemize}
-  \item Numerical computation of $H_2$, $G_2$ and physical/null basis: \\
-        \texttt{paper03/spin1\_null\_mode\_analysis.py}
-  \item Strict computation of the $G$ metric (field-space metric): \\
+  \item $\lambda_\phys\simeq -0.4183$;
+  \item $\lambda_\phys^\mathrm{symbolic}=-56L^2/(3r^2)$;
+  \item $H_{XY}=24081847/3750$;
+  \item $v_\mathrm{corr}\simeq (0.9816,0.1909)$;
+  \item $v_\mathrm{corr}^TGv_\mathrm{corr}\simeq 114.5>0$.
+\end{itemize}
+
+Scripts:
+\begin{itemize}
+  \item First-principles symbolic derivation via \texttt{dppu.action.spin1\_gradient}:
+    derives $G$ and $H$ symbolically, obtains
+    $\lambda_\phys^\mathrm{symbolic}=-56L^2/(3r^2)$ from the computed expression,
+    confirms agreement with the degenerate-pencil finite root, and cross-checks $G$
+    against the witness values after scaling by the volume factor $\pi^2 L r^3$:
+        \texttt{paper03/spin1\_symbolic\_firstprinciples.py}
+  \item Canonical backing script assembling $G_{XX}$, $H_{XX}$, $H_{XY}$, and
+    $H_{YY}$ from the raw $G,H$ witness data, confirming the Schur-reduced
+    $\lambda_\phys\simeq -0.4183<0$ and positive kinetic norm; also incorporates
+    the first-principles symbolic derivation and $G$ witness cross-check:
         \texttt{paper03/spin1\_kinetic\_metric.py}
-  \item Numerical confirmation of variable redundancy exclusion
-        ($\delta g\neq 0$, $H_\mathrm{null}>0$, $\lambda_\mathrm{eff}\to\infty$):
+  \item Verifies that $Y_k$ is kinetic-null and non-dynamical, and connects this
+    auxiliary classification to the Schur-reduced spin-1 result:
+        \texttt{paper03/spin1\_null\_mode\_analysis.py}
+  \item Witness script excluding gauge or variable redundancy by checking the
+    coframe variation:
         \texttt{paper03/spin1\_auxiliary\_exclusion.py}
 \end{itemize}

@@ -177,6 +177,6 @@ Riemann block decomposability
   → P ≡ 0 confirmed ✓
 
 
-Computation time: 1.3s
+Computation time: 1.2s
 
 *Script: scripts/proofs/pfaffian_decomposability.py

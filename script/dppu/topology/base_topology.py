@@ -49,7 +49,7 @@ from sympy.tensor.array import MutableDenseNDimArray
 from ..engine.pipeline import BaseFrameEngine
 from ..torsion.mode import Mode
 from ..torsion.nieh_yan import NyVariant
-from ..utils.levi_civita import epsilon_symbol
+from ..utils.epsilon import epsilon_3d
 
 
 class TopologyEngine(BaseFrameEngine):
@@ -74,6 +74,8 @@ class TopologyEngine(BaseFrameEngine):
             logger=logger,
             checkpoint_mgr=checkpoint_mgr,
             skip_antisymmetry_check=getattr(config, 'skip_antisymmetry_check', False),
+            weyl_source=getattr(config, 'weyl_source', 'ec'),
+            riemann_source=getattr(config, 'riemann_source', 'ec'),
         )
 
     # =========================================================================
@@ -113,17 +115,39 @@ class TopologyEngine(BaseFrameEngine):
         Build metric, volume element, and structure constants.
 
         Processing order:
-          1. Set identity matrix metric
+          1. Build frame metric (Euclidean identity or Lorentzian diag(-,+,+,+))
           2. _build_structure_constants   ★ abstract  (C in-place)
           3. _compute_volume              ★ abstract  → total_volume
+          4. Store metric metadata in engine.data
         """
+        from ..engine.metric import create_frame_metric
+        from sympy import sign as sympy_sign
+
         params = self.data['params']
         dim    = self.data['dim']
 
-        self.data['metric_frame'] = Matrix.eye(dim)
+        sig = getattr(self.config, 'signature', 'euclidean')
+        fc  = getattr(self.config, 'frame_convention', 'legacy_euclidean')
+
+        metric = create_frame_metric(dim, signature=sig)
+        self.data['metric_frame']          = metric
+        self.data['metric_inv_frame']      = metric.inv()
+        self.data['metric_det']            = metric.det()
+        self.data['metric_signature_sign'] = sympy_sign(metric.det())
+        self.data['signature']             = sig
+        self.data['frame_convention']      = fc
+        self.data['volume_convention'] = (
+            "legacy_euclidean" if sig == "euclidean"
+            else "lorentzian_smoke_static_not_physical_action"
+        )
 
         C = MutableDenseNDimArray.zeros(dim, dim, dim)
         self._build_structure_constants(params, C)
+
+        if sig == "lorentzian" and fc == "lz_native":
+            from .lz_adapter import remap_dense_structure_constants_to_lz
+            C = remap_dense_structure_constants_to_lz(C, dim)
+
         self.data['structure_constants'] = C
 
         self.data['total_volume'] = self._compute_volume(params)
@@ -131,7 +155,8 @@ class TopologyEngine(BaseFrameEngine):
         self.logger.success(
             f"{self.config.topology.value.upper()}×S¹: "
             f"structure constants defined  "
-            f"[fiber={self.config.fiber_mode.value}]"
+            f"[fiber={self.config.fiber_mode.value}]  "
+            f"[sig={sig}]"
         )
 
     # =========================================================================
@@ -492,9 +517,10 @@ class TopologyEngine(BaseFrameEngine):
     # Analysis helpers — public API called from analysis scripts
     # =========================================================================
 
-    def get_riemann_lambdified(self):
+    def get_riemann_lambdified(self, source=None):
         """
         Lambdify R_{abcd} and return a function usable for numerical Pontryagin scanning.
+        If source is omitted, the engine's configured riemann_source is used.
 
         Returns
         -------
@@ -506,13 +532,18 @@ class TopologyEngine(BaseFrameEngine):
         from sympy import lambdify, S as _S
         import numpy as np
 
-        if 'riemann_abcd' not in self.data:
+        source_key = self._normalize_curvature_source(
+            source if source is not None else self.riemann_source
+        )
+        tensor_key = 'riemann_abcd_LC' if source_key == 'lc' else 'riemann_abcd'
+
+        if tensor_key not in self.data:
             raise RuntimeError(
                 "Run engine first (call engine.run() before get_riemann_lambdified())."
             )
 
         params = self.data['params']
-        R_sym  = self.data['riemann_abcd']
+        R_sym  = self.data[tensor_key]
         dim    = self.data['dim']
 
         # Candidate list covering both S³ 'r' and Nil³ 'R'
@@ -642,5 +673,7 @@ class TopologyEngine(BaseFrameEngine):
             parts.append("both(δ₀δ₁δ₂,ω₁ω₂ω₃)")
         if getattr(cfg, 'enable_offdiag_shear', False):
             parts.append("offdiag_shear(q₃q₄q₅)")
+        parts.append(f"Weyl:{cfg.weyl_source.value.upper()}")
+        parts.append(f"Riemann:{cfg.riemann_source.value.upper()}")
         parts.append(self.mode.value)
         return " + ".join(parts)

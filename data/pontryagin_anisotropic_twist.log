@@ -3,14 +3,14 @@ S³ anisotropic twist — Confirmation of P≡0 (App B.7)
 =================================================================
 =================================================================
   Task 1: Consistency check
-  VectorTwist(ω₁=ω₂=ω₃=ω) == TwistS3S1Engine(ω) ?
+  S3 vector twist with omega1=omega2=omega3 matches isotropic twist?
 =================================================================
 
   [Isotropic twist] Running isotropic twist engine...
-  Done (0.4s)
+  Done (0.3s)
 
   [Vector Twist] Running general vector twist engine...
-  Done (0.3s)
+  Done (0.4s)
 
   --- Comparison of P ---
   P_iso: no 'pontryagin' key (check engine implementation)
@@ -95,7 +95,3 @@ S³ anisotropic twist — Confirmation of P≡0 (App B.7)
   Final summary
 =================================================================
   [Conclusion] P ≡ 0 (vanishes even for general vector twist)
-
-Computation time: 1.4s
-
-*Script: scripts/paper03/pontryagin_anisotropic_twist.py

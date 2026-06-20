@@ -1,104 +1,113 @@
 # Action Layer
 
-⇒ [English](README.md)
+-> [English](README.md)
 
-作用（action）と安定性解析を担当するモジュール群。
+Einstein-Cartan action、effective potential、および reduced-sector branch extraction のためのモジュール群です。
 
 ## 概要
 
-ラグランジアン、有効ポテンシャル、安定性分類を提供。
+action layer は topology engine と downstream callers が利用する symbolic action utility を提供します。reduced-sector の入口は `reduced_sector.py` です。このモジュールは static branch function `F_branch` を抽出し、topology data から `chi` を導出し、`EH/AX/VT/MX` branches の auxiliary torsion shell を解きます。
 
 ## モジュール
 
-### lagrangian.py
+### `lagrangian.py`
 
-Einstein-Cartan + Nieh-Yanラグランジアンの構成。
+Einstein-Cartan + Nieh-Yan Lagrangian の構成。
 
-**作用:**
+**Action:**
 
-```
-S = ∫ d⁴x √|g| L
-L = R/(2κ²) + θ_NY × N
-```
-
-**主要関数:**
-
-- `build_lagrangian(R, N, kappa, theta_NY)`: ラグランジアンを構成
-- `integrate_angular(L, topology)`: 角度方向を積分
-
-### potential.py
-
-有効ポテンシャルの計算。
-
-**有効ポテンシャル:**
-
-角度積分後、r依存の有効ポテンシャルV(r)を抽出:
-
-```
-S = ∫ dr × V_eff(r)
+```text
+S = integral d^4x sqrt(|g|) L
+L = R/(2 kappa^2) + theta_NY * N + alpha * C^2
 ```
 
-**主要関数:**
+**主な関数:**
 
-- `extract_effective_potential(S_integrated)`: 有効ポテンシャルを抽出
-- `find_extrema(V, r_range)`: 極値を探索
-- `compute_barrier_height(V, r_min)`: バリア高さを計算
+- `compute_lagrangian(ricci_scalar, nieh_yan_density, kappa, theta_NY, weyl_scalar=0, alpha=0, logger=None)`: EC+NY(+Weyl) Lagrangian density を構成します。
+- `compute_action(L_density, volume_factor)`: 与えられた volume factor を掛けて action expression を構成します。
 
-### stability.py
+### `potential.py`
 
-安定性解析と分類。
+Effective potential の抽出と分解。
 
-**安定性タイプ:**
+**主な関数:**
 
-| タイプ | 条件 | 物理的解釈 |
-|--------|------|-----------|
-| type-I | V''(r*) > 0, V(r*) > 0 | 準安定（バリアあり） |
-| type-II | V''(r*) > 0, V(r*) < 0 | 真の極小（真空より低い） |
-| type-III | 極小なし or V''(r*) ≤ 0 | 不安定 |
+- `subs_zero_modes(expr, params)`: inactive symbols を zero に置換します。
+- `compute_effective_potential(action, logger=None)`: `V_eff = -action` を計算します。
+- `get_potential_function(potential, param_symbols)`: numerical function を構成します。
+- `decompose_potential(potential, r)`: symbolic expression を有用な成分に分解します。
 
-**主要関数:**
+### `ec_action.py`
 
-- `classify_stability(V, r_star)`: 安定性を分類
-- `StabilityResult`: 分類結果のデータクラス
+Engine pipeline で使う Einstein-Cartan effective-potential helper。
 
-```python
-@dataclass
-class StabilityResult:
-    stability_type: str  # 'type-I', 'type-II', 'type-III'
-    r_star: float        # 安定点の位置
-    V_star: float        # 安定点でのポテンシャル値
-    V_second: float      # 二次微分
-    barrier_height: float  # バリア高さ (type-Iのみ)
+**主な関数:**
+
+- `compute_c2_ec(data)`: EC curvature/torsion coefficient package を計算します。
+- `build_veff_ec(topology_type, torsion_mode=None, ny_variant=None, ...)`: symbolic EC effective potential を構成します。
+- `build_veff_ec_func(V_eff, symbols)`: effective-potential expression を lambdify します。
+
+### `palatini_first_order.py`
+
+class-A minisuperspace モデル（paper07）のための minimal first-order Palatini / EH density 計算。
+
+**Convention 注意**: Levi-Civita connection は class-A Koszul 式
+``[e_i, e_j] = +C^k_{ij} e_k`` を使用します。これは ``dppu/engine/levi_civita.py``
+（CONVENTIONS 3.2: ``[E_b, E_c] = -C^a_{bc} E_a``）と**符号規約が逆**です。
+この 2 つの実装は統合しないでください。
+
+**主な関数:**
+
+- `eh_density(topology, scales, deltas=None)`: first-order EH density 係数。
+- `palatini_reduced_density(topology, vector)`: connection 揺らぎを解いた EH density。
+- `minisuperspace_dewitt_metric()`: trace-free DeWitt metric ``diag(s2*s3, s1*s3, s1*s2)``。
+
+### `reduced_sector.py`
+
+Reduced-sector extraction helper。
+
+topology dependence を少数の symbolic branch functions と auxiliary equations に局在させるための層です。
+
+**主な object / 関数:**
+
+- `TOPOLOGIES`: canonical topology list、`("S3", "T3", "Nil3", "Sol3")`。
+- `MODES`: reduced branch list、`("EH", "AX", "VT", "MX")`。
+- `StaticBranchResult`: engine-derived branch result を保持する dataclass。
+- `chi_for_topology(topology)`: LZ-native topology specialization から `chi` を導出します。
+- `derive_static_branch_result(topology, mode)`: branch metadata 一式を返します。
+- `derive_static_branch_function(topology, mode)`: `F_branch` のみを返します。
+- `auxiliary_variables(expr)`: active auxiliary torsion variables を抽出します。
+- `solve_auxiliary_shell(expr)`: auxiliary equations を解き、Hessian / on-shell data を返します。
+
+呼び出し側では、これらの helper により次の reduced-sector identity を確認できます。
+
+```text
+F_branch | auxiliary shell = chi
+qdot^2 + chi = 0
 ```
 
 ## 使用例
 
 ```python
-from dppu.action import build_lagrangian, classify_stability
+import sympy as sp
 
-# ラグランジアン構成
-L = build_lagrangian(R, N, kappa=1.0, theta_NY=0.5)
+from dppu.action.reduced_sector import (
+    TOPOLOGIES,
+    MODES,
+    chi_for_topology,
+    derive_static_branch_function,
+    solve_auxiliary_shell,
+)
 
-# 安定性分類
-result = classify_stability(V_eff, r_star=1.5)
-print(f"Type: {result.stability_type}")
-print(f"r* = {result.r_star:.3f}")
-```
-
-## Phase1との統合
-
-Phase1スキャン結果はCSVに保存され、Phase2でのSD解析に使用される:
-
-```csv
-topology,ny_variant,V,eta,theta,r0,delta_V,stability_type
-S3,FULL,2.0,-1.0,0.0,1.234,0.056,type-I
+for topology in TOPOLOGIES:
+    for mode in MODES:
+        branch_f = derive_static_branch_function(topology, mode)
+        shell = solve_auxiliary_shell(branch_f)
+        assert sp.simplify(shell["on_shell"] - chi_for_topology(topology)) == 0
 ```
 
 ## 依存関係
 
-- [curvature](../curvature/README_ja.md): Ricciスカラー
-- [torsion](../torsion/README_ja.md): Nieh-Yan密度
-
-## 関連モジュール
-
-- [scanning](../scanning/README_ja.md): パラメータ空間のスキャン
+- [curvature](../curvature/README_ja.md): spatial curvature と `chi` derivation。
+- [topology](../topology/README_ja.md): topology engines と LZ-native structure constants。
+- [torsion](../torsion/README_ja.md): torsion mode definitions と ansatz construction。

@@ -416,7 +416,7 @@ def main():
     if max_all < 1.0:
         print("Case A: all mixed Hessians at zero level")
         print("  physical spin-1 mode X_k decouples from other sectors at quadratic order")
-        print("  λ_phys = 4.1867 > 0 indicates local stability within spin-1 sector")
+        print("  spin-1 stability is fixed by the separate Schur-reduced X-Y block")
     else:
         print("Case B: non-zero components found")
         print("  stability cannot be determined from spin-1 sector alone")
@@ -433,9 +433,9 @@ def main():
 
 
 if __name__ == '__main__':
-    import time as _time
-    _t_start = _time.time()
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
-    print(f"\nComputation time: {_time.time() - _t_start:.1f}s")
-    print()
-    print("*Script: scripts/paper03/spin1_cross_hessian.py")
+    teardown_log()

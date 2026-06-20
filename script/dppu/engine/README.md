@@ -1,144 +1,114 @@
 # Engine Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group providing computation pipeline foundations.
+Computation pipeline infrastructure and low-level frame-geometry helpers.
 
 ## Overview
 
-Provides the 15-step computation pipeline, logging, and checkpoint functionality.
+The engine layer provides the base pipeline used by topology engines, plus utilities for metric handling, Levi-Civita connection construction, contortion, Einstein-Cartan connection construction, spin-2 helpers, and checkpointing.
+
+`ComputationLogger` and `NullLogger` live in [utils](../utils/README.md) and are re-exported from `dppu.engine` for backward compatibility.
 
 ## Modules
 
-### pipeline.py
+### `pipeline.py`
 
-Base class for the computation pipeline.
+Base class for topology engines.
 
-**BaseFrameEngine:**
+**BaseFrameEngine step order:**
 
-Abstract base class for all topology engines. Executes 15 computation steps sequentially:
+1. `E4.1` - parameter setup.
+2. `E4.2` - metric, frame, volume, and structure constants.
+3. `E4.3` - Levi-Civita connection.
+4. `E4.3a` - LC Riemann/Ricci path.
+5. `E4.3b` - LC Weyl tensor path.
+6. `E4.4` - torsion ansatz.
+7. `E4.5` - contortion tensor.
+8. `E4.6` - Einstein-Cartan connection.
+9. `E4.7` - EC Riemann tensor.
+10. `E4.8` - EC Ricci scalar.
+11. `E4.8b` - EC Weyl scalar.
+12. `E4.9` - torsion scalar.
+13. `E4.10` - Nieh-Yan density.
+14. `E4.11` - Lagrangian construction.
+15. `E4.12` - angular/topology volume integration.
+16. `E4.13` - effective-potential extraction.
+17. `E4.15` - summary.
 
-1. **E4.1**: Parameter setup
-2. **E4.2**: Metric and frame definition
-3. **E4.3**: Christoffel symbols (general Koszul formula)
-4. **E4.4**: Torsion tensor construction
-5. **E4.5**: Contortion tensor
-6. **E4.6**: Einstein-Cartan connection
-7. **E4.7**: Riemann tensor (with strict verification)
-8. **E4.8**: Ricci scalar
-9. **E4.9**: Torsion scalar
-10. **E4.10**: Nieh-Yan density (all variants)
-11. **E4.11**: Lagrangian construction
-12. **E4.12**: Angular integration
-13. **E4.13**: Effective potential extraction
-14. **E4.14**: Stability analysis
-15. **E4.15**: Summary
+The `run(start_step="E4.1")` method runs from the requested start step to the end.  Call individual `step_E4_*` methods directly when only a partial pipeline is needed.
 
-**Abstract methods (implemented by subclasses):**
+### `metric.py`
 
-```python
-@abstractmethod
-def _define_structure_constants(self):
-    """Define structure constants C^a_{bc}"""
+Frame metric utilities.
 
-@abstractmethod
-def _define_metric(self):
-    """Define frame metric η_{ab}"""
+### `levi_civita.py`
 
-@abstractmethod
-def _get_volume_factor(self):
-    """Return volume factor"""
-```
+Levi-Civita connection from frame structure constants, using the Koszul formula.
 
-### logger.py
+### `contortion.py`
 
-Computation progress logging.
+Contortion tensor construction from torsion.
 
-**ComputationLogger:**
+### `ec_connection.py`
 
-Log output to file and console:
+Einstein-Cartan connection construction from the LC connection and contortion.
 
-```python
-from dppu.engine import ComputationLogger
+### `spin2.py`
 
-logger = ComputationLogger('dppu_run.log')
-logger.step(1, "E4.1", "Parameter setup")
-logger.info("Setting r = 1.0")
-logger.success("Step completed")
-```
+Spin-2/off-diagonal deformation helpers used by higher-order diagnostics.
 
-**NullLogger:**
-
-Disable log output (for testing):
-
-```python
-from dppu.engine import NullLogger
-
-logger = NullLogger()  # No output
-```
-
-### checkpoint.py
+### `checkpoint.py`
 
 Save and restore computation state.
-
-**CheckpointManager:**
-
-Save state at each step via pickle:
 
 ```python
 from dppu.engine import CheckpointManager
 
-ckpt = CheckpointManager('checkpoints/', enabled=True)
-
-# Save
-ckpt.save('E4.7', {'R': riemann_tensor})
-
-# Restore
-data = ckpt.load('E4.7')
-```
-
-**Enabling checkpoints:**
-
-```bash
-python scripts/pipeline/run_s3s1.py --mode MX --ny-variant FULL \
-    --checkpoint-dir ./checkpoints
+ckpt = CheckpointManager("checkpoints/", enabled=True)
+ckpt.save("E4.7", {"R": riemann_tensor})
+data = ckpt.load("E4.7")
 ```
 
 ## Usage
 
 ```python
-from dppu.topology import S3S1Engine
-from dppu.torsion import Mode, NyVariant
-from dppu.engine import ComputationLogger, CheckpointManager
+from dppu.topology import FiberMode, TopologyType, make_engine
+from dppu.torsion.mode import Mode
+from dppu.torsion.nieh_yan import NyVariant
 
-# Set up logger and checkpoint
-logger = ComputationLogger('run.log')
-ckpt = CheckpointManager('ckpt/', enabled=True)
-
-# Run engine
-engine = S3S1Engine(Mode.MX, NyVariant.FULL, logger, ckpt)
+engine = make_engine(
+    TopologyType.S3,
+    torsion_mode=Mode.MX,
+    ny_variant=NyVariant.FULL,
+    signature="lorentzian",
+    frame_convention="lz_native",
+    fiber_mode=FiberMode.NONE,
+    enable_squash=False,
+)
 engine.run()
 ```
 
-## Pipeline Customization
-
-Execute specific steps only:
+Partial execution can be done by calling explicit step methods:
 
 ```python
-engine = S3S1Engine(Mode.MX, NyVariant.FULL)
-
-# Execute steps 1-7 only (up to curvature computation)
-engine.run(stop_after='E4.7')
-
-# Resume from step 7
-engine.run(resume_from='E4.7')
+engine.step_E4_1_setup()
+engine.step_E4_2_metric_and_frame()
+engine.step_E4_3_christoffel_frame()
+engine.step_E4_4_torsion_ansatz_frame()
+engine.step_E4_5_contortion_frame()
+engine.step_E4_6_ec_connection_frame()
+engine.step_E4_7_riemann_tensor_frame()
 ```
 
 ## Dependencies
 
-- SymPy (symbolic computation)
-- pickle (checkpoints)
+- SymPy for symbolic tensor expressions.
+- [utils](../utils/README.md): logging, epsilon tensors, and symbolic helpers.
 
 ## Related Modules
 
-- [topology](../topology/README.md): Topology-specific engines
+- [topology](../topology/README.md): concrete topology engines.
+- [torsion](../torsion/README.md): torsion ansatz construction.
+- [curvature](../curvature/README.md): Riemann, Ricci, Weyl, and Pontryagin routines.
+- [action](../action/README.md): Lagrangian and effective-potential routines.

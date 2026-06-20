@@ -29,13 +29,13 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import FiberMode, TopologyType, UnifiedEngine, make_config
 
-from sympy import S, simplify, factor, symbols
+from sympy import S, simplify
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
-from dppu.utils.levi_civita import levi_civita_4d
+from dppu.utils.logger import NullLogger
+from dppu.utils.epsilon import epsilon_4d
 
 
 def expand_P_SS(engine_name: str, engine):
@@ -126,7 +126,7 @@ def expand_P_S3(engine_name: str, engine):
     print("\n  S3→SS dual correspondence:")
     for (a,b), (e,f), s in zip(S3_pairs, S3_duals, S3_signs):
         # Verify the value of ε_{abef}
-        eps = levi_civita_4d(a, b, e, f)
+        eps = epsilon_4d(a, b, e, f)
         print(f"    ε_{{{a}{b}{e}{f}}} = {eps:+d}  →  (*R)^{{{a}{b},cd}} ∝ {eps:+d} R_{{{e}{f},cd}}")
 
     # Breakdown of P_S3 by (c,d)
@@ -137,13 +137,13 @@ def expand_P_S3(engine_name: str, engine):
         for d in range(dim):
             term = S.Zero
             for (a,b), (e,f), s in zip(S3_pairs, S3_duals, S3_signs):
-                eps_ab_ef = levi_civita_4d(a, b, e, f)
+                eps_ab_ef = epsilon_4d(a, b, e, f)
                 # Both (a,b) and (b,a)
                 R_abcd = R[a, b, c, d]
                 R_efcd = R[e, f, c, d]
                 R_bacd = R[b, a, c, d]   # = -R[a,b,c,d]
                 R_fecd = R[f, e, c, d]   # = -R[e,f,c,d]
-                eps_ba_fe = levi_civita_4d(b, a, f, e)  # = same sign as ab_ef
+                eps_ba_fe = epsilon_4d(b, a, f, e)  # = same sign as ab_ef
 
                 term += eps_ab_ef * R_abcd * R_efcd
                 term += eps_ba_fe * R_bacd * R_fecd   # = eps * (-R) * (-R) = eps * R * R = same (both orientations)
@@ -249,14 +249,22 @@ def main():
     print("=" * 65)
 
     print("\n[Running engines...]")
-    _cfg_eng_s3 = DOFConfig.from_engine('TwistS3S1Engine')
-    _cfg_eng_s3.torsion_mode = Mode.AX
-    _cfg_eng_s3.ny_variant = NyVariant.FULL
+    _cfg_eng_s3 = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_s3 = UnifiedEngine(_cfg_eng_s3, NullLogger())
     eng_s3.run()
-    _cfg_eng_nil3 = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_eng_nil3.torsion_mode = Mode.AX
-    _cfg_eng_nil3.ny_variant = NyVariant.FULL
+    _cfg_eng_nil3 = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+    )
     eng_nil3 = UnifiedEngine(_cfg_eng_nil3, NullLogger())
     eng_nil3.run()
     print("  Done")

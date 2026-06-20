@@ -35,13 +35,13 @@ import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
 from dppu.curvature.hodge import compute_hodge_dual
-from dppu.engine.logger import NullLogger
-from sympy import lambdify, simplify, S as Szero
+from dppu.utils.logger import NullLogger
+from sympy import lambdify, simplify
 
 
 # ===========================================================================
@@ -130,7 +130,7 @@ def symbolic_verify(engine) -> dict:
     dict: {'P_symbolic': expr, 'P_is_zero': bool}
     """
     from sympy import S
-    R_sym = engine.data['riemann_abcd']
+    R_sym = engine.data['riemann_abcd_LC']
     dim = engine.data['dim']
 
     print("\n  [Symbolic computation] Computing P = ⟨R, ∗R⟩...")
@@ -139,7 +139,7 @@ def symbolic_verify(engine) -> dict:
     # P = Σ_{abcd} R_{abcd} * (ε_{cdef} R^{ab}_{ef})
     # Simplified: P = Σ R_{abcd} (*R)^{abcd}
     # Use numpy-based symbolic sum
-    from dppu.utils.levi_civita import levi_civita_4d
+    from dppu.utils.epsilon import epsilon_4d
 
     P_sym = S.Zero
     for a in range(dim):
@@ -154,7 +154,7 @@ def symbolic_verify(engine) -> dict:
                     # (*R)_{abcd} = (1/2) ε_{abef} R^{ef}_{cd}
                     for e in range(dim):
                         for f in range(dim):
-                            eps_val = levi_civita_4d(a, b, e, f)
+                            eps_val = epsilon_4d(a, b, e, f)
                             if eps_val == 0:
                                 continue
                             R_efcd = R_sym[e, f, c, d]
@@ -189,12 +189,18 @@ def run_phase3_0b(R_val: float, eta_val: float, do_symbolic: bool = True):
     # ------------------------------------------------------------------
     # Step 1: Run engine (symbolic computation)
     # ------------------------------------------------------------------
-    print("\n[Step 1] Running TwistNil3S1Engine symbolically...")
+    print("\n[Step 1] Running Nil3 isotropic twist engine symbolically...")
     t0 = time.time()
 
-    _cfg_engine = DOFConfig.from_engine('TwistNil3S1Engine')
-    _cfg_engine.torsion_mode = Mode.AX
-    _cfg_engine.ny_variant = NyVariant.FULL
+    _cfg_engine = make_config(
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=Mode.AX,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     engine = UnifiedEngine(_cfg_engine, NullLogger())
     engine.run()
 
@@ -402,8 +408,9 @@ def main():
 
 
 if __name__ == '__main__':
-    _t_start = time.time()
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
-    print(f"\nComputation time: {time.time() - _t_start:.1f}s")
-    print()
-    print("*Script: scripts/paper03/pontryagin_scan_nil3.py")
+    teardown_log()

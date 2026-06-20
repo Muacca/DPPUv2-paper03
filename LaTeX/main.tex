@@ -115,8 +115,9 @@ in Einstein--Cartan + Nieh--Yan Theory}
 
 \maketitle
 \begin{center}
-Version: v1\\
+Version: v2\\
 First release: 2026-03-21\\
+Revised: 2026-06-20
 \end{center}
 
 %------------------------------------------------------------------------------
@@ -166,9 +167,11 @@ The physical spin-1 mode is
 \[
    X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
 \]
-with generalised eigenvalue $\lambda_\phys = 4.1867 > 0$.  A mixed-Hessian
-computation confirms that $X_k$ fully decouples from the spin-2, radial, and
-torsion sectors at quadratic order.
+The finite generalised eigenvalue obtained after Schur elimination of the
+second-class auxiliary direction is $\lambda_\phys\simeq -0.4183<0$, with
+positive kinetic norm.  Thus the physical spin-1 triplet is tachyonic but
+non-ghost.  A mixed-Hessian computation confirms that the corrected spin-1 mode
+fully decouples from the spin-2, radial, and torsion sectors at quadratic order.
 
 Taking all results together, the model is understood as a unified geometric
 Landau-EFT on the homogeneous $\Sthree\times\Sone$ geometry, in which the
@@ -259,6 +262,7 @@ For questions, bug reports, or collaboration inquiries:
 \input{appendices/appF}  % Cross-Hessian Checks and Quadratic Decoupling
 \input{appendices/appG}  % Landau-EFT Selection Rules and Forbidden Terms
 \input{appendices/appH}  % Numerical Tables and Supplemental Data
+\input{appendices/appI}  % Reduction-order Artifact in the Spin-1 Sector
 
 %------------------------------------------------------------------------------
 % References

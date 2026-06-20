@@ -1,144 +1,114 @@
 # Engine Layer
 
-⇒ [English](README.md)
+-> [English](README.md)
 
-計算パイプラインの基盤を提供するモジュール群。
+Computation pipeline infrastructure と low-level frame-geometry helpers を提供します。
 
 ## 概要
 
-15ステップの計算パイプライン、ロギング、チェックポイント機能を提供。
+engine layer は topology engines が利用する base pipeline と、metric handling、Levi-Civita connection construction、contortion、Einstein-Cartan connection construction、spin-2 helpers、checkpointing を提供します。
+
+`ComputationLogger` と `NullLogger` は [utils](../utils/README_ja.md) にあり、backward compatibility のため `dppu.engine` からも re-export されています。
 
 ## モジュール
 
-### pipeline.py
+### `pipeline.py`
 
-計算パイプラインの基底クラス。
+Topology engines の base class。
 
-**BaseFrameEngine:**
+**BaseFrameEngine step order:**
 
-全トポロジーエンジンの抽象基底クラス。15ステップの計算を順次実行:
+1. `E4.1` - parameter setup。
+2. `E4.2` - metric, frame, volume, structure constants。
+3. `E4.3` - Levi-Civita connection。
+4. `E4.3a` - LC Riemann/Ricci path。
+5. `E4.3b` - LC Weyl tensor path。
+6. `E4.4` - torsion ansatz。
+7. `E4.5` - contortion tensor。
+8. `E4.6` - Einstein-Cartan connection。
+9. `E4.7` - EC Riemann tensor。
+10. `E4.8` - EC Ricci scalar。
+11. `E4.8b` - EC Weyl scalar。
+12. `E4.9` - torsion scalar。
+13. `E4.10` - Nieh-Yan density。
+14. `E4.11` - Lagrangian construction。
+15. `E4.12` - angular/topology volume integration。
+16. `E4.13` - effective-potential extraction。
+17. `E4.15` - summary。
 
-1. **E4.1**: パラメータ設定
-2. **E4.2**: 計量とフレーム定義
-3. **E4.3**: Christoffel記号（一般Koszul公式）
-4. **E4.4**: トーションテンソル構成
-5. **E4.5**: Contortionテンソル
-6. **E4.6**: Einstein-Cartan接続
-7. **E4.7**: Riemannテンソル（厳密検証付き）
-8. **E4.8**: Ricciスカラー
-9. **E4.9**: トーションスカラー
-10. **E4.10**: Nieh-Yan密度（全バリアント）
-11. **E4.11**: ラグランジアン構成
-12. **E4.12**: 角度積分
-13. **E4.13**: 有効ポテンシャル抽出
-14. **E4.14**: 安定性解析
-15. **E4.15**: サマリー
+`run(start_step="E4.1")` は指定 step から最後まで実行します。partial pipeline だけが必要な場合は、個別の `step_E4_*` methods を直接呼びます。
 
-**抽象メソッド（サブクラスで実装）:**
+### `metric.py`
 
-```python
-@abstractmethod
-def _define_structure_constants(self):
-    """構造定数 C^a_{bc} を定義"""
+Frame metric utilities。
 
-@abstractmethod
-def _define_metric(self):
-    """フレーム計量 η_{ab} を定義"""
+### `levi_civita.py`
 
-@abstractmethod
-def _get_volume_factor(self):
-    """体積因子を返す"""
-```
+Frame structure constants から Koszul formula によって Levi-Civita connection を構成します。
 
-### logger.py
+### `contortion.py`
 
-計算進捗のロギング。
+Torsion から contortion tensor を構成します。
 
-**ComputationLogger:**
+### `ec_connection.py`
 
-ファイルおよびコンソールへのログ出力:
+LC connection と contortion から Einstein-Cartan connection を構成します。
 
-```python
-from dppu.engine import ComputationLogger
+### `spin2.py`
 
-logger = ComputationLogger('dppu_run.log')
-logger.step(1, "E4.1", "Parameter setup")
-logger.info("Setting r = 1.0")
-logger.success("Step completed")
-```
+Higher-order diagnostics で使う spin-2/off-diagonal deformation helpers。
 
-**NullLogger:**
+### `checkpoint.py`
 
-ログ出力を無効化（テスト用）:
-
-```python
-from dppu.engine import NullLogger
-
-logger = NullLogger()  # 何も出力しない
-```
-
-### checkpoint.py
-
-計算状態の保存・復元。
-
-**CheckpointManager:**
-
-各ステップの状態をpickleで保存:
+Computation state の保存と復元。
 
 ```python
 from dppu.engine import CheckpointManager
 
-ckpt = CheckpointManager('checkpoints/', enabled=True)
-
-# 保存
-ckpt.save('E4.7', {'R': riemann_tensor})
-
-# 復元
-data = ckpt.load('E4.7')
-```
-
-**チェックポイントの有効化:**
-
-```bash
-python scripts/run_s3s1.py --mode MX --ny-variant FULL \
-    --checkpoint-dir ./checkpoints
+ckpt = CheckpointManager("checkpoints/", enabled=True)
+ckpt.save("E4.7", {"R": riemann_tensor})
+data = ckpt.load("E4.7")
 ```
 
 ## 使用例
 
 ```python
-from dppu.topology import S3S1Engine
-from dppu.torsion import Mode, NyVariant
-from dppu.engine import ComputationLogger, CheckpointManager
+from dppu.topology import FiberMode, TopologyType, make_engine
+from dppu.torsion.mode import Mode
+from dppu.torsion.nieh_yan import NyVariant
 
-# ロガーとチェックポイントを設定
-logger = ComputationLogger('run.log')
-ckpt = CheckpointManager('ckpt/', enabled=True)
-
-# エンジン実行
-engine = S3S1Engine(Mode.MX, NyVariant.FULL, logger, ckpt)
+engine = make_engine(
+    TopologyType.S3,
+    torsion_mode=Mode.MX,
+    ny_variant=NyVariant.FULL,
+    signature="lorentzian",
+    frame_convention="lz_native",
+    fiber_mode=FiberMode.NONE,
+    enable_squash=False,
+)
 engine.run()
 ```
 
-## パイプラインのカスタマイズ
-
-特定ステップのみ実行:
+Partial execution は explicit step methods の呼び出しで行います。
 
 ```python
-engine = S3S1Engine(Mode.MX, NyVariant.FULL)
-
-# ステップ1-7のみ実行（曲率計算まで）
-engine.run(stop_after='E4.7')
-
-# ステップ7から再開
-engine.run(resume_from='E4.7')
+engine.step_E4_1_setup()
+engine.step_E4_2_metric_and_frame()
+engine.step_E4_3_christoffel_frame()
+engine.step_E4_4_torsion_ansatz_frame()
+engine.step_E4_5_contortion_frame()
+engine.step_E4_6_ec_connection_frame()
+engine.step_E4_7_riemann_tensor_frame()
 ```
 
 ## 依存関係
 
-- SymPy (シンボリック計算)
-- pickle (チェックポイント)
+- SymPy: symbolic tensor expressions。
+- [utils](../utils/README_ja.md): logging, epsilon tensors, symbolic helpers。
 
 ## 関連モジュール
 
-- [topology](../topology/README_ja.md): トポロジー固有エンジン
+- [topology](../topology/README_ja.md): concrete topology engines。
+- [torsion](../torsion/README_ja.md): torsion ansatz construction。
+- [curvature](../curvature/README_ja.md): Riemann, Ricci, Weyl, Pontryagin routines。
+- [action](../action/README_ja.md): Lagrangian and effective-potential routines。

@@ -122,6 +122,6 @@ Algebraic structure analysis of P equiv 0 (App B.2–B.3)
     -> All blocks independently zero (strongest result)
     P_SS=0, P_S3=0, P_33=0
 
-Computation time: 0.6s
+Computation time: 0.5s
 
 *Script: scripts/proofs/pontryagin_block_decomposition.py

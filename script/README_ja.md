@@ -213,7 +213,7 @@ python scripts/paper03/spin1_cross_hessian.py
 | **Schur 5 重縮退** | §4 | H_AB = μ²_q δ_AB、μ²_q = 48π² — **記号的証明** | `paper03/spin2_schur_degeneracy.py` |
 | **相転移 ε_c±** | §4 | ε_c+ ≈ 0.483（squash）、ε_c− ≈ −0.293（shear）— **数値解析** | `paper03/spin2_spectrum_splitting.py`、`paper03/spin2_diagonal_hessians.py` |
 | **Spin-1 physical/auxiliary 分解** | §5 | X_k 物理的・Y_k 補助的（Case B 確定）— **解析的 + 数値** | `paper03/spin1_kinetic_metric.py`、`paper03/spin1_null_mode_analysis.py` |
-| **λ_phys = 4.19 > 0** | §5 | 一般化固有値：物理 spin-1 セクターにタキオンなし | `paper03/spin1_kinetic_metric.py` |
+| **λ_phys ≈ −0.4183 < 0** | §5 | Schur 消去後の有限一般化固有値：タキオン的（非ゴースト） | `paper03/spin1_kinetic_metric.py` |
 | **二次セクター decoupling** | §6 | 等方点で cross-Hessian がゼロ — **数値検証** | `paper03/spin1_cross_hessian.py`、`paper03/spin0_torsion_cross_hessian.py` |
 | **EFT 不変量基底** | §6 | Landau EFT 選択則と禁制項 — **群論的** | `paper03/eft_invariant_generation.py` |
 

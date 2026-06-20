@@ -115,4 +115,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
+    teardown_log()

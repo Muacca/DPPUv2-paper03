@@ -1,45 +1,97 @@
 """
-DPPU Topology Layer
-===================
+DPPU topology layer.
 
-Topology-specific implementations for M³×S¹ manifolds.
-
-Unified Engine (recommended)
------------------------------
-- UnifiedEngine : Single configurable engine covering all 12 legacy cases.
-- DOFConfig     : Dataclass specifying which geometric DOFs are active.
-- TopologyType  : Enum — S3 | T3 | NIL3
-- FiberMode     : Enum — NONE | TWIST | MIXING
-
-  Quick start::
-
-      from dppu.topology import UnifiedEngine, DOFConfig, TopologyType, FiberMode
-      cfg = DOFConfig.from_engine('TwistS3S1Engine')
-      cfg.torsion_mode = Mode.AX
-      engine = UnifiedEngine(cfg)
-      engine.run()
-
+Use UnifiedEngine with an explicit DOFConfig.  Historical paper labels and
+their configuration equivalents are documented in scripts/README.md.
 """
 
-# ── Unified engine & topology implementations ─────────────────────────────────
-from .unified       import UnifiedEngine, DOFConfig, TopologyType, FiberMode
+from .unified import (
+    UnifiedEngine,
+    DOFConfig,
+    TopologyType,
+    FiberMode,
+    CurvatureSource,
+    make_config,
+    make_engine,
+    normalize_topology,
+    normalize_topology_str,
+    normalize_curvature_source,
+)
+from .lz_invariants import (
+    A,
+    B,
+    C,
+    U,
+    W,
+    Q,
+    LZ_PARAMETER_SYMBOLS,
+    CANONICAL_TOPOLOGIES,
+    engine_lz_structure_constants,
+    extract_lz_five_parameter_specialization,
+    topology_lz_parameter_table,
+)
 from .base_topology import TopologyEngine
-from .s3            import S3Geometry
-from .t3            import T3Geometry
-from .nil3          import Nil3Geometry
+from .s3 import S3Geometry
+from .t3 import T3Geometry
+from .nil3 import Nil3Geometry
+from .sol3 import Sol3Geometry
+from .class_a import (
+    structure_entries_class_a,
+    structure_constants_array,
+    n_matrix_from_structure_constants,
+    exterior_derivative_matrix_d1,
+    topology_n_data,
+    rational_orthogonal_matrix,
+    rotate_n_matrix,
+    vector_norm,
+    crosscheck_class_a_against_engine,
+)
+from .bianchi_ix import (
+    bianchi_ix_symbols,
+    build_bianchi_ix_lc_weyl,
+    build_isotropic_ec_torsion_weyl,
+    beta_quadratic_expansion,
+)
 
-# ── Legacy engines (preserved for backward compatibility) ─────────────────────
 __all__ = [
-    # Unified factory & topology implementations
-    'UnifiedEngine', 'DOFConfig', 'TopologyType', 'FiberMode',
-    'TopologyEngine', 'S3Geometry', 'T3Geometry', 'Nil3Geometry',
-    # Legacy
-    'S3S1Engine', 'T3S1Engine', 'Nil3S1Engine',
-    'TwistS3S1Engine', 'TwistNil3S1Engine',
-    'VectorTwistS3S1Engine', 'VectorTwistT3S1Engine',
-    'SquashedVectorTwistS3S1Engine',
-    'FullyAnisotropicS3S1Engine',
-    'M1MixingS3S1Engine',
-    'M1SquashedMixingS3S1Engine',
-    'FullyAnisotropicMixingS3S1Engine',
+    "UnifiedEngine",
+    "DOFConfig",
+    "TopologyType",
+    "FiberMode",
+    "CurvatureSource",
+    "make_config",
+    "make_engine",
+    "normalize_topology",
+    "normalize_topology_str",
+    "normalize_curvature_source",
+    "A",
+    "B",
+    "C",
+    "U",
+    "W",
+    "Q",
+    "LZ_PARAMETER_SYMBOLS",
+    "CANONICAL_TOPOLOGIES",
+    "engine_lz_structure_constants",
+    "extract_lz_five_parameter_specialization",
+    "topology_lz_parameter_table",
+    "TopologyEngine",
+    "S3Geometry",
+    "T3Geometry",
+    "Nil3Geometry",
+    "Sol3Geometry",
+    # class_a
+    "structure_entries_class_a",
+    "structure_constants_array",
+    "n_matrix_from_structure_constants",
+    "exterior_derivative_matrix_d1",
+    "topology_n_data",
+    "rational_orthogonal_matrix",
+    "rotate_n_matrix",
+    "vector_norm",
+    "crosscheck_class_a_against_engine",
+    "bianchi_ix_symbols",
+    "build_bianchi_ix_lc_weyl",
+    "build_isotropic_ec_torsion_weyl",
+    "beta_quadratic_expansion",
 ]

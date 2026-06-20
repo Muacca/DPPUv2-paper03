@@ -54,11 +54,13 @@ mode dictionary 自体は本論と数値付録で役割分担して提示する�
 - `paper03/spin2_diagonal_hessians.py`
 - `paper03/spin2_offdiag_hessian.py`
 
-**spin-1 physical/auxiliary 分解（Appendix E 対応）**
+**spin-1 Schur reduction and auxiliary analysis（§5, Appendix E, Appendix I 対応）**
 
-- `paper03/spin1_null_mode_analysis.py`
+- `paper03/spin1_symbolic_firstprinciples.py`
 - `paper03/spin1_kinetic_metric.py`
+- `paper03/spin1_null_mode_analysis.py`
 - `paper03/spin1_auxiliary_exclusion.py`
+- `paper03/spin1_appI_projection_artifact.py`
 
 **cross-Hessian と最終基底整合性（Appendix F, G 対応）**
 

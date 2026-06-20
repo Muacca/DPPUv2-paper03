@@ -5,7 +5,7 @@ S³ isotropic twist — Pontryagin scan (App B.7)
 Numerical implementation of isotropic twist analysis (highest priority, analysis frontier).
 
 Strategy: numerics first → symbolic verification
-    1. Run TwistS3S1Engine symbolically (keeping ω as a SymPy symbol)
+    1. Run the S3 isotropic twist config symbolically
     2. Lambdify R_{abcd}(r, ω, η, ...) for numerical evaluation
     3. Scan P(ω) = <R, *R> over ω ∈ [-1, 1]
     4. Check ω → -ω symmetry (expected: odd function P(-ω) = -P(ω))
@@ -35,12 +35,12 @@ import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import CurvatureSource, FiberMode, TopologyType, UnifiedEngine, make_config
 
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
 from dppu.curvature.hodge import compute_hodge_dual
-from dppu.engine.logger import ComputationLogger, NullLogger
+from dppu.utils.logger import NullLogger
 
 
 # ===========================================================================
@@ -192,13 +192,19 @@ def run_phase3_0a(r_val: float, eta_val: float, verbose: bool = True):
     # ------------------------------------------------------------------
     # Step 1: Run engine (symbolic computation)
     # ------------------------------------------------------------------
-    print("\n[Step 1] Running TwistS3S1Engine symbolically...")
+    print("\n[Step 1] Running S3 isotropic twist engine symbolically...")
     t0 = time.time()
 
     mode = Mode.AX  # AX: axial torsion (V=0, eta≠0)
-    _cfg_engine = DOFConfig.from_engine('TwistS3S1Engine')
-    _cfg_engine.torsion_mode = mode
-    _cfg_engine.ny_variant = NyVariant.FULL
+    _cfg_engine = make_config(
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+        torsion_mode=mode,
+        ny_variant=NyVariant.FULL,
+        weyl_source=CurvatureSource.LC,
+        riemann_source=CurvatureSource.LC,
+    )
     engine = UnifiedEngine(_cfg_engine, NullLogger())
     engine.run()
 
@@ -215,7 +221,7 @@ def run_phase3_0a(r_val: float, eta_val: float, verbose: bool = True):
     print(f"  R argument order: {arg_names}")
 
     # Lambdify V_eff
-    from sympy import lambdify, S as Szero
+    from sympy import lambdify
     params_sym = engine.data['params']
     V_sym = engine.data['potential']
 
@@ -397,8 +403,9 @@ def main():
 
 
 if __name__ == '__main__':
-    _t_start = time.time()
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', '..'))
+    from dppu.utils.tee_logger import setup_log, teardown_log
+    setup_log(__file__, log_dir='output')
     main()
-    print(f"\nComputation time: {time.time() - _t_start:.1f}s")
-    print()
-    print("*Script: scripts/paper03/pontryagin_scan_s3.py")
+    teardown_log()

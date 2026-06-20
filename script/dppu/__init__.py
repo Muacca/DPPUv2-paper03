@@ -8,20 +8,22 @@ designed for publication-quality computations.
 Package Structure:
 - geometry/    : Metric, volume forms, structure constants
 - connection/  : Levi-Civita, contortion, EC connection
-- curvature/   : Riemann, Ricci, Hodge dual, self-duality
+- curvature/   : Riemann, Ricci, Hodge dual, Pontryagin
 - torsion/     : Mode enum, ansatz, Nieh-Yan density
-- action/      : Lagrangian, effective potential, stability
-- topology/    : S3xS1, T3xS1, Nil3xS1 implementations
+- action/      : Lagrangian, effective potential, stability, EC action
+- topology/    : S3xS1, T3xS1, Nil3xS1 implementations (UnifiedEngine)
 - engine/      : Computation pipeline, logging, checkpoints
-- scanning/    : Parameter scans, Phase 1 integration
-- utils/       : Shared utilities
+- utils/       : Shared utilities (epsilon, printing, symbolic, logger)
+- kk/          : KK photon effective theory pipeline (v2.1)
+                 Two-route computation: Gamma×Gamma shortcut + full Riemann
+                 validation.  Supports T³, Nil³, S³ topologies.
 
 Author: Muacca
-Version: 2.0
-Date: 2026-02
+Version: 2.2
+Date: 2026-03
 """
 
-__version__ = "2.0.0"
+__version__ = "2.2.0"
 __author__ = "Muacca"
 
 # Lazy imports for main components
@@ -33,16 +35,7 @@ def __getattr__(name):
     elif name == "NyVariant":
         from .torsion.nieh_yan import NyVariant
         return NyVariant
-    elif name == "BaseFrameEngine":
-        from .engine.pipeline import BaseFrameEngine
-        return BaseFrameEngine
-    elif name == "S3S1Engine":
-        from .topology.s3s1 import S3S1Engine
-        return S3S1Engine
-    elif name == "T3S1Engine":
-        from .topology.t3s1 import T3S1Engine
-        return T3S1Engine
-    elif name == "Nil3S1Engine":
-        from .topology.nil3s1 import Nil3S1Engine
-        return Nil3S1Engine
+    elif name == "kk":
+        from . import kk
+        return kk
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

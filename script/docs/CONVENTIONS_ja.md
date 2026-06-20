@@ -320,7 +320,7 @@ $$
 X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
 $$
 
-一般化固有値 $\lambda_{\rm phys} \approx 4.19 > 0$（3 重縮退、SO(3) 対称）。
+一般化固有値 $\lambda_{\rm phys} \approx -0.4183 < 0$（3 重縮退、SO(3) 対称、タキオン的・非ゴースト）。ここで $H_{\rm phys}$ は auxiliary 消去前の Hessian ブロックであり、物理的な有効質量²は Schur 補 $H_{\rm eff} = H_{XX} - H_{XY}^2/H_{YY}$ を用いて $\lambda_{\rm phys} = H_{\rm eff}/G_{XX} \approx -0.4183 < 0$ と得られる。消去前の比 $H_{\rm phys}/G_{\rm phys} \approx 4.19$ は射影前の Rayleigh 商であり、物理的な固有値ではない。
 
 ### 12.4 一般化固有値問題
 

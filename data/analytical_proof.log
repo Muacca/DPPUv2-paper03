@@ -72,6 +72,6 @@ SUMMARY FOR THEOREM STATEMENT
    → ε = 0 is a local minimum of C² (since coefficient is positive for r > 0)
 
 
-Computation time: 0.4s
+Computation time: 0.5s
 
 *Script: scripts/proofs/analytical_proof.py

@@ -79,21 +79,23 @@ def compute_ricci_tensor(
 def compute_ricci_scalar(
     Riemann: MutableDenseNDimArray,
     dim: int,
-    logger: Optional[Any] = None
+    logger: Optional[Any] = None,
+    metric_inv: Optional[Any] = None
 ) -> Any:
     """
     Compute Ricci scalar from Riemann tensor.
 
     Formula:
-        R = R^a_{bab} = R^a_a
+        R = η^{bd} R^a_{bad}
 
-    For orthonormal frame:
-        R = sum_a R^a_{aba}
+    For orthonormal frame (Euclidean):
+        R = sum_a sum_b R^a_{bab}
 
     Args:
         Riemann: Riemann tensor R^a_{bcd}
         dim: Dimension
         logger: Optional logger
+        metric_inv: Optional inverse metric η^{ab} for proper contraction
 
     Returns:
         Ricci scalar R as SymPy expression
@@ -102,9 +104,14 @@ def compute_ricci_scalar(
         logger.info("Computing Ricci Scalar R = R^a_bab...")
 
     R_scalar = S.Zero
-    for a in range(dim):
-        for b in range(dim):
-            R_scalar += Riemann[a, b, a, b]
+    for b in range(dim):
+        for d in range(dim):
+            ricci_bd = sum(Riemann[a, b, a, d] for a in range(dim))
+            if metric_inv is not None:
+                R_scalar += metric_inv[b, d] * ricci_bd
+            else:
+                if b == d:
+                    R_scalar += ricci_bd
 
     R_scalar = cancel(R_scalar)
 
@@ -178,3 +185,52 @@ def decompose_ricci_tensor(
             R_antisym[a, b] = cancel(Rational(1, 2) * (Ricci[a, b] - Ricci[b, a]))
 
     return R_sym, R_antisym
+
+
+def delta_ricci_scalar_ec_lc(
+    structure_constants: MutableDenseNDimArray,
+    contortion: MutableDenseNDimArray,
+    dim: int,
+    metric: Any,
+    metric_inv: Any,
+    frame_deriv: Optional[Any] = None,
+) -> Any:
+    """Compute the EC-minus-LC Ricci scalar difference.
+
+    Returns
+
+        ΔR = R[Γ_LC + K] − R[Γ_LC]
+
+    i.e., the torsion contribution to the Ricci scalar when the
+    Einstein-Cartan connection replaces the Levi-Civita one.
+
+    Args:
+        structure_constants: Frame structure constants C^a_{bc}.
+        contortion:          Contortion tensor K^a_{bc}.
+        dim:                 Space-time dimension (typically 4).
+        metric:              Frame metric (SymPy Matrix).
+        metric_inv:          Inverse frame metric (SymPy Matrix).
+        frame_deriv:         Optional callable ``frame_deriv(a, expr)``
+                             for the frame derivative; passed to
+                             ``compute_riemann_tensor`` unchanged.
+
+    Returns:
+        ΔR as a SymPy expression (``cancel``-normalised).
+    """
+    from ..engine.levi_civita import compute_christoffel_frame
+    from ..engine.ec_connection import compute_ec_connection
+    from .riemann import compute_riemann_tensor
+
+    gamma_lc = compute_christoffel_frame(
+        structure_constants, dim, metric=metric, metric_inv=metric_inv
+    )
+    gamma_ec = compute_ec_connection(gamma_lc, contortion, dim)
+
+    kwargs = {} if frame_deriv is None else {"frame_deriv": frame_deriv}
+    r_lc = compute_riemann_tensor(gamma_lc, structure_constants, dim, **kwargs)
+    r_ec = compute_riemann_tensor(gamma_ec, structure_constants, dim, **kwargs)
+
+    scalar_lc = compute_ricci_scalar(r_lc, dim, metric_inv=metric_inv)
+    scalar_ec = compute_ricci_scalar(r_ec, dim, metric_inv=metric_inv)
+    return cancel(scalar_ec - scalar_lc)
+

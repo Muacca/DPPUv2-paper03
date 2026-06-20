@@ -15,7 +15,7 @@ Goal:
     -> Can add a lemma to paper03 as a "VT-specific separate mechanism".
 
 PLAN:
-    1. Run VectorTwistS3S1Engine (VT)
+    1. Run S3 vector-twist config (VT)
     2. Obtain the Pfaffian of each (c,d) block symbolically
     3. Factor/collect each to confirm simplified form
     4. Identify the algebraic structure that makes the sum zero (sign-flip pairs, etc.)
@@ -37,12 +37,12 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from dppu.topology.unified import UnifiedEngine, DOFConfig
+from dppu.topology import FiberMode, TopologyType, UnifiedEngine, make_config
 
-from sympy import S, simplify, Matrix, factor, expand, collect, symbols
+from sympy import S, simplify, Matrix, factor, expand
 from dppu.torsion.mode import Mode
 from dppu.torsion.nieh_yan import NyVariant
-from dppu.engine.logger import NullLogger
+from dppu.utils.logger import NullLogger
 
 
 def get_pfaffian_blocks(R):
@@ -81,7 +81,7 @@ def get_pfaffian_blocks(R):
     return results
 
 
-def analyze_vt_cancellation(topo_name, engine_name:str):
+def analyze_vt_cancellation(topo_name, topology, **config_kwargs):
     """
     Analyze the Pfaffian cancellation mechanism in VT mode for the specified topology.
     """
@@ -90,9 +90,12 @@ def analyze_vt_cancellation(topo_name, engine_name:str):
     print(f"  {'=' * 64}")
 
     t0 = time.time()
-    _cfg_eng = DOFConfig.from_engine(engine_name)
-    _cfg_eng.torsion_mode = Mode.VT
-    _cfg_eng.ny_variant = NyVariant.FULL
+    _cfg_eng = make_config(
+        topology,
+        torsion_mode=Mode.VT,
+        ny_variant=NyVariant.FULL,
+        **config_kwargs,
+    )
     eng = UnifiedEngine(_cfg_eng, NullLogger())
     eng.run()
     elapsed = time.time() - t0
@@ -187,16 +190,19 @@ def analyze_vt_cancellation(topo_name, engine_name:str):
         print(f"  -> Each type independently zero (stronger cancellation) ✓")
 
 
-def analyze_mx_no_cancellation(topo_name, engine_name:str):
+def analyze_mx_no_cancellation(topo_name, topology, **config_kwargs):
     """
     Confirm that no cancellation occurs in MX mode (as a contrast).
     """
     print(f"\n  --- Contrast: {topo_name} MX mode (confirming no cancellation) ---")
 
     t0 = time.time()
-    _cfg_eng = DOFConfig.from_engine(engine_name)
-    _cfg_eng.torsion_mode = Mode.MX
-    _cfg_eng.ny_variant = NyVariant.FULL
+    _cfg_eng = make_config(
+        topology,
+        torsion_mode=Mode.MX,
+        ny_variant=NyVariant.FULL,
+        **config_kwargs,
+    )
     eng = UnifiedEngine(_cfg_eng, NullLogger())
     eng.run()
     elapsed = time.time() - t0
@@ -224,13 +230,28 @@ def main():
     t_total = time.time()
 
     # VT analysis for S3xS1
-    analyze_vt_cancellation("S3xS1 (VectorTwist)", 'VectorTwistS3S1Engine')
+    analyze_vt_cancellation(
+        "S3xS1 (vector twist)",
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=False,
+    )
 
     # VT analysis for Nil3xS1
-    analyze_vt_cancellation("Nil3xS1 (TwistNil3)", 'TwistNil3S1Engine')
+    analyze_vt_cancellation(
+        "Nil3xS1 (isotropic twist)",
+        TopologyType.NIL3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=True,
+    )
 
     # Contrast: MX mode (no cancellation)
-    analyze_mx_no_cancellation("S3xS1", 'VectorTwistS3S1Engine')
+    analyze_mx_no_cancellation(
+        "S3xS1",
+        TopologyType.S3,
+        fiber_mode=FiberMode.TWIST,
+        isotropic_twist=False,
+    )
 
     elapsed = time.time() - t_total
     print(f"\nComputation time: {elapsed:.1f}s")

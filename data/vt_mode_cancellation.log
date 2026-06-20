@@ -4,7 +4,7 @@
 ====================================================================
 
   ================================================================
-  S3xS1 (VectorTwist) — VT mode cancellation mechanism analysis
+  S3xS1 (vector twist) — VT mode cancellation mechanism analysis
   ================================================================
   Engine completed (0.5s)
 
@@ -50,9 +50,9 @@
   -> Cancellation is a mutual annihilation of 'sum of SS blocks' and 'sum of S3 blocks' ✓
 
   ================================================================
-  Nil3xS1 (TwistNil3) — VT mode cancellation mechanism analysis
+  Nil3xS1 (isotropic twist) — VT mode cancellation mechanism analysis
   ================================================================
-  Engine completed (0.1s)
+  Engine completed (0.2s)
 
   Pfaffian of each (c,d) block (VT mode, factored):
    (c,d)   Rank          Pf  detailed
@@ -93,9 +93,9 @@
   -> Cancellation is a mutual annihilation of 'sum of SS blocks' and 'sum of S3 blocks' ✓
 
   --- Contrast: S3xS1 MX mode (confirming no cancellation) ---
-  (0.3s) Non-zero Pf blocks: 6/6
+  (0.6s) Non-zero Pf blocks: 6/6
   P != 0 -> no cancellation ✓ (characteristic of MX mode)
 
-Computation time: 4.4s
+Computation time: 5.2s
 
 *Script: scripts/proofs/vt_mode_cancellation.py

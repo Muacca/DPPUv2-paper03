@@ -1,164 +1,119 @@
 # Curvature Layer
 
-⇒ [日本語](README_ja.md)
+-> [Japanese](README_ja.md)
 
-Module group for curvature tensor computation and analysis.
+Module group for curvature tensor computation, Pontryagin diagnostics, Hodge operations, Weyl tensors, and spatial-curvature helpers.
 
 ## Overview
 
-Provides Riemann tensor, Ricci scalar, Hodge dual, self-duality diagnostics, Pontryagin inner product, and Weyl tensor.
+The curvature layer provides symbolic tensor routines used by the EC+NY engine and downstream callers.  The layer includes:
+
+- `spatial_lie.py`: derives the scale-stripped 3D scalar curvature and `chi`.
+- `pontryagin_lz.py`: computes the Lorentzian form-Hodge Pontryagin density used for `P_form` checks.
+
+These modules keep form-Hodge Pontryagin densities separate from any script-level diagnostic contractions.
 
 ## Modules
 
-### riemann.py
+### `riemann.py`
 
-Riemann tensor computation and antisymmetry verification.
+Riemann tensor computation in a non-coordinate frame, including strict antisymmetry checks and first-index lowering.
 
 **Key classes/functions:**
 
-- `compute_riemann_tensor(connection)`: Compute Riemann tensor
-- `verify_antisymmetry(R)`: Verify antisymmetry at 3 levels
-- `RiemannAntisymmetryError`: Exception for antisymmetry violations
+- `RiemannAntisymmetryError`: exception raised by strict verification.
+- `verify_antisymmetry_strict(R, dim, ...)`: verify Riemann antisymmetry identities.
+- `compute_riemann_tensor(gamma, structure_constants, dim, ...)`: compute `R^a_{bcd}`.
+- `lower_first_index(Riemann, metric, dim)`: lower the first index to obtain `R_abcd`.
 
-**Antisymmetry verification (3 levels):**
+### `ricci.py`
 
-1. **Level 1**: Symbolic proof via SymPy
-2. **Level 2**: High-precision numerical counterexample search
-3. **Level 3**: Debug mode (development)
-
-**Riemann curvature definition:**
-
-```
-R^a_{bcd} = ∂_c Γ^a_{bd} - ∂_d Γ^a_{bc} + Γ^a_{ec}Γ^e_{bd} - Γ^a_{ed}Γ^e_{bc}
-```
-
-### ricci.py
-
-Ricci tensor and scalar computation.
+Ricci tensor, Ricci scalar, and decomposition helpers.
 
 **Key functions:**
 
-- `compute_ricci_tensor(R)`: Ricci contraction
-- `compute_ricci_scalar(Ric, metric)`: Ricci scalar
+- `compute_ricci_tensor(Riemann, dim)`: Ricci contraction.
+- `compute_ricci_scalar(Riemann, dim, logger=None, metric_inv=None)`: Ricci scalar from Riemann data.
+- `compute_ricci_scalar_from_tensor(Ricci, metric_inv, dim)`: scalar from a Ricci tensor.
+- `decompose_ricci_tensor(Ricci, metric, dim)`: trace/traceless decomposition.
 
-**Definitions:**
+### `hodge.py`
 
-```
-R_{ab} = R^c_{acb}
-R = η^{ab} R_{ab}
-```
-
-### hodge.py
-
-Hodge dual operator implementation.
+Hodge dual and 2-form block helpers.
 
 **Key functions:**
 
-- `compute_hodge_dual(R)`: Compute Hodge dual of R^{ab}_{cd}
-- `cd_block(a, b)`: 6-component block classification
+- `hodge_dual_2form(F_down, metric, metric_inv=None, signature="lorentzian")`: Hodge dual for a 2-form.
+- `basis_2form(a, b)`: basis 2-form.
+- `compute_hodge_dual(R_tensor)`: legacy Riemann Hodge dual helper.
+- `classify_lz_2form_block(c, d)`: LZ-native block classification.
+- `hodge_swaps_blocks()`: block-swap sanity check.
 
-**Hodge dual definition:**
+### `pontryagin.py`
 
-```
-(*R)^{ab}_{cd} = (1/2) ε_{cdef} R^{ab,ef}
-```
+Legacy numerical Pontryagin helper.
 
-### self_duality.py
+**Key functions:**
 
-Self-duality (SD/ASD) diagnostics.
+- `compute_P_from_riemann(R_arr)`: compute `P=<R,*R>` for numerical arrays.
+- `get_riemann_numeric(...)`: extract numerical Riemann data from a lambdified engine result.
+
+### `pontryagin_lz.py`
+
+Lorentzian/LZ-native Pontryagin density helpers.
+
+**Key functions:**
+
+- `pontryagin_density_lorentzian(R_abcd, metric, simplify_result=True)`: compute the form-Hodge `P_form=<R,*R>` density.
+- `pontryagin_density_lorentzian_by_epsilon(...)`: epsilon-contraction cross-check route.
+- `classify_pontryagin_expression(expr, zero_tol=None)`: classify exact-zero/nonzero symbolic results.
+- `classify_pontryagin_expression_deep(expr, zero_tol=None)`: deeper simplification and classification route.
+
+This module is intended for form-Hodge `P_form=<R,*R>` computations and exact-zero classification.  It is separate from any custom internal-pair diagnostic contractions implemented by individual scripts.
+
+### `spatial_lie.py`
+
+Scale-stripped spatial Lie-frame curvature helpers.
+
+**Key functions:**
+
+- `spatial_structure_constants_3d(params=None)`: build 3D structure constants for the five-parameter LZ family.
+- `scalar_curvature_q2_from_structure_constants(structure_constants)`: compute `R^(3) q^2`.
+- `chi_from_lz_parameters(params)`: compute `chi = R^(3) q^2 / 6`.
+
+### `sd_extension.py`
+
+Self-duality (SD/ASD) mixin for engines.
 
 **Key classes:**
 
-- `SDExtensionMixin`: Add SD functionality to engine
-- `CurvatureSDDiagnostics`: SD residual computation and evaluation
+- `SDExtensionMixin`: attaches SD functionality to topology engines.
 
-**SD/ASD conditions:**
+### `sd_diagnostics.py`
 
-```
-R = *R   (self-dual: SD)
-R = -*R  (anti-self-dual: ASD)
-```
-
-**Key metrics:**
-
-- `sd_residual`: ||R - *R||
-- `asd_residual`: ||R + *R||
-- `is_sd`: sd_residual < ε
-- `is_asd`: asd_residual < ε
-
-### pontryagin.py
-
-Pontryagin inner product computation and diagnostics.
+Self-duality and Pontryagin diagnostic evaluation.
 
 **Key classes/functions:**
 
-- `compute_pontryagin_inner_product(R)`: Compute P = ⟨R, *R⟩
-- `evaluate_sd_status(params)`: Full SD status diagnostics
+- `CurvatureSDDiagnostics`: evaluate SD/ASD residuals and related curvature diagnostics.
 
-**Pontryagin protection theorem (paper 03):**
+### `weyl.py`
 
-| Torsion mode | Result | Proof method |
-|---|---|---|
-| AX (axial) | P ≡ 0 (exact) | Plücker-type cancellation |
-| VT (vector-trace) | P ≡ 0 (exact) | Pfaffian decomposability |
-| MX (mixed) | P ≠ 0 in general | — |
-
-For AX and VT modes, the cancellation holds for all topologies (S³, T³, Nil³) and all parameter values. For MX mode:
-
-```
-P₀ = 2Vη(V²r² + 9η² − 36) / (9r³)
-```
-
-The source of P ≠ 0 is torsion mixing (Vη coupling), not twist.
-
-When P = 0:
-```
-SD_residual / ||R|| = √2
-ASD_residual / ||R|| = √2
-```
-
-### weyl.py
-
-Weyl tensor (conformal curvature) computation.
+Weyl tensor and Weyl scalar computation.
 
 **Key functions:**
 
-- `compute_weyl_tensor(R_abcd, Ricci, R_scalar, metric, dim)`: Compute Weyl tensor C_{abcd}
-- `compute_weyl_scalar(C_abcd, metric)`: Compute Weyl scalar C²
+- `compute_weyl_tensor(R_abcd, Ricci, R_scalar, metric, dim)`: compute `C_abcd`.
+- `compute_weyl_scalar(C_abcd, metric)`: compute `C^2`.
 
-**Definition:**
+## Notes
 
-```
-C_{abcd} = R_{abcd}
-         - (1/2)(g_{ac}R_{bd} - g_{ad}R_{bc} - g_{bc}R_{ad} + g_{bd}R_{ac})
-         + (R/6)(g_{ac}g_{bd} - g_{ad}g_{bc})
-```
-
-**Properties:**
-
-- Trace-free: C^a_{bad} = 0
-- Same symmetries as Riemann tensor
-
-## Usage
-
-```python
-from dppu.curvature import SDExtensionMixin, CurvatureSDDiagnostics
-
-# Attach SD extension to engine
-SDExtensionMixin.attach_to(engine)
-
-# SD diagnostics
-diag = CurvatureSDDiagnostics(engine)
-result = diag.evaluate_sd_status({
-    'r': 1.0, 'L': 1.0, 'eta': -1.0, 'V': 2.0,
-    'kappa': 1.0, 'theta_NY': 0.0
-})
-
-print(f"P = {result['P_RstarR']:.2e}")
-print(f"SD/||R|| = {result['sd_residual']/result['curvature_norm']:.4f}")
-```
+- `P_form` is the form-Hodge density computed through `pontryagin_lz.py`.
+- Internal-pair diagnostic contractions are script-level quantities and should not be conflated with the true form-Hodge Pontryagin density.
+- `chi` is derived from the LC/spatial-curvature sector through `spatial_lie.py`.
 
 ## Dependencies
 
-- [connection](../connection/README.md): EC connection
-- [utils](../utils/README.md): Levi-Civita symbol
+- [engine](../engine/README.md): LC/EC connection data and frame pipeline.
+- [topology](../topology/README.md): LZ-native structure constants.
+- [utils](../utils/README.md): epsilon tensors and symbolic utilities.

@@ -1,64 +1,28 @@
 """
-UnifiedEngine — Configurable Engine for All Geometric Degrees of Freedom
-========================================================================
+UnifiedEngine - configurable engine for all geometric degrees of freedom.
 
-Single engine class that reproduces all 12 specialized topology engines as
-special cases, by selecting which geometric DOFs are active at runtime.
-
-DOF Summary
------------
-Topology     : S³×S¹ | T³×S¹ | Nil³×S¹
-Squash  (ε)  : axisymmetric squash of M³
-Shear   (s)  : 0–1 plane shear (S³ only)
-Fiber        : NONE | TWIST (ω₁,ω₂,ω₃) | MIXING (δ)
-Torsion      : AX | VT | MX
-
-Equivalence table
------------------
-Legacy engine                       DOFConfig equivalent
----------------------------------   -------------------------------------------------
-S3S1Engine                          S3, squash=True,  shear=False, fiber=NONE
-T3S1Engine                          T3, squash=False, shear=False, fiber=NONE
-Nil3S1Engine                        NIL3, squash=True, shear=False, fiber=NONE
-TwistS3S1Engine                     S3, squash=False, shear=False, fiber=TWIST, iso=True
-TwistNil3S1Engine                   NIL3, squash=False, shear=False, fiber=TWIST, iso=True
-VectorTwistS3S1Engine               S3, squash=False, shear=False, fiber=TWIST, iso=False
-VectorTwistT3S1Engine               T3, squash=False, shear=False, fiber=TWIST, iso=False
-SquashedVectorTwistS3S1Engine       S3, squash=True,  shear=False, fiber=TWIST, iso=False
-FullyAnisotropicS3S1Engine          S3, squash=True,  shear=True,  fiber=TWIST, iso=False
-SquashedOffDiagS3S1Engine           S3, squash=True,  shear=False, offdiag=True, fiber=NONE
-M1MixingS3S1Engine                  S3, squash=False, shear=False, fiber=MIXING
-M1SquashedMixingS3S1Engine          S3, squash=True,  shear=False, fiber=MIXING
-FullyAnisotropicMixingS3S1Engine    S3, squash=True,  shear=True,  fiber=MIXING
+The topology layer is configured explicitly with DOFConfig. Historical paper
+labels are documented in scripts/README.md; runtime code should use explicit
+topology, deformation, and fiber fields.
 
 Usage
 -----
-    from dppu.topology.unified import UnifiedEngine, DOFConfig, TopologyType, FiberMode
+    from dppu.topology import make_config, UnifiedEngine, TopologyType, FiberMode
     from dppu.torsion.mode import Mode
-    from dppu.torsion.nieh_yan import NyVariant
 
-    # Build a config that replicates TwistS3S1Engine:
-    cfg = DOFConfig(
-        topology=TopologyType.S3,
+    cfg = make_config(
+        TopologyType.S3,
         fiber_mode=FiberMode.TWIST,
         isotropic_twist=True,
         torsion_mode=Mode.AX,
     )
     engine = UnifiedEngine(cfg)
     engine.run()
-
-    # Or use a preset:
-    cfg = DOFConfig.from_engine('FullyAnisotropicMixingS3S1Engine')
-    cfg.torsion_mode = Mode.AX
-    engine = UnifiedEngine(cfg)
-    engine.run()
-
-Author: Claude (Phase 4 Integration, 2026-03-04)
 """
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from sympy import symbols, Matrix, S, pi, Rational, sqrt
 from sympy.tensor.array import MutableDenseNDimArray
@@ -66,7 +30,7 @@ from sympy.tensor.array import MutableDenseNDimArray
 from ..engine.pipeline import BaseFrameEngine
 from ..torsion.mode import Mode
 from ..torsion.nieh_yan import NyVariant
-from ..utils.levi_civita import epsilon_symbol
+from ..utils.epsilon import epsilon_3d
 
 
 # ── Enumerations ──────────────────────────────────────────────────────────────
@@ -76,6 +40,7 @@ class TopologyType(Enum):
     S3   = "s3"    # S³×S¹  — SU(2) Lie group × circle
     T3   = "t3"    # T³×S¹  — flat 3-torus × circle
     NIL3 = "nil3"  # Nil³×S¹ — Heisenberg nilmanifold × circle
+    SOL3 = "sol3"  # Sol×S¹  — solvable Lie group (Thurston geometry)
 
 
 class FiberMode(Enum):
@@ -86,6 +51,12 @@ class FiberMode(Enum):
     BOTH    = "both"    # TWIST + MIXING simultaneously (S³ only)
                         # Structure constants computed via full frame rotation
                         # (includes O(δω) cross terms automatically)
+
+
+class CurvatureSource(Enum):
+    """Connection used for curvature-derived diagnostic/action terms."""
+    LC = "lc"  # Levi-Civita connection
+    EC = "ec"  # Einstein-Cartan/spin connection
 
 
 # ── DOF Configuration ─────────────────────────────────────────────────────────
@@ -127,12 +98,11 @@ class DOFConfig:
     ny_variant : NyVariant
         Nieh-Yan term variant: TT | REE | FULL.
 
-    Class Methods
-    -------------
-    from_engine(name) → DOFConfig
-        Return a preset that reproduces the named legacy engine geometry
-        (torsion_mode / ny_variant are left at defaults and should be set
-        by the caller).
+    Helper Functions
+    ----------------
+    make_config(...) -> DOFConfig
+        Build this dataclass with explicit topology, deformation, and fiber
+        fields.
     """
     topology:           TopologyType = TopologyType.S3
     enable_squash:      bool         = False
@@ -146,115 +116,199 @@ class DOFConfig:
     skip_antisymmetry_check: bool    = False  # Skip Riemann antisymmetry verification (speedup Option B)
                                               # Enable only when correctness is guaranteed by construction,
                                               # e.g., off-diagonal computations using rationalized variables (z_i).
-
-    # ------------------------------------------------------------------
-    @classmethod
-    def from_engine(cls, engine_name: str) -> "DOFConfig":
-        """
-        Return the DOFConfig preset that matches a legacy specialized engine.
-
-        Geometry DOFs are set to match the legacy engine exactly.
-        The caller must set `torsion_mode` and `ny_variant` separately.
-
-        Parameters
-        ----------
-        engine_name : str
-            Name of the legacy engine class.  Accepted values:
-            'S3S1Engine', 'T3S1Engine', 'Nil3S1Engine',
-            'TwistS3S1Engine', 'TwistNil3S1Engine',
-            'VectorTwistS3S1Engine', 'VectorTwistT3S1Engine',
-            'SquashedVectorTwistS3S1Engine',
-            'FullyAnisotropicS3S1Engine',
-            'M1MixingS3S1Engine', 'M1SquashedMixingS3S1Engine',
-            'FullyAnisotropicMixingS3S1Engine'
-
-        Returns
-        -------
-        DOFConfig
-        """
-        _PRESETS: Dict[str, "DOFConfig"] = {
-            'S3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=False,
-                fiber_mode=FiberMode.NONE),
-            'T3S1Engine': cls(
-                topology=TopologyType.T3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.NONE),
-            'Nil3S1Engine': cls(
-                topology=TopologyType.NIL3,
-                enable_squash=True, enable_shear=False,
-                fiber_mode=FiberMode.NONE),
-            'TwistS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=True),
-            'TwistNil3S1Engine': cls(
-                topology=TopologyType.NIL3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=True),
-            'VectorTwistS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=False),
-            'VectorTwistT3S1Engine': cls(
-                topology=TopologyType.T3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=False),
-            'SquashedVectorTwistS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=False,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=False),
-            'FullyAnisotropicS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=True,
-                fiber_mode=FiberMode.TWIST, isotropic_twist=False),
-            # WARNING: engine.run() with this config causes Out-of-Memory even on
-            # 64 GB machines.  Structure constants (E4.2) and the LC connection
-            # (E4.3) complete successfully, but the Riemann tensor steps (E4.3a,
-            # E4.7) generate ~3M-op intermediate polynomials and exhaust heap.
-            # Use the single-variable Method 2 (z = exp(q/√2)) or a numerical
-            # finite-difference pipeline for off-diagonal Hessian calculations.
-            'SquashedOffDiagS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=False,
-                enable_offdiag_shear=True,
-                fiber_mode=FiberMode.NONE),
-            'M1MixingS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=False, enable_shear=False,
-                fiber_mode=FiberMode.MIXING),
-            'M1SquashedMixingS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=False,
-                fiber_mode=FiberMode.MIXING),
-            'FullyAnisotropicMixingS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=True,
-                fiber_mode=FiberMode.MIXING),
-            'FullyAnisotropicBothS3S1Engine': cls(
-                topology=TopologyType.S3,
-                enable_squash=True, enable_shear=True,
-                fiber_mode=FiberMode.BOTH, isotropic_twist=False),
-        }
-        if engine_name not in _PRESETS:
-            raise ValueError(
-                f"Unknown engine name: {engine_name!r}.\n"
-                f"Available: {sorted(_PRESETS.keys())}"
-            )
-        return _PRESETS[engine_name]
+    weyl_source:        CurvatureSource = CurvatureSource.EC
+    riemann_source:     CurvatureSource = CurvatureSource.EC
+    signature:          str = "euclidean"       # "euclidean" | "lorentzian"
+    frame_convention:   str = "legacy_euclidean" # "legacy_euclidean" | "lz_native"
 
 
-# ── Unified Engine — backward-compatible factory ──────────────────────────────
+def normalize_topology(topology: Union[str, TopologyType]) -> TopologyType:
+    """Return a TopologyType from enum values or common CLI strings."""
+    if isinstance(topology, TopologyType):
+        return topology
+    if not isinstance(topology, str):
+        raise TypeError(f"topology must be str or TopologyType, got {type(topology)}")
+
+    key = topology.strip().lower()
+    key = key.replace("_", "").replace("-", "").replace(" ", "")
+    key = key.replace("×", "x")
+    key = key.replace("xs1", "")
+    aliases = {
+        "s3": TopologyType.S3,
+        "s^3": TopologyType.S3,
+        "t3": TopologyType.T3,
+        "t^3": TopologyType.T3,
+        "nil3": TopologyType.NIL3,
+        "nil": TopologyType.NIL3,
+        "sol3": TopologyType.SOL3,
+        "sol": TopologyType.SOL3,
+    }
+    try:
+        return aliases[key]
+    except KeyError as exc:
+        raise ValueError(
+            f"Unknown topology {topology!r}. Use one of: S3, T3, Nil3, Sol3."
+        ) from exc
+
+
+_TOPOLOGY_LABELS: dict[TopologyType, str] = {
+    TopologyType.S3:   "S3",
+    TopologyType.T3:   "T3",
+    TopologyType.NIL3: "Nil3",
+    TopologyType.SOL3: "Sol3",
+}
+
+
+def normalize_topology_str(label: str) -> str:
+    """Normalize a topology label to its canonical string form.
+
+    Returns "S3", "T3", "Nil3", or "Sol3".  Accepts the same aliases as
+    :func:`normalize_topology`.
+    """
+    return _TOPOLOGY_LABELS[normalize_topology(label)]
+
+
+def normalize_curvature_source(
+    source: Union[str, CurvatureSource]
+) -> CurvatureSource:
+    """Return a CurvatureSource from enum values or common CLI strings."""
+    if isinstance(source, CurvatureSource):
+        return source
+    if not isinstance(source, str):
+        raise TypeError(
+            f"curvature source must be str or CurvatureSource, got {type(source)}"
+        )
+
+    key = source.strip().lower()
+    aliases = {
+        "lc": CurvatureSource.LC,
+        "levicivita": CurvatureSource.LC,
+        "levi-civita": CurvatureSource.LC,
+        "levi_civita": CurvatureSource.LC,
+        "ec": CurvatureSource.EC,
+        "einsteincartan": CurvatureSource.EC,
+        "einstein-cartan": CurvatureSource.EC,
+        "spin": CurvatureSource.EC,
+    }
+    try:
+        return aliases[key]
+    except KeyError as exc:
+        raise ValueError(
+            f"Unknown curvature source {source!r}. Use one of: LC, EC."
+        ) from exc
+
+
+def make_config(
+    topology: Union[str, TopologyType],
+    *,
+    enable_squash: bool = False,
+    enable_shear: bool = False,
+    enable_offdiag_shear: bool = False,
+    fiber_mode: FiberMode = FiberMode.NONE,
+    isotropic_twist: bool = True,
+    torsion_mode: Mode = Mode.AX,
+    ny_variant: NyVariant = NyVariant.FULL,
+    enable_velocity: bool = False,
+    skip_antisymmetry_check: bool = False,
+    weyl_source: Union[str, CurvatureSource] = CurvatureSource.EC,
+    riemann_source: Union[str, CurvatureSource] = CurvatureSource.EC,
+    signature: str = "euclidean",
+    frame_convention: str = None,  # None -> auto-derive from signature
+) -> DOFConfig:
+    """Build a DOFConfig using explicit modern fields.
+
+    Parameters
+    ----------
+    signature : str
+        Metric signature: "euclidean" (default) or "lorentzian".
+        Euclidean is the default to preserve existing paper01-04 behaviour.
+    frame_convention : str or None
+        Frame index convention: "legacy_euclidean" or "lz_native".
+        When None (default), derived automatically from signature:
+          euclidean  -> "legacy_euclidean"
+          lorentzian -> "lz_native"
+        An explicit value that conflicts with signature triggers a warning
+        but is accepted (recorded in engine.data for auditing).
+    """
+    import warnings
+
+    _valid_sig = {"euclidean", "lorentzian"}
+    _valid_fc  = {"legacy_euclidean", "lz_native"}
+
+    if signature not in _valid_sig:
+        raise ValueError(
+            f"signature must be one of {_valid_sig}, got {signature!r}"
+        )
+
+    # Auto-derive frame_convention when not supplied
+    if frame_convention is None:
+        frame_convention = "lz_native" if signature == "lorentzian" else "legacy_euclidean"
+
+    if frame_convention not in _valid_fc:
+        raise ValueError(
+            f"frame_convention must be one of {_valid_fc}, got {frame_convention!r}"
+        )
+
+    # Warn on inconsistent combinations
+    if signature == "lorentzian" and frame_convention == "legacy_euclidean":
+        warnings.warn(
+            "signature='lorentzian' with frame_convention='legacy_euclidean' is "
+            "inconsistent. Prefer frame_convention='lz_native' for Lorentzian runs.",
+            UserWarning,
+            stacklevel=2,
+        )
+    if signature == "euclidean" and frame_convention == "lz_native":
+        warnings.warn(
+            "signature='euclidean' with frame_convention='lz_native' is inconsistent. "
+            "Prefer frame_convention='legacy_euclidean' for Euclidean runs.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+    return DOFConfig(
+        topology=normalize_topology(topology),
+        enable_squash=enable_squash,
+        enable_shear=enable_shear,
+        enable_offdiag_shear=enable_offdiag_shear,
+        fiber_mode=fiber_mode,
+        isotropic_twist=isotropic_twist,
+        torsion_mode=torsion_mode,
+        ny_variant=ny_variant,
+        enable_velocity=enable_velocity,
+        skip_antisymmetry_check=skip_antisymmetry_check,
+        weyl_source=normalize_curvature_source(weyl_source),
+        riemann_source=normalize_curvature_source(riemann_source),
+        signature=signature,
+        frame_convention=frame_convention,
+    )
+
+
+def make_engine(
+    topology: Union[str, TopologyType],
+    torsion_mode: Mode = Mode.AX,
+    ny_variant: NyVariant = NyVariant.FULL,
+    logger=None,
+    checkpoint_mgr=None,
+    **config_kwargs,
+):
+    """Build a UnifiedEngine from explicit topology/configuration fields."""
+    cfg = make_config(
+        topology,
+        torsion_mode=torsion_mode,
+        ny_variant=ny_variant,
+        **config_kwargs,
+    )
+    return UnifiedEngine(cfg, logger, checkpoint_mgr)
+
+
+# ── Unified Engine factory ────────────────────────────────────────────────────
 
 class UnifiedEngine:
     """
-    Backward-compatible factory.
-
     Accepts a DOFConfig and returns an instance of the appropriate
     topology implementation class (S3Geometry / T3Geometry / Nil3Geometry).
 
-    Interface is identical to the old monolithic class::
+    Interface::
 
         engine = UnifiedEngine(cfg, logger)
         engine.run()
@@ -282,6 +336,7 @@ class UnifiedEngine:
         from .s3   import S3Geometry
         from .t3   import T3Geometry
         from .nil3 import Nil3Geometry
+        from .sol3 import Sol3Geometry
 
         if not isinstance(config, DOFConfig):
             raise TypeError(
@@ -292,6 +347,7 @@ class UnifiedEngine:
             TopologyType.S3:   S3Geometry,
             TopologyType.T3:   T3Geometry,
             TopologyType.NIL3: Nil3Geometry,
+            TopologyType.SOL3: Sol3Geometry,
         }
         impl_cls = _MAP.get(config.topology)
         if impl_cls is None:
