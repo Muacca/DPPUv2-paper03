@@ -1,5 +1,7 @@
 # DPPUv2 paper03: Unified Geometric Landau EFT of Homogeneous S³×S¹ Minisuperspace in Einstein-Cartan + Nieh-Yan Theory
 
+[10.5281/zenodo.19144481](https://doi.org/10.5281/zenodo.19144481)
+
 [日本語 README](README_ja.md)
 
 ![spin-2 splitting](LaTeX/figures/fig07_spin2_splitting.png "spin-2 splitting")

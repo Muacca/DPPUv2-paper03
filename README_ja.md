@@ -1,5 +1,7 @@
 # DPPUv2 paper03: 統一幾何学的 Landau EFT — Einstein-Cartan + Nieh-Yan 理論における一様 S³×S¹ minisuperspace
 
+[10.5281/zenodo.19144481](https://doi.org/10.5281/zenodo.19144481)
+
 [English README](README.md)
 
 ![spin-2 スペクトル分裂](LaTeX/figures/fig07_spin2_splitting.png "spin-2 スペクトル分裂")
