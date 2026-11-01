@@ -1,0 +1,97 @@
+{
+  "schema": "paper03-joint-circle-v3",
+  "version": "v3",
+  "parameters": {
+    "r": 3,
+    "L": 1,
+    "kappa": 1,
+    "eta": 1,
+    "V": 1,
+    "theta": "arbitrary constant; complete NY integrates to zero for periodic profiles",
+    "alpha": 0
+  },
+  "geometry": {
+    "circle_period": 1,
+    "round_radius": "r/2",
+    "volume": "pi**2*L*r**3/4",
+    "torsion": "geometric torsion T as in the manuscript",
+    "shape_path": "M0 exp(q T_A) unless explicitly labelled linear_normalized",
+    "shape_background": "M0=diag(a,a,a^-2); a=(1+epsilon)^(1/3)"
+  },
+  "grids": {
+    "radius": [
+      0.2,
+      5,
+      241
+    ],
+    "shear": [
+      -0.55,
+      1.75,
+      461
+    ],
+    "bifurcation": [
+      -0.55,
+      -0.15,
+      401
+    ],
+    "twist": [
+      -1,
+      1,
+      201
+    ],
+    "invariants": [
+      -0.35,
+      0.35,
+      281
+    ],
+    "twist_kinetic": [
+      0,
+      1,
+      201
+    ],
+    "shape_minima": [
+      -0.7,
+      0.6,
+      651
+    ],
+    "cross_kinetic": [
+      -0.8,
+      0.8,
+      321
+    ],
+    "coupled_frequency": [
+      1,
+      16,
+      16
+    ],
+    "coupled_periodic_samples": 512
+  },
+  "circle_variations": {
+    "twist": "fixed r,L,eta,V; omega=rho(cos(2*pi*y),sin(2*pi*y),0)",
+    "scalar": "round, omega=0; periodic r,L,eta,V; bulk after total derivatives",
+    "joint": "r,L,eta,V,M,omega periodic; det M=1; equation M6",
+    "coupled_example": {
+      "amplitude": 0.5,
+      "shape": "diag(sqrt(z),1/sqrt(z),1); z=1-L^2*w^2/(2*r^2)",
+      "twist": "(A*cos(2*pi*n*y),0,0)",
+      "C_A": 0.06430979321729699,
+      "round_static": -44.41321980490211
+    },
+    "interpretation": "Static potential, restricted circle actions and joint Euclidean bulk action"
+  },
+  "model_sha256": "199d45643a97c4efb92f590a7c6bd330da7c6fe0d67076e88297c95845ea24d6",
+  "circle_sha256": "6685f81b3d9121e47e916dde7ac4fec3fe374b3d0cbad8d98d2c397b2fb08421",
+  "data_sha256": {
+    "radius.csv": "1e1c70f64593f7905a03a1d1add9f84bb92acb1257f1f81510fc2c8f0aa33d43",
+    "curvature.csv": "c69745bee09e423e6c96a777f0f14c8580eaeea697ad53390dbdbc6bf8c54ece",
+    "shear.csv": "f6f739d97e8b0529ac0d39fcc54ca65037e081f5ee15933a940420e7216f50d9",
+    "bifurcation.csv": "1ee501452faf62ebfb1cfaf4aca390b6c8fc0010ab03f23d7ccf3b2a8f7507f5",
+    "twist.csv": "1580a262b7ebea2af033aa622ae0e4cf118eae5c96c6a21adfbb6b749d65539e",
+    "invariants.csv": "a0e0867a94468b88f55740d6c471c9ddd0ec3c173fa6f33f27a6a34ca8aae049",
+    "scalars.json": "f7fadcb5515d02c3a5f346551e2f12bf01036a40ac5b245dba88bcd3847a4d5c",
+    "twist_kinetic.csv": "fd380de52e1d0a37cbb1979e35d37f5cfeb10d5c822b91c080fba713c63f3847",
+    "shape_minima.csv": "55d6a15ccd47469583bd19a77b41f50ffc6b7aa04dfb99e84534580820fa2d3b",
+    "cross_kinetic.csv": "f6f15385611a1e97f36803af177d9b80f93fb31a445af4fde5ff81ea50717ccb",
+    "coupled_action.csv": "657c8231db1a785a0558d1f3ffd18351fef7a1153c62302eceb1bc91fbfacdbe"
+  }
+}

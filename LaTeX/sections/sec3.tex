@@ -1,127 +1,62 @@
-%==============================================================================
-% Section 3: Pontryagin Protection Structure
-%==============================================================================
-\section{Pontryagin Protection Structure}
-\label{sec:pont}
+\section{Spin-0: radius, torsion and circle scale}
 
-The message of this section is simple.  The Pontryagin density $P$ is not
-generated everywhere in the homogeneous sector.  It vanishes exactly in the AX
-and VT modes, and only the MX mode is an exception.  This structure is
-established not by a qualitative symmetry argument but by algebraic cancellations
-in the Riemann blocks.
+\label{sec:3}
 
-\subsection{Pontryagin Density and Block Decomposition}
+\subsection{Static couplings and radius minimum}
 
-The Pontryagin density $P = \innerprod{R}{\star R}$ is as defined in
-\S\ref{sec:setup}.  In the 3+1 block notation it reads
-\begin{equation}
-  P = \sum_{c<d}
-  \bigl(R_{01cd}R_{23cd} - R_{02cd}R_{13cd} + R_{12cd}R_{03cd}\bigr),
+At the round shape and zero twist the scalar potential is
+
+\begin{equation}\tag{S1}\label{eq:S1}
+U_0=\frac{\pi^2Lr}{12\kappa^2}(V^2r^2+9\eta^2-36).
 \end{equation}
-enabling us to track the cancellation structure for each pair $(c,d)$.
 
-\subsection{Theorem P0: AX and VT Sectors}
+For fixed $L,\eta,V$, a strict positive-radius minimum exists exactly when $V\ne0$ and $\eta^2<4$. Its position and curvature are
 
-\begin{theorem}[P0]\label{thm:P0}
-  For the AX and VT modes and for the general vector-twist ansatz on
-  $\Sthree\times\Sone$, $\Nilthree\times\Sone$, and $\Tthree\times\Sone$,
-  $P\equiv 0$ holds identically.
-\end{theorem}
-
-For isotropic twist on $\Sthree$ and $\Nilthree$, the individual Pl\"ucker
-contribution at each fixed $(c,d)$,
-\begin{equation}
-  R_{01cd}R_{23cd} - R_{02cd}R_{13cd} + R_{12cd}R_{03cd} = 0,
+\begin{equation}\tag{S2}\label{eq:S2}
+r_{\ast}=\frac{\sqrt{12-3\eta^2}}{|V|},
+\qquad U_{rr}(r_{\ast})=\frac{\pi^2LV^2r_{\ast}}{2\kappa^2}>0.
 \end{equation}
-vanishes independently, so
-\begin{equation}
-  P = \sum_{c<d}
-  \bigl(R_{01cd}R_{23cd} - R_{02cd}R_{13cd} + R_{12cd}R_{03cd}\bigr) = 0.
-\end{equation}
-The key point is that this is \emph{not} an accidental cancellation in the sum;
-each $(c,d)$ term vanishes independently.  Furthermore, symbolic computation
-confirms $P\equiv 0$ for anisotropic vector twist as well, so the protection
-mechanism does not depend on isotropy per se.
 
-\subsection{VT Sector: Pfaffian Cancellation}
+Thus $\eta=V=1$ gives $r_{\ast}=3$. At $V=0$ the potential is linear in $r$: it decreases for $\eta^2<4$, is constant for $\eta^2=4$, and increases for $\eta^2>4$. If $V\ne0$ and $\eta^2\ge4$, it increases for $r>0$ and has no interior minimum. This classification distinguishes zero radial curvature from an actually flat potential. In particular, AX with $\eta=1$ has $U_r=-9\pi^2L/(4\kappa^2)$, despite $U_{rr}=0$.
 
-In the VT mode the cancellation mechanism is more refined.
-
-\begin{lemma}[VT-Pfaffian]\label{lem:VTPfaffian}
-  In the VT mode, each Riemann-block Pfaffian is individually non-zero, yet
-  the SS group and the S3 group cancel with equal magnitude and opposite sign,
-  yielding $P\equiv 0$ overall.
-\end{lemma}
-
-This cancellation holds for both $\Sthree\times\Sone$ and $\Nilthree\times\Sone$.
-The VT-mode protection is a \emph{Pfaffian group cancellation between the SS and
-S3 classes}, not a trivial decomposability of individual blocks.  Explicit
-Pfaffian expressions and verification for both topologies are given in
-Appendix~\ref{app:B:VT}.
-
-\subsection{MX Sector as the Unique Source of $P\neq 0$}
-
-\begin{proposition}[MX-P]\label{prop:MX}
-  In the MX mode the Pontryagin density is generated in proportion to the
-  torsion mixing $V\eta$; the twist field itself is not the origin.
-\end{proposition}
-
-For $\Sthree\times\Sone$,
-\begin{equation}
-  P(\bm{\omega}) =
-  \underbrace{\frac{2V\eta\,(V^2 r^2 + 9\eta^2 - 36)}{9r^3}}_{P_0 = P(\omega=0)}
-  + \underbrace{\frac{40V\eta L^2}{3r^5}}_{C_1}\, I_2.
-\end{equation}
-Even at the isotropic point one has
-\begin{equation}
-  P_0 = \frac{2V\eta\,(V^2 r^2 + 9\eta^2 - 36)}{9r^3},
-\end{equation}
-so the origin of non-zero Pontryagin number is vacuum torsion mixing.  One
-should therefore not identify chirality generation in the MX mode with
-spontaneous twist generation.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.70\textwidth]{figures/fig04_pontryagin_mx.png}
-  \caption{Pontryagin density $P$ in the MX sector as a function of the torsion
-           mixing parameter $V\eta$.  Non-zero $P$ arises exclusively from vacuum
-           torsion mixing; the twist field $\omega$ is not the origin.}
-  \label{fig:pont_mx}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig01_radius.pdf}
+\caption{Radius potentials at $L=\kappa=1$, with each active torsion coefficient set to one. The MX minimum is $r=3$; the VT minimum is $r=\sqrt{12}$; the AX curve is linear.}\label{fig:fig01_radius}
 \end{figure}
 
-\subsection{NyVariant Independence and Twist Stability}
+The torsion coordinates have positive diagonal static curvature. Their coupling to radius is background dependent:
 
-Because the Pontryagin density depends on the Riemann tensor, it is independent
-of the NyVariant choice (FULL/TT/REE): $P\equiv 0$ always in AX/VT, and always
-non-zero in MX.  A summary table is given in Appendix~\ref{app:B:NyVar}.
-
-Within the parameter range analysed in this paper, spontaneous twist generation
-does not occur either.  From the isotropic twist effective potential on
-$\Sthree\times\Sone$,
-\begin{equation}
-  m^2_{\Sthree}(r)
-  = \left.\frac{\partial^2 \Veff}{\partial\omega^2}\right|_{\omega=0}
-  = \frac{48\pi^2 L^3}{\kappa^2 r} > 0,
+\begin{equation}\tag{S3}\label{eq:S3}
+\begin{aligned}
+U_{\eta\eta}&=\frac{3\pi^2Lr}{2\kappa^2},&
+U_{VV}&=\frac{\pi^2Lr^3}{6\kappa^2},&
+U_{\eta V}&=0,\\
+U_{r\eta}&=\frac{3\pi^2L\eta}{2\kappa^2},&
+U_{rV}&=\frac{\pi^2Lr^2V}{2\kappa^2}.
+\end{aligned}
 \end{equation}
-so $\omega=0$ is stable for all $r>0$ \cite{paper2}.
 
-\subsection{Interpretation}
+Consequently $V$ separates quadratically from $(r,\eta)$ at an AX point with $V=0$, whereas it couples to $r$ in VT and MX. The equality $U_{\eta\eta}=U_{VV}$ at $r=3$ is an equality in these coordinates, not a degeneracy enforced by $SO(3)$. Including $L$ gives further scalar cross terms. Appendix F gives the full gradient and Hessian in one common coordinate system.
 
-The conclusion of this section is stated precisely in three points.
-\begin{enumerate}
-  \item The AX and VT modes are structurally protected.
-  \item The MX mode is the unique exception, with origin $V\eta$ mixing \cite{Chandia1997}.
-  \item Within the scope of this paper, the twist sector is itself stable and no
-        spontaneous twist generation occurs.
-\end{enumerate}
-This protection structure is the unified starting point that is consistent with
-the spin-2 and spin-1 organisation introduced below.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{figures/fig03_p-density_classification.png}
-  \caption{Classification of the Pontryagin density by torsion mode.  The AX and
-           VT modes are protected by distinct algebraic mechanisms; the MX mode
-           is the unique exception sourced by vacuum torsion mixing $V\eta$.}
-  \label{fig:pont_class}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig02_scalar.pdf}
+\caption{Scalar Hessians in the common coordinates $(r,L,\eta,V)$, divided by $\pi^2$, at the MX point $(3,1,1,1)$ and the AX point $(3,1,1,0)$, with $\kappa=1$. They display couplings between scalar deformations.}\label{fig:fig02_scalar}
 \end{figure}
+
+\subsection{Exact scalar action along the circle}
+
+Allow smooth periodic $r(y),L(y),\eta(y),V(y)$, with $r,L>0$, on the round zero-twist coframe. Including the connection derivatives and integrating the total derivatives over the circle gives
+
+\begin{equation}\tag{S4}\label{eq:S4}
+\mathcal S_{\mathrm{scalar}}=
+\int_0^1dy\left[U_0(r,L,\eta,V)
+-\frac{3\pi^2}{4\kappa^2}\frac{r(r')^2}{L}\right].
+\end{equation}
+
+Appendix A derives this formula directly from Cartan curvature. Radius carries a circle-derivative term. The $\eta'$ and $V'$ contributions to curvature combine into total derivatives, and no independent $L'$ term remains in the bulk. Here $L(y)$ is the local lapse, while $\int_0^1 L(y)\,dy$ is the circle circumference. Its variation must be specified separately from fixing that circumference. The negative radial derivative coefficient characterizes radial variations of the Euclidean action defined here. The role of lapse and constraints in a canonical formulation is reviewed in \cite{ADM}.
+
+The scalar sector therefore supplies a useful hierarchy: the radius potential at fixed controls, the static response to changing those controls, and the circle-dependent restricted action. For example, the MX radius minimum fixes one derivative to zero, while the remaining scalar gradients need not vanish. This is sufficient for a conditional radius classification and preserves the different roles of size, torsion and circle scale.
+
+In the joint action, scalar changes can couple to shape and twist derivatives through the induced metric (M4). The vanishing of these cross terms in (S4) follows from its round, zero-twist restriction. At nonzero twist the lapse is $\mathcal N$, which differs from the coframe coefficient $L$; an $L'$ cross term in those coordinates need not represent an independent lapse degree of freedom.

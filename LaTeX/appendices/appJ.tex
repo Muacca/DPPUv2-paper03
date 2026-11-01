@@ -1,0 +1,38 @@
+\section{Joint circle action and velocity structure}
+
+\label{app:J}
+
+\subsection{Metric reduction and boundary current}
+
+Use the induced metric, lapse and shift (M4). The spatially homogeneous shift obeys (M5), and the extrinsic-curvature matrix is $K=(\gamma'-\ell)/(2\mathcal N)$. The Euclidean curvature decomposition adds $[\mathrm{tr}(\gamma^{-1}K)]^2-\mathrm{tr}[(\gamma^{-1}K)^2]$ to the intrinsic three-curvature, together with a divergence. Spatial divergences of invariant vectors vanish on this unimodular algebra. The remaining normal current is $-2\sqrt{\det\gamma}\,\mathrm{tr}(\gamma^{-1}K)$. Since $\mathrm{tr}Y=0$ and $\mathcal N\sqrt{\det\gamma}=J$, it gives
+
+\begin{equation}\tag{J1}\label{eq:J1}
+\begin{aligned}
+R_{\mathrm{LC}}&=R_{\mathrm{stat,LC}}
+-\frac{\mathrm{tr}(X^2)-(\mathrm{tr}X)^2-2\mathrm{tr}(XY)}
+{4\mathcal N^2}+\frac{B_R'}{J},\\
+B_R&=-\frac{J}{\mathcal N^2}\mathrm{tr}X.
+\end{aligned}
+\end{equation}
+
+Here $R_{\mathrm{stat,LC}}$ is (A3) with $\eta=V=0$. To see the subtraction explicitly, expand the quadratic form in $X-Y$: its $Y^2$ term is the zero-velocity contribution and combines with the intrinsic three-curvature into $R_{\mathrm{stat,LC}}$. Multiplication by $-\pi^2J/(8\kappa^2)$ yields (M6) after the periodic boundary integral is removed. This derivation retains the non-Killing shift for anisotropic shape. The lapse--shift geometry is reviewed in \cite{ADM}; the Euclidean sign here is also fixed directly by the Cartan curvature formula (A1).
+
+\subsection{Torsion derivatives and periodic rotations}
+
+For any smooth coframe rotation $O(y)$, let $E=E_3^y$ be the circle component of the final dual frame vector. Substituting the specified axial and trace torsions into the metric-compatible connection gives
+
+\begin{equation}\tag{J2}\label{eq:J2}
+\begin{aligned}
+R_{\mathrm{EC}}&=R_{\mathrm{LC}}-\frac{6\eta^2}{r^2}
+-\frac{2V^2}{3}+\frac2J\partial_y(JVE),\\
+N_{\mathrm{NY}}&=-\frac6J\partial_y\left(J\frac{\eta}{r}E\right).
+\end{aligned}
+\end{equation}
+
+The quadratic torsion norms give the two algebraic terms; the trace-torsion divergence gives the last term in the first line. The axial NY current gives the second line. In the unrotated coframe, $E=1/L$, so (J2) reduces to (A4)--(A5) at $\omega=0$ and to (E3) at fixed scalars and round shape. Multiplication by the volume density makes both currents total derivatives, whose periodic integrals vanish. Thus $\eta',V'$ and derivatives of $O$ have been included; they do not create independent bulk velocity terms. No pointwise vanishing of the general NY density is required.
+
+\subsection{Cross terms and velocity rank}
+
+Expanding $M=e^h$ and (M4)--(M6) around a constant round, zero-twist point recovers the quadratic limit of (T6) and the representative cubic cross terms (X1). For the diagonal family, $\gamma=\mathrm{diag}(r^2e^{2s}+L^2w^2,r^2e^{-2s},r^2)$; direct differentiation gives (X2) and (X3). For the rotating shape of (V6), $\gamma'$ and $\ell$ are commutators with the same $01$ rotation generator. Evaluating $-2\mathrm{tr}(XY)$ gives the displayed coefficient. These calculations retain the full doublet and vector components rather than inferring their couplings from a single static Hessian.
+
+For the quadratic velocity form, $\gamma^{-1}\gamma'$ is similar to a symmetric matrix. Its tracefree part has five positive directions and its trace has one negative direction. Radius and five shape coordinates span every symmetric change of $\gamma$, so the Hessian in $(r,L,\eta,V,q_1,\ldots,q_5,\omega_0,\omega_1,\omega_2)$ has rank six, with inertia $(5,1,6)$, listing positive, negative and zero directions. At nonzero twist the null directions mix these coordinates. If all four scalar controls are fixed, the eight-dimensional shape--twist Hessian has inertia $(5,0,3)$ at zero twist and $(5,1,2)$ at nonzero twist: the twist variation then supplies the missing trace direction of the induced metric. This is an unreduced Euclidean velocity form. It does not count physical polarizations after lapse and momentum constraints. The term linear in velocities affects Euler equations while leaving this Hessian unchanged.

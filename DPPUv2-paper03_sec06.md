@@ -1,203 +1,133 @@
-## 6. Unified Geometric Landau EFT
+# 6. 相互作用・連成profile・曲率恒等式
 
-本節では、§3 - §5 の結果を一つの最終有効理論としてまとめる。要点は、final basis では二次 sector が block-diagonal に整理され、低次不変量によって許容される相互作用項が明確になることである。
+## 既約セクター間の相互作用
 
-### 6.1 Raw quadratic data
+$M=e^h$ に対して $I_2=\mathrm{tr}(h^2),I_3=\mathrm{tr}(h^3)$ と定義する。Cayley–Hamiltonにより $\mathrm{tr}(h^4)=I_2^2/2$ である。exactポテンシャルの展開は
 
-raw basis では有効ポテンシャルは
-
-$$
-V_{\rm eff}=
-V_0+
-\frac12\mu_q^2\,{\rm tr}(h^2)+
-\frac12\mu_\omega^2|\omega|^2+
-\frac12\mu_\delta^2|\delta|^2+
-m_{\omega\delta}\,\omega\cdot\delta+
-c_\omega\,h_{ij}\omega_i\omega_j+
-c_\delta\,h_{ij}\delta_i\delta_j+
-O(4)
-$$
-
-と書ける。ここで
+式(I1)：
 
 $$
-\mu_q^2=48\pi^2,\qquad
-\mu_\omega^2=52.6379,\qquad
-\mu_\delta^2=3789.9295,\qquad
-m_{\omega\delta}=-631.6544,
+\begin{aligned}
+F(e^{2h})&=-3+4I_2+\frac{40}{3}I_3+\frac{14}{3}I_2^2+O(h^5),\\
+\lVert e^h\omega\rVert^2&=\omega^2+
+2\omega^{\mathsf T}h\omega+2\omega^{\mathsf T}h^2\omega
++O(h^3\omega^2).
+\end{aligned}
 $$
 
-$$
-c_\omega=105.28,\qquad
-c_\delta=1894.96,\qquad
-c_{\omega\delta}=0\quad\text{(等方点)}
-$$
+第一行には $\mathcal K$ 、第二行には $\mathcal K L^2/r^2$ を掛ける。これにより、各セクターと同じ正規化でtensor自己相互作用とtensor–twist結合が得られる。一般には三次tensor不変量が存在する。doubletの振幅ポテンシャルが偶関数であることは指定断面の性質であり、全モデルの $h\mapsto-h$ 対称性ではない。表現論が許す不変量を整理し、実際の係数を作用から定める。付録Gに展開と二次blockとの関係を示す。
 
-である。
+![$h=q_1T_1$ に沿うexact shapeポテンシャル差と四次までの不変量展開。 $r=3,L=\kappa=\eta=V=1$ を固定した。](LaTeX/figures/v3/fig08_expansion.png)
 
-raw 幾何変数での記述は幾何的な由来の確認には必要だが、物理的な自由度の整理としては過剰である。§5 の physical / auxiliary 分解により、final basis を導出する。
+$h=q_1T_1$ に沿うexact shapeポテンシャル差と四次までの不変量展開。 $r=3,L=\kappa=\eta=V=1$ を固定した。
 
-### 6.2 Final quadratic EFT
+## 微分交叉項
 
-final basis では、quadratic sector は概念的に
+一般作用は、一定round・twistゼロの参照点で二次の分離を保つ。各摂動とその微分を一次として数えると、異なるセクターを結ぶ代表的な三次項は
+
+式(X1)：
 
 $$
-\mathcal{L}_{\rm quad}=
-\mathcal{L}_{r}+\mathcal{L}_{q_A}+\mathcal{L}_{X}+\mathcal{L}_{Y}+\mathcal{L}_{\eta,V}
+\begin{aligned}
+\mathcal L_{\mathrm{cross}}^{(3)}
+={}&-\frac{\pi^2L_0}{2\kappa^2}\delta r'\thinspace \omega^{\mathsf T}\omega'
++\frac{\pi^2L_0r_0}{4\kappa^2}\omega'^{\mathsf T}h'\omega\\
+&-\frac{\pi^2L_0r_0}{\kappa^2}
+\mathrm{tr}\left[h'\left(h[\omega]_\times-[\omega]_\times h\right)\right].
+\end{aligned}
 $$
 
-と block-diagonal に分解される。より具体的には
+最初の二項は速度交叉項、最後はshift結合の先頭項である。スカラーに依存する係数の展開からも頂点が生じ、全て式(M6)に含まれる。有限振幅の具体例として $M=\mathrm{diag}(e^s,e^{-s},1)$ 、 $\omega=(w,0,0)$ とし、 $\mathsf G_{ab}=\partial^2\mathcal L_\partial/\partial x_a'\partial x_b'$ と定義すると、
+
+式(X2)：
 
 $$
-\mathcal{L}_{q_A}=-\frac12\mu_q^2\sum_{A=1}^5 q_A^2,
-\qquad
-\mathcal{L}_{X}=\frac12\dot{X}^T G_{XX}\dot{X}-\frac12 X^T H_{\rm eff}X,
-\qquad
-\mathcal{L}_{Y}=-\frac12 Y^TH_{\rm null}Y
+\begin{aligned}
+\mathsf G_{rw}&=-\frac{\pi^2Lw}{2\kappa^2e^{2s}},&
+\mathsf G_{sw}&=\frac{\pi^2Lrw}{4\kappa^2e^{2s}},&
+\mathsf G_{rs}&=\frac{\pi^2Lw^2}{4\kappa^2e^{2s}},\\
+\mathsf G_{rL}&=-\frac{\pi^2w^2}{2\kappa^2e^{2s}},&
+\mathsf G_{sL}&=\frac{\pi^2rw^2}{4\kappa^2e^{2s}}.
+\end{aligned}
 $$
 
-である。
+非零twistでは交叉項が残る。速度Hessianには速度一次項(V6)が含まれないため、Euler式ではそれも保持する。一般の速度rankと物理的自由度数との区別は付録Jに示す。
 
-ここで $\mathcal{L}\_{X}$ と $\mathcal{L}\_{Y}$ が block-diagonal に分離するのは、§5.5 の non-dynamical auxiliary $Y_k$ を代数 EOM $Y=-({H}\_{XY}/{H}\_{\rm null})X$ で消去（平方完成）した結果である。運動項は $G\,Y_k=0$ ゆえ $G_{XY}=0$ となり自明に分離しており、唯一の結合はポテンシャル cross 項 ${H}\_{XY}={H}\_{\rm cross}\neq0$ である。これは ${Y}\_{k}\to {Y}\_{k}+({H}\_{XY}/{H}\_{\rm null}){X}\_{k}$ のシフトにより、ポテンシャル二次形式
+## 連成周期族と作用の非有界性
 
-$$
-\frac12 X^TH_{XX}X+X^TH_{XY}Y+\frac12 Y^TH_{\rm null}Y=\frac12 X^TH_{\rm eff}X+\frac12 Y^TH_{\rm null}Y,
-\qquad
-H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{\rm null}}
-$$
+上の対角族で $r,L,\eta,V$ を固定すると、微分密度は厳密に平方完成できる。
 
-として ${H}\_{\rm eff}$（§5.5, Appendix E）に畳み込まれる。したがって $\mathcal{L}\_{X}$ の ${H}\_{\rm eff}$ はすでに X-Y cross 項の寄与を含んでおり、 $\mathcal{L}\_{Y}$ の $Y$ はシフト後の auxiliary を表す。これは X-Y cross 項を落とした見かけの decoupling とは異なる。
-
-$X_k$ と $(q_A,r,\eta)$ の mixed Hessian が全 21 成分でゼロと確認されたため、spin-1 sector の quadratic decoupling は final basis において厳密な statement である。ただし、spin-1 block 自体は Schur 消去後に $\lambda_{\rm phys}\simeq -0.4183<0$ を持つため、非ゴースト・タキオン的である。また、spin-2 sector と torsion 変数 $(\eta,V)$ の間の cross-Hessian も全 10 成分でゼロと確認され、さらに radial– $V$ cross-Hessian もゼロである。ただし、radial– $\eta$ cross-Hessian は非ゼロ（ $\approx 118.4$ ）であり、spin-0/torsion subsector は $(r,\eta)$ 混合ブロックを形成する。したがって local stability の議論は、spin-2・spin-1 各 block については独立に行うことができるが、spin-1 block の結論は不安定であり、scalar/torsion subsector は $(r,\eta)$ を連立して扱う必要がある。
-
-**Fig. 13** Quadratic block organization of the final sector. The spin-1 sector fully decouples; the spin-2 sector decouples from torsion; the scalar/torsion subsector contains a coupled $(r,\eta)$ block.
-
-```mermaid
-flowchart LR
-    subgraph bd["Final Quadratic EFT:<br/> block-diagonal"]
-        direction LR
-        spacer[" "]
-        B_r["spin-0<br/>r  (radial)"]
-        B_q["spin-2<br/>q_A  quintet<br/>μq²=48π²"]
-        B_X["spin-1 physical<br/>X_k<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
-        B_Y["spin-1 auxiliary<br/>Y_k<br/>H_null=894.85<br/>(non-dynamical)"]
-        B_t["torsion<br/>η, V<br/>(control params)"]
-    end
-    
-    style spacer fill:none,stroke:none, height:1
-    classDef default fill:none,stroke:black
-    class bd default
-```
-
-### 6.3 Invariant basis and selection rules
-
-Landau-EFT の低次スカラーは、最終的に
+式(X3)：
 
 $$
-I_2={\rm tr}(h^2),\qquad
-I_3=h_{ij}\omega_i\omega_j,\qquad
-I_4={\rm tr}(h^3),\qquad
-W_2=\omega_i\omega_i
+\begin{aligned}
+\mathcal L_{\partial}
+&=\frac{\pi^2r^3}{4\kappa^2L}(s')^2
++\frac{\pi^2Lr}{4\kappa^2e^{2s}}s'ww'\\
+&=\frac{\pi^2r^3}{4\kappa^2L}
+\left(s'+\frac{L^2ww'}{2r^2e^{2s}}\right)^2
+-\frac{\pi^2L^3w^2(w')^2}{16\kappa^2r e^{4s}}.
+\end{aligned}
 $$
 
-を基底として整理される。exact check により
+shapeを固定した一軸twistの微分costは零であるが、shapeをtwistに連成させると第二項の負の寄与が生じる。次の滑らかで周期的な非退化族を取る。
+
+式(X4)：
 
 $$
-I_3=q_A F_A(\omega)
+\begin{aligned}
+w_n(y)&=A\cos(2\pi n y),\quad
+e^{2s_n}=1-\frac{L^2w_n^2}{2r^2},
+\quad 0<A<\frac{\sqrt2r}{L},\quad n=1,2,\ldots,\\
+\mathcal S_n&=\overline U_A-n^2C_A,\qquad
+C_A=\frac{\pi^2L^3}{16\kappa^2r}
+\int_0^1\frac{w_1^2(w_1')^2}{[1-L^2w_1^2/(2r^2)]^2}\thinspace dy>0.
+\end{aligned}
 $$
 
-が最終 $T_A$ 基底で成立することが確認されている。quartic order では
+$s_n$ の関係式により式(X3)の平方項は零になる。各profileは同じ経路をn回繰り返すので、静的平均 $\overline U_A=\int_0^1U(r,L,\eta,V,M_n,\omega_n)\thinspace dy$ はnによらず、微分寄与は $-n^2$ に比例する。従って $\mathcal S_n\to-\infty$ である。高階微分項や周波数制限を加えない本モデルでは、スカラー固定でも同時profileのEuclidean作用は下に有界でない。この非有界性は、拘束条件を課す前のEuclidean作用を、指定した滑らかな周期profile上で評価した結果である。
+
+負の寄与には幾何学的な由来がある。 $\widetilde X=X-\tfrac13(\mathrm{tr}X)I$ と置くと、式(M6)の速度二次形式は $\mathrm{tr}(\widetilde X^2)-\tfrac23(\mathrm{tr}X)^2$ であり、 $\mathrm{tr}X=(\ln\det\gamma)'$ は誘導された空間体積の変化を表す。 $r$ と $L$ を固定してもこの体積は固定されない。式(X4)に沿って $\det\gamma=r^6(1+L^2w_n^2e^{-2s_n}/r^2)$ はtwistとともに変化し、 $w_nw_n'\ne0$ の点ではtrace項が勝る。式(S4)の負の半径微分項も同じtrace方向に由来する。従ってこの系列は、Euclidean重力作用の共形モードに沿う不定性 [7] を、スカラー固定のもとでshape–twist結合を通じて実現している。
+
+![速度交叉係数と連成周期作用](LaTeX/figures/v3/fig09_coupled.png)
+
+左： $r=3$ 、 $L=\kappa=1$ 、 $s=0$ における式(X2)の速度交叉係数。右： $A=0.5$ 、 $\eta=V=1$ での式(X4)の作用寄与をround静的配置との差で示す。静的寄与は周波数によらず、連成微分寄与は $-n^2$ に比例して減少する。
+
+このパラメータでround静的作用は $-44.4132198049$ 、連成作用は $n=1$ で $-44.0662455826$ 、 $n=4$ で $-45.0308924809$ 、 $n=8$ で $-48.1177625553$ となる。第5節の静的な大域shape下限と、円方向作用汎関数の下限が存在しないことは、異なる対象を異なる変分族で最小化する結果として両立する。
+
+## 完全NYとform添字のPontryagin
+
+添字対の交換対称性を仮定せず、完全なEC曲率を用いて密度を定義する。
+
+式(I2)：
 
 $$
-I_2^2,\qquad I_2W_2,\qquad W_2^2
+\begin{aligned}
+N&=\frac14\epsilon^{abcd}T^e{}_{ab}T_{ecd}
+-\frac12\epsilon^{abcd}R_{abcd},\\
+P&=\frac14\epsilon^{cdef}R_{abcd}R_{abef},\qquad
+P\thinspace \mathrm{vol}_4=\sum_{a,b}R_{ab}\wedge R_{ab},\\
+B&=\sum_{c<d}\left(R_{01cd}R_{23cd}-R_{02cd}R_{13cd}
++R_{03cd}R_{12cd}\right).
+\end{aligned}
 $$
 
-が補助基底として自然に現れる。
+向き付けた四次元unimodular Lie代数上の一定接続では、全ての左不変三形式が閉じる。三形式を $\iota_X\mathrm{vol}$ と書けば、その外微分は $\mathcal L_X\mathrm{vol}$ となり、unimodularityによって零となる。NY三形式と接続のChern–Simons三形式（その外微分がRiemann–Cartan空間での二つの不変量を与える [5]）はいずれも左不変なので、
 
-この整理により、
+式(I3)：
 
-- 許容される代表的 cubic term は $h_{ij}\omega_i\omega_j$ と $h_{ij}\delta_i\delta_j$
-- final basis では $X_k$ を用いた quadratic cross-term は消滅
-- 既知の禁制項 $H_{\rm sym}$、 $K_{\rm sym}$ は表現論的選別則によって排除
+$$
+\begin{aligned}
+N\thinspace \mathrm{vol}_4&=d(e^a\wedge T_a)=0,\\
+P\thinspace \mathrm{vol}_4&=-d\thinspace \mathrm{tr}
+\left(\Gamma\wedge d\Gamma+\frac23\Gamma\wedge\Gamma\wedge\Gamma\right)=0.
+\end{aligned}
+$$
 
-という形で、interaction structure が見通しよく記述できる。
+第二行の $\Gamma$ は行列値接続一形式を表す。定理はAX・VT・MX、および $S^3\times S^1$ の任意の一定coframe変形を含む。これは局所代数的な結果であり、compact性は積分領域を与える。内部双対量Bは別の縮約であり、非零となり得る。付録Bには独立な正規化と、接続が一定でなく $P\ne0$ となる例を示す。
 
-**Fig. 14** Connection structure of low-order invariants in the Landau-EFT. Solid arrows: allowed terms; dashed arrows: terms forbidden by selection rules.
+![$\eta=V=1$ のround MX族における内部双対Bと標準form添字P。Pは解析的に零であり、描画値は浮動小数点の残差を示す。](LaTeX/figures/v3/fig10_curvature.png)
 
-```mermaid
-graph LR
-    h["h_ij  (spin-2)<br/>q_A quintet"]
-    w["ω_i / X_k<br/>(spin-1)"]
+$\eta=V=1$ のround MX族における内部双対Bと標準form添字P。Pは解析的に零であり、描画値は浮動小数点の残差を示す。
 
-    h --> I2["I₂ = tr(h²)"]
-    h --> I3["I₃ = h_ij ω_i ω_j"]
-    h --> I4["I₄ = tr(h³)"]
-    w --> I3
-    w --> W2["W₂ = ω_i ω_i"]
-
-    I2 & I3 & I4 & W2 --> Veff["V_eff allowed terms"]
-
-    Hsym["H_sym  (forbidden)"] -. "selection rule" .-> Veff
-    Ksym["K_sym  (forbidden)"] -. "selection rule" .-> Veff
-    
-    classDef default fill:none,stroke:black
-```
-
-### 6.4 Final dictionary
-
-本論で採用する mode dictionary を再掲する。
-
-| variable | final classification | role | comment |
-|---|---|---|---|
-| $r$ | spin-0 | isotropic radius | equilibrium value $r_0=3$ |
-| $q_A$ | spin-2 | full shear quintet | $\mu_q^2=48\pi^2$ |
-| $X_k$ | spin-1 physical | propagating mixed mode | quadratic decoupled; tachyonic, non-ghost |
-| $Y_k$ | spin-1 auxiliary | non-propagating auxiliary | not gauge |
-| $\eta$ | spin-0 torsion | AX parameter | input / control |
-| $V$ | spin-0 torsion | VT parameter | input / control |
-
-raw 幾何変数 $(\omega_i,\delta_i)$ は、あくまで intermediate description であり、最終的な物理辞書では $X_k$ と $Y_k$ に読み替えられる。
-
-quadratic sector のブロック分解は §6.2 で示した通りであり、spin-1 および spin-2 sector は decouple する一方、scalar/torsion subsector は §6.2 で同定した連立 $(r,\eta)$ ブロックを保持する。
-
-**Fig. 15** Overall transformation from raw geometric variables to the final EFT basis. Arrows indicate the assignment of each variable.
-
-```mermaid
-flowchart LR
-    subgraph raw["Raw basis"]
-        eps["ε, s  (squash/shear)"]
-        phi["φ  (SO(2) rotation)"]
-        omk["ω_k  (twist)"]
-        delk["δ_k  (mixing)"]
-        r0["r,  η,  V"]
-    end
-    subgraph final["Final EFT basis"]
-        qA["q_A  (spin-2 quintet)<br/>A=1..5"]
-        Xk["X_k  (spin-1 physical)<br/>k=0,1,2"]
-        Yk["Y_k  (spin-1 auxiliary)<br/>k=0,1,2"]
-        r1["r,  η,  V<br/>(spin-0 / torsion)"]
-    end
-
-    eps -->|"Jacobian  (App C.6)"| qA
-    phi -->|"SO(2) slice"| qA
-    omk -->|"gen. eigenvalue<br/>(App E)"| Xk
-    delk -->|"gen. eigenvalue<br/>(App E)"| Xk
-    omk -->|"null mode"| Yk
-    delk -->|"null mode"| Yk
-    r0 --> r1
-
-    classDef default fill:none,stroke:black
-    class raw,final default
-```
-
-### 6.5 Interpretation as a geometric Landau EFT
-
-以上の結果から本モデルを、単なる重力 minisuperspace における数値ポテンシャルの記述としてではなく、有限自由度の geometric Landau-EFT として理解することができるようになる。ここでは
-
-1. order parameter に相当する幾何自由度が既約表現で整理される。
-2. 二次 sector は表現論的ブロックに整理できる。spin-1 sector は完全に decouple し、scalar/torsion 側は連立 $(r,\eta)$ ブロックと独立な $V$ 方向という精密化されたブロック構造をもつ。
-3. 許容 interaction は不変量基底と表現論的選別則で記述できる。
-
-本節は、この意味で minisuperspace 還元の $S^3 \times S^1$ トポロジーにおける幾何自由度の振る舞いを「統一された理論言語」に翻訳する役割を担っている。
-
-§6.2 の cross-Hessian 解析により、このブロック整理が quadratic order で厳密であることが確認されている（数値表の詳細は Appendix H.3 を参照）。加えて、torsion block $H^{(\eta,V)}$ は等方点で対角かつ 2 重縮退であり固有値は正（ $\approx 355.3$ ）である一方、連立 $(r,\eta)$ 2×2 ブロックは AX モードで鞍点型（indefinite）となり、 $r$ の零モード性を反映して $\lambda_{\min} < 0$ となる。
+[前の節・付録](DPPUv2-paper03_sec05.md) / [次の節・付録](DPPUv2-paper03_sec07.md) / [第1節](DPPUv2-paper03_sec01.md)

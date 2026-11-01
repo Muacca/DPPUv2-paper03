@@ -1,39 +1,11 @@
-## 7. Physical Interpretation and Outlook
+# 7. 幾何学的解釈とPaper01/02との関係
 
-本節では、本論で何が完結し、何がまだ完結していないかを明確にする。
+spinセクターは、二つの変分対象を共通の変数で整理する。静的ポテンシャルは大きさ–torsion結合、twistの剛性、shape極小を定める。円方向作用はそれらの座標が変化するときの微分costと交叉項を定める。spin-0は半径項、spin-2はtracefreeなshape項を持ち、spin-1は固定shapeの制限で有限振幅の方向costを得る。共通のmetric依存性が非線形結合を生む。
 
-### 7.1 What has been completed in homogeneous bulk geometric sector
+スカラー制御変数を固定しtwistをゼロとした静的ポテンシャルでは、軸対称制御変数を固定するとdoubletが連続分岐し、その制御変数も最小化すると、回転を除いて一意なround大域最小が得られる。正の係数 $\mathcal K$ と加法的torsion項は、スカラー固定での無次元分類を変えない。twistも静的に最小化すると $\omega=0$ となる。共通の球面族では、Paper01のFULL半径ポテンシャルとPaper02の $\alpha=0$ における静的な軸対称shape下限を回収し、shape解析をtracelessな全五成分へ拡張する。Paper02の同時最小化は一定の半径・shapeパラメータを変える問題であり、本論の同時円方向問題は周期profileを変える問題である。
 
-本論が一様 minisuperspace 幾何セクターの古典二次レベルで確立した主要項目は §8 にまとめる。以下ではその背景として、本論の範囲を限定する点について補足する。
+円方向作用汎関数では、式(X4)により、同じ静的下限と、作用が負の無限大へ向かう系列が共存する。twistゼロ・半径固定のshape制限と、スカラー固定・round形状のtwist制限にそれぞれ非負の微分項があっても、連成後の正定性は従わない。またtwistゼロの停留結果は第4節「有限振幅の円方向依存」の族に適用され、一般のshape履歴でそれが維持されるとは限らない理由を、回転shapeのsource(V6)が示す。各座標を独立な粒子と同定せずに、セクターごとの寄与を比較できる。
 
-「quadratic block organization」とは、homogeneous bulk sector が spin-2・spin-1 physical・spin-1 auxiliary・scalar/torsion の各 subsector に分解できることを指す。ただし scalar/torsion subsector は $(r,\eta,V)$ 変数で完全対角ではなく、radial mode は quadratic order で axial torsion と混合し、 $V$ 方向は等方点で分離したままである点に注意する。
+各極値には指定した制御条件を保持する。MX参照点では半径微分が零でも他のスカラー勾配は零でなく、半径極小は制限されたモデルの結果である。円方向作用の非有界性も、lapse・運動量拘束を課す前、Lorentzianへの継続を選ぶ前のoff-shell Euclideanの結果であり、真空や物理応答を推定しない。Paper02は既約EC-Weyl補正を含むが、本論ではその係数を零とする。Paper02の $\alpha>0$ での非有界性は静的な小半径極限による。本論の式(X4)は、正の半径を固定した $\alpha=0$ の大周波数系列である。Paper02の指定された静的族での二つのWeyl射影の一致を、円方向に依存する場の恒等式として使用していない。追加項や指定した周波数範囲による円方向問題の変更は、別のモデル上の問いである。
 
-ここで、非一様モードについては言及していない点に注意が必要である。本論はあくまで homogeneous bulk geometric sector の classical EFT としての構造について述べたものである。
-
-### 7.2 What is not claimed here
-
-本論は、以下を保留している。
-
-- minisuperspace を超えた非一様モードを含む完全安定性
-- generalized eigenvalue $\lambda_{\rm phys}$ を普遍的 mass squared と同一視すること
-- full 4D deformed geometry が新しい Lie group manifold をなすという主張
-- arbitrary non-invariant polynomial まで含めた完全な作用生成
-
-これらは本論の結果と矛盾するものではなく、本論の言及範囲外として意識的に線引きしたものである。
-
-### 7.3 Relation to the thermal interpretation of the $S^1$ direction
-
-$S^1$ 方向は paper01 以来、温度解釈への自然な接続点として見なされてきた [1]。本論は、その接続について議論していないが、一様幾何 sector における final basis としての整理は、以下についてより明確に議論するための基盤となる。
-
-- background geometry の安定 sector
-- thermal deformation と結びつく control parameter
-- bulk geometric response と温度依存応答の分離
-
-### 7.4 Toward this model
-
-本モデルの今後の課題は以下の通りである。
-
-1. 局所自由度を含む非一様ゆらぎの導入。
-2. 境界面や interface を含む問題設定。
-3. homogeneous bulk mode と localized mode の接続。
-4. thermal / Lorentzian 解釈を含む物理的 observables への橋渡し。
+[前の節・付録](DPPUv2-paper03_sec06.md) / [次の節・付録](DPPUv2-paper03_sec08.md) / [第1節](DPPUv2-paper03_sec01.md)

@@ -1,232 +1,99 @@
-%==============================================================================
-% Section 5: Spin-1 Sector: Twist-Mixing System and Physical/Auxiliary
-%            Decomposition
-%==============================================================================
-\section{Spin-1 Sector: Twist-Mixing System and Physical/Auxiliary Decomposition}
-\label{sec:spin1}
+\section{Spin-2: shape splitting and continuous bifurcation}
 
-This section replaces the raw geometric variables $(\omega_i,\delta_i)$ with the
-physical basis and reconstructs the spin-1 sector via the generalised eigenvalue
-problem
-\begin{equation}
-  Hv = \lambda G v.
-\end{equation}
-The conclusion is that $Y_k$ is a non-dynamical auxiliary direction and $X_k$ is
-the unique propagating spin-1 triplet.
+\label{sec:5}
 
-\subsection{Raw Spin-1 Variables}
+\subsection{The quintet and its axial splitting}
 
-At the isotropic point $r_0=3$, $L=1$, the raw $2\times 2$ blocks are
-\begin{equation}
-  H_2 =
-  \begin{pmatrix}
-    \mu_\omega^2 & m_{\omega\delta} \\
-    m_{\omega\delta} & \mu_\delta^2
-  \end{pmatrix}
-  =
-  \begin{pmatrix}
-    52.6379 & -631.6544 \\
-    -631.6544 & 3789.9295
-  \end{pmatrix},
-\end{equation}
-\begin{equation}
-  G_2 =
-  \begin{pmatrix}
-    G_{\omega\omega} & G_{\omega\delta} \\
-    G_{\omega\delta} & G_{\delta\delta}
-  \end{pmatrix}
-  =
-  \begin{pmatrix}
-    236.870435 & -355.305547 \\
-    -355.305547 & 532.958162
-  \end{pmatrix}.
-\end{equation}
-Looking only at the eigenvalues of the raw Hessian gives the impression of
-a negative direction, but this is insufficient for determining physical mass.
-The physically meaningful quantity is the generalised eigenvalue problem for the
-pair $(H,G)$.
+Write $h=q_AT_A$, where $T_A$ is the orthonormal symmetric traceless basis of Appendix C. At $\omega=0$ the scalar controls multiply the shape action by $\mathcal K$ and add a shape-independent constant. At the round point its Hessian is $8\mathcal K\delta_{AB}$, so all five normalized directions have the same positive curvature. For the axial reference $M_0=\mathrm{diag}(a,a,a^{-2})$, with $a=(1+\epsilon)^{1/3}$, $\epsilon>-1$, use the paths $M=M_0e^{q_AT_A}$ one at a time. Their curvatures split into a singlet and two doublets:
 
-\subsection{Null Direction and Physical Direction}
-
-The field-space metric $G$ is rank-deficient.  For each axis $k$ it has a null
-direction
-\begin{equation}
-  Y_k \propto (\omega_k,\delta_k)
-     = \!\left(1,\frac{2L}{r_0}\right)
-     = \!\left(1,\frac{2}{3}\right),
-  \qquad k=0,1,2,
-\end{equation}
-where $k=0,1,2$ labels the three spin-1 axes and is distinct from the spatial
-tensor indices $i,j=1,2,3$.  The physical direction orthogonal to $Y_k$ is
-\begin{equation}
-  X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
-  \qquad k=0,1,2.
+\begin{equation}\tag{T1}\label{eq:T1}
+\begin{aligned}
+H_0&=\frac{8\mathcal K(4-a^6)}{3a^8},\\
+H_2&=\frac{8\mathcal K(2a^6-1)}{a^2},\qquad (T_2,T_3),\\
+H_1&=\frac{4\mathcal K(a^6+1)}{a^8},\qquad (T_4,T_5).
+\end{aligned}
 \end{equation}
 
-The geometric reason why $Y_k$ is null is simple.  For a fixed $k$, the twist
-$\omega_k$ mixes a time-direction component into $e^k$, while the mixing
-$\delta_k$ conversely mixes a spatial component into $e^0$.  The $Y_k$ direction
-is the combination in which these two deformations cancel in the quadratic form
-of the metric, yielding $G\,Y_k=0$.  However, the coframe deformation itself
-does not vanish, so this direction is not gauge but remains as a
-\emph{constraint-like auxiliary}.
+At $a=1$ these agree with the round value. Residual rotations in the 01 plane rotate $(T_2,T_3)$ with twice the angle and $(T_4,T_5)$ with the angle itself. The specified exponential path fixes the meaning of the second derivatives. Off a stationary shape, another path with the same tangent can have a different second derivative, as derived in Appendix D. In particular, the zero of $H_0$ at $\epsilon=1$ is a curvature zero along that path.
 
-In this basis,
-\begin{equation}
-  G\,Y_k = 0,
-  \qquad
-  G_{XX} = 769.8286\,I_3,
-  \qquad
-  H_{XX} = 3223.06\,I_3.
-\end{equation}
-Here $H_{XX}$ is the $X$-block before the auxiliary direction has been
-eliminated.  The finite physical eigenvalue must be obtained from the full
-$X$--$Y$ system.  The direction $Y_k$ is a second-class auxiliary with no kinetic
-term,
-\begin{equation}
-  G_{YY}=0,
-  \qquad
-  H_{YY}=H_\mathrm{null}=894.845>0,
-  \qquad
-  H_{XY}=H_\mathrm{cross}
-    =\frac{24081847}{3750}\simeq 6421.8\neq 0.
-\end{equation}
-Therefore the Schur-reduced physical Hessian is
-\begin{equation}
-  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
-\end{equation}
-and the finite generalised eigenvalue is
-\begin{equation}
-  \lambda_\phys
-  = \frac{H_\mathrm{eff}}{G_{XX}}
-  \simeq -0.4183<0.
-\end{equation}
-The corresponding corrected mode is approximately $(0.9816,0.1909)$ in the raw
-$(\omega_k,\delta_k)$ coordinates, and its kinetic norm is positive.  The
-physical spin-1 triplet is therefore tachyonic but non-ghost, so the isotropic
-background is locally unstable in the spin-1 twist direction.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.70\textwidth]{figures/fig10_spin-1_decomposition.png}
-  \caption{Decomposition from the raw spin-1 basis to the physical/auxiliary
-           basis.  The rank-deficiency of $G$ is the origin of the decomposition.}
-  \label{fig:spin1_decomp}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig05_shear.pdf}
+\caption{The singlet and two doublet curvatures, normalized by $24\pi^2$ at $r=3$, $L=\kappa=1$. The second panel compares two paths with the same tangent at the axial background.}\label{fig:fig05_shear}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.68\textwidth]{figures/fig11_G_spectrum.png}
-  \caption{Eigenvalue spectrum of the field-space metric $G$ in the spin-1
-           sector.  Three eigenvalues are exactly zero (null directions $Y_k$)
-           and three are degenerate at $G_{XX}=769.83$ (non-null directions
-           $X_k$), reflecting the $SO(3)$ Schur structure.}
-  \label{fig:G_spectrum}
+\subsection{Exact doublet minimization at fixed axial control}
+
+Fix $a$ and minimize over the full doublet, $M=M_0\exp(q_2T_2+q_3T_3)$. Let $\rho=(q_2^2+q_3^2)^{1/2}$. The eigenvalues of $S$ are $a^2e^{\sqrt2\rho},a^2e^{-\sqrt2\rho},a^{-4}$. Thus $z=2\cosh(\sqrt2\rho)\ge2$ reduces the problem to a convex quadratic:
+
+\begin{equation}\tag{T2}\label{eq:T2}
+F(a,z)=a^4(z^2-4)-2a^{-2}z+a^{-8}
+=a^4(z-a^{-6})^2-4a^4.
+\end{equation}
+
+\begin{equation}\tag{T3}\label{eq:T3}
+\begin{aligned}
+\rho_{\ast}(a)&=
+\begin{cases}
+0,&a^6\ge1/2,\\
+\mathrm{arcosh}(1/(2a^6))/\sqrt2,&a^6<1/2,
+\end{cases}\\
+F_{\min}(a)&=
+\begin{cases}
+a^{-8}-4a^{-2},&a^6\ge1/2,\\
+-4a^4,&a^6<1/2.
+\end{cases}
+\end{aligned}
+\end{equation}
+
+The critical control is $\epsilon_c=1/\sqrt2-1$. For $\epsilon<\epsilon_c$ the minimum has three unequal shape eigenvalues; it approaches the axial shape continuously at the boundary. More precisely,
+
+\begin{equation}\tag{T4}\label{eq:T4}
+\begin{aligned}
+\rho_{\ast}&=2^{3/4}\sqrt{\epsilon_c-\epsilon}
++O((\epsilon_c-\epsilon)^{3/2}),\\
+[\,\partial_\epsilon^2 F_{\min}\,]_{\mathrm{right}}
+-[\,\partial_\epsilon^2 F_{\min}\,]_{\mathrm{left}}
+&=32\,2^{1/3}.
+\end{aligned}
+\end{equation}
+
+Both $F_{\min}$ and its first derivative are continuous at $\epsilon_c$. The quartic coefficient in the local expansion in $\rho$ is $2\,2^{1/3}>0$ at criticality. These facts characterize a continuous bifurcation of constrained shape minima, or a continuous shape transition within this finite-dimensional minimization problem.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig06_branch.pdf}
+\caption{Doublet amplitude and the potential gain at fixed axial control. The dotted line is $\epsilon_c$. For nonzero amplitude the minimizers form a rotation orbit, not two isolated minima.}\label{fig:fig06_branch}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{figures/fig12_spin1_rotation.png}
-  \caption{Basis rotation from raw spin-1 variables $(\omega_k,\delta_k)$ to the
-           physical/auxiliary basis $(X_k,Y_k)$.  The null direction $Y_k\propto
-           (1,2L/r_0)$ is a non-dynamical auxiliary; the orthogonal direction
-           $X_k$ carries the propagating spin-1 degree of freedom.}
-  \label{fig:spin1_rot}
+The two signs of $q_2$ on the cut $q_3=0$ are points on the circle $q_2^2+q_3^2=\rho_{\ast}^2$. Residual $SO(2)$ rotations connect that circle. When shapes related by rotations and axis relabeling are identified, it represents one triaxial shape class at each fixed control.
+
+\subsection{Global minimum of the static shape potential}
+
+At fixed scalar controls and zero twist, every positive-definite $S$ of determinant one has an eigenvalue representation of the form used in (T2), after choosing an axis order. Minimizing (T3) also over $a>0$ therefore covers all shapes, modulo rotations. For $a^6<1/2$, $F_{\min}>-2^{4/3}>-3$. On the complementary branch,
+
+\begin{equation}\tag{T5}\label{eq:T5}
+F_{\min}+3=
+\frac{(a^2-1)^2(3a^4+2a^2+1)}{a^8}\ge0.
+\end{equation}
+
+Equality requires $a=1,z=2$, hence $S=I$. On this zero-twist slice, the round shape is the unique global minimizing shape of the static potential, modulo rotations. Since the twist term in (M3) is nonnegative, minimizing over twist as well gives $\omega=0$. At a prescribed nonzero twist, the shape dependence of the last term in (M3) generally shifts the shape minimum. The fixed-control bifurcation and the full-shape minimum above are complementary results of the static zero-twist potential. At fixed torsion and circle circumference, combining this bound with Section 3 also selects the round radius minimum when $V\ne0$ and $\eta^2<4$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig07_shape_minima.pdf}
+\caption{The axial shape potential, its doublet-minimized value and the full-shape lower bound $F=-3$. Releasing the axial control selects $\epsilon=0$, $\rho=0$.}\label{fig:fig07_shape_minima}
 \end{figure}
 
-\subsection{Why $Y_k$ Is Not Gauge}
-\label{sec:spin1:notgauge}
+\subsection{Circle-dependent shape}
 
-It is important not to confuse $Y_k$ with gauge freedom or variable redundancy.
-For axis $k=0$, the variation along the null direction gives
-\begin{equation}
-  \delta e^3_\text{twist} = +\frac{2L}{r_0} e^0,
-  \qquad
-  \delta e^3_\text{mixing} = -\frac{2L}{r_0} e^0,
-\end{equation}
-so $\delta e^3 = 0$ in total.  However,
-\begin{equation}
-  \delta e^0 = +\frac{2L}{r_0} e^3
-\end{equation}
-survives, producing the metric variation
-\begin{equation}
-  \delta g_{\tau,\sigma^0} = 1 \neq 0.
-\end{equation}
-Hence this direction is \emph{not} gauge.
+Set $\omega=0$ and write $B=M^{\mathsf T}M$, with $\det B=1$. Then $Y=0$ and $\mathrm{tr}(B^{-1}B')=0$. The derivative part of (M6) becomes
 
-Furthermore, variable redundancy would require:
-\begin{itemize}
-  \item $\delta g_{\mu\nu} = 0$ (metric variation vanishes),
-  \item $H_\mathrm{null} = 0$ (Hessian along the null direction vanishes), and
-  \item $\lambda_\mathrm{eff}$ finite.
-\end{itemize}
-In reality,
-\begin{equation}
-  H_\mathrm{null} = 894.845 > 0,
-  \qquad
-  \lambda_\mathrm{eff} \to +\infty.
+\begin{equation}\tag{T6}\label{eq:T6}
+\mathcal L_{\partial}\big|_{\omega=0}
+=-\frac{3\pi^2r(r')^2}{4\kappa^2L}
++\frac{\pi^2r^3}{32\kappa^2L}
+\mathrm{tr}\!\left[(B^{-1}B')^2\right].
 \end{equation}
-Therefore $Y_k$ is correctly interpreted as an auxiliary direction without a
-kinetic term, i.e.\ a \emph{non-dynamical auxiliary}.  Full details of the
-variable-redundancy exclusion are given in Appendix~\ref{app:E:Yk}.
 
-\subsection{Quadratic Decoupling}
-
-We evaluated whether the physical spin-1 mode mixes with other sectors at
-quadratic order.  The mixed Hessians
-\begin{equation}
-  M_{Ai}^{(qX)} = \frac{\partial^2 V}{\partial q_A \partial X_i},
-  \qquad
-  M_i^{(rX)} = \frac{\partial^2 V}{\partial r\, \partial X_i},
-  \qquad
-  M_i^{(\eta X)} = \frac{\partial^2 V}{\partial \eta\, \partial X_i}
-\end{equation}
-(15, 3, and 3 components respectively; 21 in total) were evaluated by numerical
-finite differences, and
-\begin{equation}
-  M_{Ai}^{(qX)} = 0,
-  \qquad
-  M_i^{(rX)} = 0,
-  \qquad
-  M_i^{(\eta X)} = 0
-\end{equation}
-were all confirmed.  Step-size stability and the parity check
-$V(p,+X_k)-V(p,-X_k)=0$ are detailed in Appendix~\ref{app:F}.  Quadratic
-decoupling is therefore a structural fact in the final basis, not a numerical
-artefact.
-
-\subsection{Final Quadratic Sector for Spin-1}
-
-Summarising, the quadratic contribution of the spin-1 sector, including the
-intra-sector $X$--$Y$ cross term, is
-\begin{equation}
-  \mathcal{L}_{X,Y}
-  = \frac{1}{2}\dot{X}^T G_{XX} \dot{X}
-    - \frac{1}{2} X^T H_{XX} X
-    - X^T H_{XY}Y
-    - \frac{1}{2} Y^T H_{YY} Y.
-\end{equation}
-The field $Y$ has no kinetic term and can be eliminated by its algebraic equation
-of motion,
-\begin{equation}
-  Y=-\frac{H_{XY}}{H_{YY}}X.
-\end{equation}
-The physical effective Hessian is therefore
-\begin{equation}
-  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
-  \qquad
-  \lambda_\phys=\frac{H_\mathrm{eff}}{G_{XX}}\simeq -0.4183<0.
-\end{equation}
-Thus the corrected physical mode has negative mass squared and positive kinetic
-norm; it is a genuine tachyonic non-ghost spin-1 instability rather than an
-artifact of the auxiliary direction.  The complete block decomposition of
-$\mathcal{L}_\mathrm{quad}$ including all sectors is presented in \S\ref{sec:eft}.
-
-The conclusions of this section are the following three points.
-\begin{enumerate}
-  \item The raw basis $(\omega_i,\delta_i)$ is not the final physical basis.
-  \item $Y_k$ is neither gauge nor redundancy but a non-dynamical auxiliary.
-  \item $X_k$ is the unique propagating spin-1 triplet and decouples from all
-        other sectors at quadratic order, but is tachyonic and non-ghost after
-        Schur elimination of $Y_k$.
-\end{enumerate}
+The shape term is nonnegative: $B^{-1}B'$ is similar to the symmetric matrix $B^{-1/2}B'B^{-1/2}$. Near a constant round reference, $M=e^h$ gives the quadratic coefficient $\pi^2r_0^3\mathrm{tr}[(h')^2]/(8\kappa^2L_0)$. The scalar--shape derivative cross term vanishes exactly at zero twist. Thus the static bifurcation and a positive shape derivative cost can be described in the same sector. Their extension to nonzero twist requires the joint terms of Section 6.

@@ -1,213 +1,105 @@
-## 5. Spin-1 Sector: Twist-Mixing System and Physical/Auxiliary Decomposition
+# 5. Spin-2：shape分裂と連続分岐
 
-本節では raw 幾何変数 $(\omega_i,\delta_i)$ を physical basis とする見方を変更し、一般化固有値問題
+## 五重項と軸対称背景での分裂
 
-$$
-Hv=\lambda Gv
-$$
+$h=q_AT_A$ とし、 $T_A$ は付録Cの正規直交対称traceless基底とする。 $\omega=0$ ではスカラー制御変数はshape作用に $\mathcal K$ を掛け、shapeに依存しない定数を加える。round点のHessianは $8\mathcal K\delta_{AB}$ となり、正規化した五方向は共通の正の曲率を持つ。軸対称参照 $M_0=\mathrm{diag}(a,a,a^{-2})$ 、 $a=(1+\epsilon)^{1/3},\epsilon>-1$ で、各経路 $M=M_0e^{q_AT_A}$ を用いると、一重項と二つの二重項に分裂する。
 
-を基礎として spin-1 セクターを再構成する。結論は、 $Y_k$ は non-dynamical auxiliary、 $X_k$ が唯一の propagating spin-1 triplet、というものである。
-
-### 5.1 Raw spin-1 variables
-
-等方点 $r_0=3,\ L=1$ における raw 2x2 block は
+式(T1)：
 
 $$
-H_2=\begin{pmatrix}
-\mu_\omega^2 & m_{\omega\delta}\\
-m_{\omega\delta} & \mu_\delta^2
-\end{pmatrix}=\begin{pmatrix}
-52.6379 & -631.6544\\
--631.6544 & 3789.9295
-\end{pmatrix},
+\begin{aligned}
+H_0&=\frac{8\mathcal K(4-a^6)}{3a^8},\\
+H_2&=\frac{8\mathcal K(2a^6-1)}{a^2},\qquad (T_2,T_3),\\
+H_1&=\frac{4\mathcal K(a^6+1)}{a^8},\qquad (T_4,T_5).
+\end{aligned}
 $$
 
-$$
-G_2=\begin{pmatrix}
-G_{\omega\omega} & G_{\omega\delta}\\
-G_{\omega\delta} & G_{\delta\delta}
-\end{pmatrix}=\begin{pmatrix}
-236.870435 & -355.305547\\
--355.305547 & 532.958162
-\end{pmatrix}.
-$$
+$a=1$ で三者はround値に一致する。01平面の残余回転は $(T_2,T_3)$ を二倍角、 $(T_4,T_5)$ を同じ角度で回す。二階微分の意味は指数経路を指定することで定まる。shapeの非停留点では、同じ接線を持つ別経路の二階微分が異なり得ることを付録Dで示す。特に $\epsilon=1$ の $H_0=0$ は、その経路に沿う曲率の零点である。
 
-raw Hessian 単独の固有値だけを見れば、負方向や不安定性のように見えるものが現れる。しかしこれは physical mass の判定には不十分であり、真に意味を持つのは $H$ と $G$ の対 $(H,G)$ に対する generalized eigenvalue problem である。
+![$r=3,L=\kappa=1$ で $24\pi^2$ により正規化した一重項・二重項の曲率。右は軸対称背景で同じ接線を持つ二種類の経路を比較する。](LaTeX/figures/v3/fig05_shear.png)
 
-### 5.2 Null direction and physical direction
+$r=3,L=\kappa=1$ で $24\pi^2$ により正規化した一重項・二重項の曲率。右は軸対称背景で同じ接線を持つ二種類の経路を比較する。
 
-field-space metric $G$ は rank-deficient であり、各軸ごとに null direction
+## 軸対称制御変数を固定したdoubletのexact最小化
+
+aを固定し、 $M=M_0\exp(q_2T_2+q_3T_3)$ によりdoublet全体を最小化する。 $\rho=\sqrt{q_2^2+q_3^2}$ とすると、Sの固有値は $a^2e^{\sqrt2\rho},a^2e^{-\sqrt2\rho},a^{-4}$ である。 $z=2\cosh(\sqrt2\rho)\ge2$ を用いると、凸な二次式へ帰着する。
+
+式(T2)：
 
 $$
-Y_k\propto(\omega_k,\delta_k)=\left(1,\frac{2L}{r_0}\right)=\left(1,\frac23\right)
+F(a,z)=a^4(z^2-4)-2a^{-2}z+a^{-8}
+=a^4(z-a^{-6})^2-4a^4.
 $$
 
-を持つ。これに直交する physical direction は
+式(T3)：
 
 $$
-X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}},
-\qquad
-k=0,1,2
+\begin{aligned}
+\rho_{\ast}(a)&=
+\begin{cases}
+0,&a^6\ge1/2,\\
+\mathrm{arcosh}(1/(2a^6))/\sqrt2,&a^6<1/2,
+\end{cases}\\
+F_{\min}(a)&=
+\begin{cases}
+a^{-8}-4a^{-2},&a^6\ge1/2,\\
+-4a^4,&a^6<1/2.
+\end{cases}
+\end{aligned}
 $$
 
-で与えられる。
+臨界制御値は $\epsilon_c=1/\sqrt2-1$ である。 $\epsilon<\epsilon_c$ では極小のshape固有値は三つとも異なり、境界で軸対称形状へ連続的に近づく。具体的には、
 
-ここで $k=0,1,2$ は 3 本の spin-1 軸ラベルであり、空間テンソル指標 $i,j=1,2,3$ とは別物である。さらに $Y_k$ が null になる幾何学的理由は単純である。固定した $k$ に対して、twist $\omega_k$ は $e^k$ に時間方向成分を混入させ、mixing $\delta_k$ は逆に $e^0$ に空間方向成分を混入させる。 $Y_k$ はこの 2 つの変形が metric の二次形式では相殺する方向であり、その結果 $G\,Y_k=0$ が生じる。一方で coframe 変形そのものは消えないので、この方向は gauge ではなく constraint-like auxiliary として残る。
-
-この基底で、 $X$ 方向の kinetic coefficient と消去前の Hessian coefficient は
+式(T4)：
 
 $$
-G\,Y_k=0,
-\qquad
-G_{XX}=769.8286\,I_3,
-\qquad
-H_{XX}=3223.06\,I_3
+\begin{aligned}
+\rho_{\ast}&=2^{3/4}\sqrt{\epsilon_c-\epsilon}
++O((\epsilon_c-\epsilon)^{3/2}),\\
+[\thinspace \partial_\epsilon^2 F_{\min}\thinspace ]_{\mathrm{right}}
+-[\thinspace \partial_\epsilon^2 F_{\min}\thinspace ]_{\mathrm{left}}
+&=32\thinspace 2^{1/3}.
+\end{aligned}
 $$
 
-となる。ここで $H_{XX}$ は $Y_k$ を消去する前の $X$-block であり、physical finite eigenvalue は $X$ - $Y$ system 全体から得る必要がある。 $Y_k$ は kinetic term を持たない second-class auxiliary であり、 $G_{YY}=0$、 $H_{YY}=H_{\rm null}=894.845>0$、かつ
+$F_{\min}$ とその一次微分は $\epsilon_c$ で連続である。臨界点の $\rho^4$ 係数は $2\thinspace 2^{1/3}>0$ となる。これは制限された形状極小の連続分岐、すなわちこの有限次元の最小化問題内での連続的な形状転移を特徴付ける。
+
+![軸対称制御変数固定でのdoublet振幅とポテンシャルの減少量。点線は $\epsilon_c$ 。非零振幅の極小は回転軌道をなし、孤立した二点ではない。](LaTeX/figures/v3/fig06_branch.png)
+
+軸対称制御変数固定でのdoublet振幅とポテンシャルの減少量。点線は $\epsilon_c$ 。非零振幅の極小は回転軌道をなし、孤立した二点ではない。
+
+断面 $q_3=0$ の $q_2$ の正負二枝は、円 $q_2^2+q_3^2=\rho_{\ast}^2$ 上の点である。残余 $SO(2)$ 回転がこの円を結ぶ。回転・軸の名前替えで結ばれる形状を同一視すると、固定した制御値ごとに一つの三軸不等shapeの類となる。
+
+## 静的shapeポテンシャルの大域最小
+
+スカラー制御変数を固定しtwistをゼロとすると、行列式1の任意の正定値Sは、軸の順序を選べば式(T2)で用いた固有値表示を持つ。従って式(T3)を $a>0$ についても最小化すれば、回転を除いた全shapeを扱える。 $a^6<1/2$ では $F_{\min}>-2^{4/3}>-3$ であり、残る枝では
+
+式(T5)：
 
 $$
-H_{XY}=H_{\rm cross}=\frac{24081847}{3750}\simeq6421.8\neq0
+F_{\min}+3=
+\frac{(a^2-1)^2(3a^4+2a^2+1)}{a^8}\ge0.
 $$
 
-であるため、Schur 消去後の physical Hessian は
+等号は $a=1,z=2$ 、従って $S=I$ に限られる。このtwistゼロの断面では、round形状が静的ポテンシャルの回転を除いて一意な大域最小shapeとなる。式(M3)のtwist項は非負なので、twistも最小化すれば $\omega=0$ となる。非零のtwistを指定して固定する場合は、式(M3)の最後の項のshape依存性により、shape極小は一般に移動する。上記の固定制御値での分岐と全shape最小は、静的なtwistゼロのポテンシャルの相補的な二つの結果である。torsionと円周を固定すると、この下限と第3節の結果を合わせ、 $V\ne0,\eta^2<4$ の場合にroundな半径極小も得られる。
+
+![軸対称shapeポテンシャル、doubletを最小化した値、全shapeの下限 $F=-3$ 。軸対称制御変数も解放すると $\epsilon=0,\rho=0$ が選ばれる。](LaTeX/figures/v3/fig07_shape_minima.png)
+
+軸対称shapeポテンシャル、doubletを最小化した値、全shapeの下限 $F=-3$ 。軸対称制御変数も解放すると $\epsilon=0,\rho=0$ が選ばれる。
+
+## 円方向に変化するshape
+
+$\omega=0$ 、 $B=M^{\mathsf T}M$ 、 $\det B=1$ と置くと、 $Y=0$ 、 $\mathrm{tr}(B^{-1}B')=0$ である。式(M6)の微分部分は
+
+式(T6)：
 
 $$
-H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}}
+\mathcal L_{\partial}\big|_{\omega=0}
+=-\frac{3\pi^2r(r')^2}{4\kappa^2L}
++\frac{\pi^2r^3}{32\kappa^2L}
+\mathrm{tr}\left[(B^{-1}B')^2\right].
 $$
 
-となる。したがって有限一般化固有値は
+$B^{-1}B'$ は対称行列 $B^{-1/2}B'B^{-1/2}$ と相似なので、shape項は非負である。一定round参照点近傍で $M=e^h$ とすると、二次項は $\pi^2r_0^3\mathrm{tr}[(h')^2]/(8\kappa^2L_0)$ となる。twistゼロではscalar–shapeの微分交叉項は厳密に消える。静的分岐と正のshape微分costを同じセクターで記述でき、非零twistへの拡張には第6節の連成項を用いる。
 
-$$
-\lambda_{\rm phys}\simeq
-\frac{H_{\rm eff}}{G_{XX}}
-\simeq -0.4183<0
-$$
-
-を得る。対応する corrected mode は概ね $(0.9816,0.1909)$ 方向であり、kinetic norm は正である。したがって physical spin-1 triplet は非ゴースト・タキオン的であり、等方背景は spin-1 twist 方向に局所不安定である。
-
-**Fig. 10** Decomposition from raw spin-1 basis to physical/auxiliary basis. The rank-deficiency of $G$ is the origin of the decomposition.
-
-```mermaid
-flowchart TD
-    raw["raw spin-1 basis<br/>(ω_k, δ_k)   k=0,1,2"]
-
-    raw -->|"G·Y_k = 0<br/>(null direction)"| Yk["Y_k ∝ (1, 2L/r₀) = (1, 2/3)<br/>non-dynamical auxiliary<br/>H_null = 894.85 > 0"]
-    raw -->|"G·X_k ≠ 0<br/>(non-null kinetic)"| Xk["corrected physical spin-1 mode<br/>≈(0.9816ω_k+0.1909δ_k)<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
-
-    classDef default fill:none,stroke:black
-```
-
-**Fig. 11** Eigenvalue spectrum of the field-space metric $G$ in the spin-1 sector. Three eigenvalues are exactly zero (null directions $Y_k$) and three are degenerate at $G_{XX}=769.83$ (non-null directions $X_k$), reflecting the SO(3) Schur structure.
-
-![Fig. 11: G eigenvalue spectrum](LaTeX/figures/fig11_G_spectrum.png)
-
-**Fig. 12** Basis rotation from raw spin-1 variables $(\omega_k,\delta_k)$ to physical/auxiliary basis $(X_k,Y_k)$. The null direction $Y_k\propto(1,2L/r_0)$ is identified as a non-dynamical auxiliary; the orthogonal direction $X_k$ carries the propagating spin-1 degree of freedom.
-
-![Fig. 12: Spin-1 basis rotation](LaTeX/figures/fig12_spin1_rotation.png)
-
-### 5.3 Why $Y_k$ is not gauge
-
-重要なのは、 $Y_k$ を gauge や variable redundancy と取り違えないことである。軸 $k=0$ では、null direction に沿う変分は
-
-$$
-\delta e^3_{\rm twist}=+\frac{2L}{r_0}e^0,
-\qquad
-\delta e^3_{\rm mixing}=-\frac{2L}{r_0}e^0
-$$
-
-を与え、合計として $\delta e^3=0$ になる。しかし一方で
-
-$$
-\delta e^0=+\frac{2L}{r_0}e^3
-$$
-
-が残るため、metric 変分
-
-$$
-\delta g_{\tau,\sigma^0}=1\neq0
-$$
-
-が生じる。したがってこの方向は gauge ではない。
-
-さらに variable redundancy なら
-
-- $\delta g_{\mu\nu}=0$
-- $H_{\rm null}=0$
-- 有効固有値 $\lambda_{\rm eff}$ が有限
-
-が必要だが、実際には
-
-$$
-H_{\rm null}=894.845>0,
-\qquad
-\lambda_{\rm eff}\to\infty
-$$
-
-である。よって $Y_k$ は kinetic term を持たない補助方向、すなわち non-dynamical auxiliary と解釈するのが正しい。
-
-variable redundancy 排除の詳細（ $\delta g$ の明示的導出、 $H_{\rm null}=894.845>0$ の確認、 $\lambda_{\rm eff}\to\infty$ の計算過程）は Appendix E.2 を参照のこと。
-
-### 5.4 quadratic decoupling
-
-physical spin-1 mode が他 sector と二次レベルで混合するかを全成分で評価したところ、 mixed Hessian は
-
-$$
-M_{Ai}^{(qX)}=\frac{\partial^2V}{\partial q_A\partial X_i},
-\qquad
-M_i^{(rX)}=\frac{\partial^2V}{\partial r\partial X_i},
-\qquad
-M_i^{(\eta X)}=\frac{\partial^2V}{\partial \eta\partial X_i}
-$$
-
-であり、内訳は
-
-- spin-1 x spin-2: 15 成分
-- spin-1 x radial: 3 成分
-- spin-1 x torsion: 3 成分
-
-の合計 21 成分である。
-
-数値差分評価の結果、
-
-$$
-M_{Ai}^{(qX)}=0,
-\qquad
-M_i^{(rX)}=0,
-\qquad
-M_i^{(\eta X)}=0
-$$
-
-がすべて成立した。step size 安定性の詳細な数値表と偶性確認（ $V(p,+X_k)-V(p,-X_k)=0$ ）は Appendix F.4–F.5 を参照のこと。したがって quadratic decoupling は表示上の丸めではなく、final basis での構造的事実である。
-
-### 5.5 Final quadratic sector for spin-1
-
-以上をまとめると、spin-1 sector の quadratic 寄与は、intra-sector の $X$ - $Y$ cross term を含めて
-
-$$
-\mathcal{L}_{X,Y}
-=\frac12 \dot{X}^T G_{XX}\dot{X}
--\frac12 X^T H_{XX}X
--X^T H_{XY}Y
--\frac12 Y^TH_{YY}Y
-$$
-
-で与えられる。 $Y$ には kinetic term がないため、代数 EOM
-
-$$
-Y=-\frac{H_{XY}}{H_{YY}}X
-$$
-
-により消去できる。したがって physical mode の有効質量項は
-
-$$
-H_{\rm eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}}
-$$
-
-であり、 $\lambda_{\rm phys}=H_{\rm eff}/G_{XX}\simeq -0.4183<0$ となる。したがって corrected physical mode は負の質量二乗を持つ非ゴースト・タキオンであり、auxiliary 由来の見かけの負方向ではなく真の spin-1 不安定である。全 sector を含む完全な $\mathcal{L}_{\rm quad}$ のブロック分解は §6.2 にまとめる。
-
-本節の結論は 以下3 点の通りである。
-
-1. raw basis $(\omega_i,\delta_i)$ はfinal physical basis ではない。
-2. $Y_k$ は gauge でも redundancy でもなく non-dynamical auxiliary である。
-3. corrected $X_k$ は唯一の propagating spin-1 triplet であり、二次レベルで他 sector と decouple するが、非ゴースト・タキオン的である。
+[前の節・付録](DPPUv2-paper03_sec04.md) / [次の節・付録](DPPUv2-paper03_sec06.md) / [第1節](DPPUv2-paper03_sec01.md)

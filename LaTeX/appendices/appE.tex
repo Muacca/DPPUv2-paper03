@@ -1,188 +1,53 @@
-%==============================================================================
-% Appendix E: Spin-1 Sector: Schur Reduction and Finite Generalised Eigenvalue
-%==============================================================================
-\section{Spin-1 Sector: Schur Reduction and Finite Generalised Eigenvalue}
+\section{Derivation of the nonlinear twist action}
+
 \label{app:E}
 
-This appendix summarises the raw quadratic form of the spin-1 sector, the
-rank-deficient kinetic metric, the identification of the non-dynamical auxiliary
-direction, and the finite generalised eigenvalue obtained after Schur
-elimination.
+For the fixed-scalar, round-shape family of Section 4.2 in the unrotated coframe the induced spatial metric, lapse and shift in the invariant basis are
 
-\subsection{Raw Quadratic Blocks}
-
-At the isotropic point $r_0=3$, $L=1$, each axis $k=0,1,2$ has
-\begin{equation}
-  H_2 =
-  \begin{pmatrix}
-    52.6379 & -631.6544 \\
-    -631.6544 & 3789.9295
-  \end{pmatrix},
-  \qquad
-  G_2 =
-  \begin{pmatrix}
-    236.870435 & -355.305547 \\
-    -355.305547 & 532.958162
-  \end{pmatrix}.
+\begin{equation}\tag{E1}\label{eq:E1}
+\begin{aligned}
+\gamma&=r^2I+L^2\omega\omega^{\mathsf T},&
+\mathcal N&=\frac{Lr}{\sqrt{r^2+L^2\omega^2}},\\
+\beta^i&=\frac{L^2\omega_i}{r^2+L^2\omega^2},&
+\gamma^{-1}&=\frac1{r^2}\left(I-\frac{L^2\omega\omega^{\mathsf T}}{r^2+L^2\omega^2}\right).
+\end{aligned}
 \end{equation}
-Here $H_2$ is the potential Hessian and $G_2$ is the field-space kinetic metric.
-The raw Hessian alone is insufficient for determining physical mass.  The
-quadratic form must be treated together with the rank-deficient kinetic metric
-and the auxiliary constraint.
 
-\subsection{Null Direction and Auxiliary Character}
-\label{app:E:Yk}
+At each circle coordinate, the spatial shift is along the symmetry axis of $\gamma$ and its spatial Lie derivative of $\gamma$ vanishes. Thus $K=\gamma'/(2\mathcal N)$ up to an irrelevant overall sign convention for the normal. Direct matrix traces give
 
-The kinetic metric has the null direction
-\begin{equation}
-  Y_k \propto (\omega_k,\delta_k)=\left(1,\frac{2}{3}\right),
+\begin{equation}\tag{E2}\label{eq:E2}
+\begin{aligned}
+\mathrm{tr}\!\left[(\gamma^{-1}K)^2\right]
+-\left[\mathrm{tr}(\gamma^{-1}K)\right]^2
+&=\frac{L^2}{2r^4}Q,\\
+{}^{(3)}R&=\frac{24}{r^2}-\frac{8L^2}{r^4}\omega^2.
+\end{aligned}
 \end{equation}
-with
-\begin{equation}
-  G_2Y_k\simeq 0,
-  \qquad
-  H_{YY}=Y_k^T H_2Y_k\simeq 894.845>0.
-\end{equation}
-Thus $Y_k$ has no kinetic term but has non-zero potential curvature.  It is a
-second-class auxiliary direction.
 
-The direction $Y_k$ is neither gauge nor variable redundancy.  For axis $k=0$,
-the variation along $Y_0$ gives
-\begin{equation}
-  \delta e^3_\text{twist}=+\frac{2L}{r_0}e^0,
-  \qquad
-  \delta e^3_\text{mixing}=-\frac{2L}{r_0}e^0,
-\end{equation}
-so the total variation of $e^3$ vanishes.  However, the coframe variation
-\begin{equation}
-  \delta e^0=+\frac{2L}{r_0}e^3
-\end{equation}
-remains and therefore produces
-\begin{equation}
-  \delta g_{\tau,\sigma^0}\neq 0.
-\end{equation}
-Moreover, since $H_{YY}>0$ while $G_2Y_k=0$, the effective Rayleigh quotient
-along $Y_k$ diverges, $\lambda_\mathrm{eff}\to\infty$.  Hence $Y_k$ is correctly
-interpreted as a non-dynamical auxiliary, not as variable redundancy.
+The Euclidean curvature decomposition adds the negative of the first line and the divergence $-2\partial_y(\omega\cdot\omega')/r^2$ to $^{(3)}R$, giving (V2). Equations (A1)--(A2) give the same result without a metric decomposition. This comparison fixes both the sign and the normalization of the quartic term.
 
-\subsection{Non-null Coordinate and Schur Data}
+For an arbitrary smooth mixing rotation, let $E_3^y$ denote the circle component of the final frame vector dual to $e'^3$. With fixed $r,L,\eta,V$ the torsion decomposition gives
 
-As a complementary non-null coordinate we use
-\begin{equation}
-  X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}}.
+\begin{equation}\tag{E3}\label{eq:E3}
+\begin{aligned}
+R_{\mathrm{EC}}&=R_{\mathrm{LC}}-\frac{6\eta^2}{r^2}-\frac{2V^2}{3}
++2V\partial_yE_3^y,\\
+N&=-\frac{6\eta}{r}\partial_yE_3^y.
+\end{aligned}
 \end{equation}
-This coordinate spans the non-zero kinetic direction.  Its pre-elimination block
-coefficients are
-\begin{equation}
-  G_{XX}\simeq 769.8286,
-  \qquad
-  H_{XX}\simeq 3223.06.
+
+The volume density is constant and the spatial invariant divergence is zero. The last terms therefore integrate to zero for periodic profiles. For a single 03 rotation and $\omega=(w,0,0)$, $E_3^y=\cos\chi/L+w\sin\chi/r$, which exhibits the boundary current explicitly. This proves scalar-action independence from mixing in the circle family.
+
+For completeness, with $p=\omega'$, $s=\omega\cdot p$, the derivative momentum and Euler expression are
+
+\begin{equation}\tag{E4}\label{eq:E4}
+\begin{aligned}
+\frac{\partial\mathcal L}{\partial p}
+&=\frac{C_\omega}{8}(\omega^2p-s\omega),\\
+E&=2C_\omega\omega+\frac{C_\omega}{8}
+\left[(2p^2+\omega\cdot\omega'')\omega
+-2sp-\omega^2\omega''\right].
+\end{aligned}
 \end{equation}
-However, $Y_k$ remains in the same quadratic form as an auxiliary direction, so
-the finite physical eigenvalue is determined by the Schur reduction of the full
-$X$--$Y$ system, not by the $X$-block alone.
 
-The remaining required coefficients are
-\begin{equation}
-  H_{YY}\simeq 894.845,
-  \qquad
-  H_{XY}
-    =\frac{24081847}{3750}
-    \simeq 6421.8\neq 0.
-\end{equation}
-The non-zero $H_{XY}$ is an auxiliary coupling that must not be discarded before
-elimination.
-
-\subsection{Schur Elimination}
-
-For each axis, the spin-1 quadratic Lagrangian can be written as
-\begin{equation}
-  \mathcal{L}_{X,Y}
-  =\frac{1}{2}\dot X^T G_{XX}\dot X
-   -\frac{1}{2}X^T H_{XX}X
-   -X^T H_{XY}Y
-   -\frac{1}{2}Y^T H_{YY}Y .
-\end{equation}
-Since $Y$ has no kinetic term, its algebraic equation of motion is
-\begin{equation}
-  \frac{\partial V}{\partial Y}=0,
-  \qquad\Rightarrow\qquad
-  Y=-\frac{H_{XY}}{H_{YY}}X.
-\end{equation}
-Substitution gives the physical Hessian
-\begin{equation}
-  H_\mathrm{eff}=H_{XX}-\frac{H_{XY}^2}{H_{YY}},
-\end{equation}
-and hence the finite generalised eigenvalue
-\begin{equation}
-  \lambda_\phys
-  =\frac{H_\mathrm{eff}}{G_{XX}}
-  =\frac{H_{XX}-H_{XY}^2/H_{YY}}{G_{XX}}
-  \simeq -0.4183<0.
-\end{equation}
-In the symbolic Ricci normalisation the same Schur structure gives
-\begin{equation}
-  \lambda_\phys^\mathrm{symbolic}
-  =-\frac{56L^2}{3r^2}<0.
-\end{equation}
-The two magnitudes should not be identified directly because the normalisations
-differ, but the sign and physical classification agree.
-
-\subsection{Corrected Mode and Ghost Test}
-
-The corrected mode corresponding to the finite generalised eigenvalue is,
-in Euclidean unit normalisation,
-\begin{equation}
-  v_\mathrm{corr}\simeq (0.9816,\;0.1909)
-\end{equation}
-in the raw $(\omega_k,\delta_k)$ coordinates.  Its kinetic norm is
-\begin{equation}
-  v_\mathrm{corr}^T G_2 v_\mathrm{corr}\simeq 114.5>0.
-\end{equation}
-Thus the corrected spin-1 mode is not a ghost; it is a tachyonic mode with
-negative mass squared and positive kinetic norm.
-
-\subsection{Final Statement}
-
-The spin-1 conclusion is:
-\begin{enumerate}
-  \item $Y_k$ is neither gauge nor redundancy, but a non-dynamical auxiliary.
-  \item The $X$--$Y$ cross term $H_{XY}$ is non-zero, so Schur elimination is
-        required for the finite physical eigenvalue.
-  \item After eliminating $Y_k$, the finite generalised eigenvalue is
-        $\lambda_\phys\simeq -0.4183<0$.
-  \item The corrected physical mode has positive kinetic norm and is therefore
-        a tachyonic non-ghost mode.
-\end{enumerate}
-
-\subsection{Computational Verification}
-
-The scripts verify the following values:
-\begin{itemize}
-  \item $\lambda_\phys\simeq -0.4183$;
-  \item $\lambda_\phys^\mathrm{symbolic}=-56L^2/(3r^2)$;
-  \item $H_{XY}=24081847/3750$;
-  \item $v_\mathrm{corr}\simeq (0.9816,0.1909)$;
-  \item $v_\mathrm{corr}^TGv_\mathrm{corr}\simeq 114.5>0$.
-\end{itemize}
-
-Scripts:
-\begin{itemize}
-  \item First-principles symbolic derivation via \texttt{dppu.action.spin1\_gradient}:
-    derives $G$ and $H$ symbolically, obtains
-    $\lambda_\phys^\mathrm{symbolic}=-56L^2/(3r^2)$ from the computed expression,
-    confirms agreement with the degenerate-pencil finite root, and cross-checks $G$
-    against the witness values after scaling by the volume factor $\pi^2 L r^3$:
-        \texttt{paper03/spin1\_symbolic\_firstprinciples.py}
-  \item Canonical backing script assembling $G_{XX}$, $H_{XX}$, $H_{XY}$, and
-    $H_{YY}$ from the raw $G,H$ witness data, confirming the Schur-reduced
-    $\lambda_\phys\simeq -0.4183<0$ and positive kinetic norm; also incorporates
-    the first-principles symbolic derivation and $G$ witness cross-check:
-        \texttt{paper03/spin1\_kinetic\_metric.py}
-  \item Verifies that $Y_k$ is kinetic-null and non-dynamical, and connects this
-    auxiliary classification to the Schur-reduced spin-1 result:
-        \texttt{paper03/spin1\_null\_mode\_analysis.py}
-  \item Witness script excluding gauge or variable redundancy by checking the
-    coframe variation:
-        \texttt{paper03/spin1\_auxiliary\_exclusion.py}
-\end{itemize}
+Contracting with $\omega$ cancels the second derivatives and gives (V5). This is a pointwise proof, valid also where the polar coordinate $\rho,n$ is singular. It requires no division by the amplitude and establishes the zero-twist stationary result for all real smooth twist profiles in this fixed-scalar, round-shape family.

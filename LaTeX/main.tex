@@ -1,205 +1,49 @@
-%==============================================================================
-% Unified Geometric Landau EFT of Homogeneous S^3 x S^1 Minisuperspace
-% in Einstein-Cartan + Nieh-Yan Theory
-%==============================================================================
-\documentclass[12pt,a4paper]{article}
-
-%------------------------------------------------------------------------------
-% Packages
-%------------------------------------------------------------------------------
-
-% Fonts / encoding
+\documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{textcomp}
-\usepackage[final]{microtype}
-
-% Math
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
-\usepackage{mathtools}
-\usepackage{bm}
-
-% Graphics and figures
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{subcaption}
-
-% Tables
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{multirow}
-
-% TikZ for diagrams
-\usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
-
-% Layout and formatting
-\usepackage[margin=2.5cm]{geometry}
-\usepackage{setspace}
-\onehalfspacing
-
-% Misc (xcolor before hyperref)
-\usepackage{xcolor}
-\usepackage{enumitem}
-
-% References and links
-\definecolor{linkblue}{RGB}{0,0,180}
-\usepackage[colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue]{hyperref}
-\usepackage{cleveref}
-
-% Code listings (for appendices)
-\usepackage{listings}
-\lstset{
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  frame=single,
-  language=Python
-}
-
-% Section break
-\usepackage{titlesec}
-\newcommand{\sectionbreak}{\clearpage}
-
-%------------------------------------------------------------------------------
-% Theorem environments
-%------------------------------------------------------------------------------
-\newtheorem{theorem}{Theorem}
-\newtheorem{proposition}{Proposition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\theoremstyle{remark}
-\newtheorem{remark}{Remark}
-
-%------------------------------------------------------------------------------
-% Custom commands
-%------------------------------------------------------------------------------
-% Math shortcuts
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\Veff}{V_{\mathrm{eff}}}
-\newcommand{\VEC}{V_{\mathrm{EC}}}
-\newcommand{\LC}{\mathrm{LC}}
-\newcommand{\EC}{\mathrm{EC}}
-\newcommand{\NY}{\mathrm{NY}}
-\newcommand{\Vol}{\mathrm{Vol}}
-\newcommand{\tr}{\mathrm{tr}}
-\newcommand{\Sym}{\mathrm{Sym}}
-
-% Topology notation
-\newcommand{\Sthree}{S^3}
-\newcommand{\Tthree}{T^3}
-\newcommand{\Nilthree}{\mathrm{Nil}^3}
-\newcommand{\Sone}{S^1}
-
-% Inner product notation
-\newcommand{\innerprod}[2]{\langle #1,\, #2 \rangle}
-
-% Spin labels
-\newcommand{\phys}{\mathrm{phys}}
-
-%------------------------------------------------------------------------------
-% Title and author
-%------------------------------------------------------------------------------
-\title{Unified Geometric Landau EFT of Homogeneous\\ $\Sthree\times\Sone$ Minisuperspace\\
-in Einstein--Cartan + Nieh--Yan Theory}
-
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,graphicx,booktabs,microtype,tocloft}
+\setlength{\cftbeforesecskip}{3pt}
+\usepackage[margin=25mm]{geometry}
+\usepackage[section]{placeins}
+\usepackage{needspace}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\newcounter{eqanchor}
+\renewcommand{\theHequation}{\arabic{eqanchor}}
+\usepackage{etoolbox}
+\AtBeginEnvironment{equation}{\stepcounter{eqanchor}}
+\setlength{\emergencystretch}{3em}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\title{Spin-0, Spin-1 and Spin-2 Deformations of $S^3\times S^1$ in Einstein--Cartan--Nieh--Yan Theory}
 \author{Muacca}
-
 \date{}
-
-%==============================================================================
+\hypersetup{pdftitle={Spin-0, Spin-1 and Spin-2 Deformations of S3 x S1 in Einstein-Cartan-Nieh-Yan Theory},pdfauthor={Muacca},pdfsubject={Static geometric sectors, joint circle action and coupled periodic profiles}}
 \begin{document}
-%==============================================================================
-
 \maketitle
 \begin{center}
-Version: v2\\
+Version: v3\\
 First release: 2026-03-21\\
-Revised: 2026-06-20
+Revised: 2026-11-01
 \end{center}
-
-%------------------------------------------------------------------------------
-% Abstract
-%------------------------------------------------------------------------------
 \begin{abstract}
-We reconstruct the homogeneous $\Sthree\times\Sone$ minisuperspace reduction of
-Einstein--Cartan (EC) gravity augmented by the Nieh--Yan (NY) term, and
-demonstrate that the homogeneous geometric sector admits a unified description as
-a finite-degree-of-freedom geometric Landau effective theory.  The aim is to
-organise the Pontryagin protection structure, the spin-2 shear deformations, and
-the spin-1 twist-mixing system along the irreducible spin-0/2/1 modes, thereby
-reconsolidating them into a single theoretical framework.
-
-First, we show that the Pontryagin density $P=\innerprod{R}{\star R}$ vanishes
-identically under the AX and VT torsion modes, while only the MX mode can
-sustain $P\neq 0$.  In the MX mode the source at the isotropic point is
-\[
-   P_0 = \frac{2V\eta\,(V^2 r^2 + 9\eta^2 - 36)}{9r^3},
-\]
-establishing that non-zero Pontryagin number arises from torsion mixing $V\eta$,
-not from the twist field itself.
-
-Second, we introduce the full shear tensor as the traceless symmetric tensor
-$h_{ij}$ and organise its five components as the spin-2 quintet $q_A$.  At the
-isotropic point Schur's lemma forces the spin-2 Hessian to
-\[
-   H_{AB} = \mu_q^2\,\delta_{AB}, \qquad \mu_q^2 = 48\pi^2,
-\]
-a five-fold degeneracy.  Under a squash background the $SO(3)\to SO(2)$ splitting
-reveals that the $m=0$ singlet is the first soft mode on the positive-$\varepsilon$
-side at $\varepsilon_{c+}=0.48324$, while on the negative side the $m=\pm 2$
-sector undergoes a second-order transition into the $s\neq 0$ phase at
-$\varepsilon_{c-}=-0.29309\pm 0.00019$.
-
-Third, in the spin-1 sector the Hessian and field-space metric of the raw
-variables $(\omega_i,\delta_i)$ are analysed as the generalised eigenvalue problem
-\[
-   Hv = \lambda G v.
-\]
-The field-space metric is rank-deficient; the null direction
-\[
-   Y_k \propto \!\left(1,\frac{2L}{r_0}\right)
-\]
-is neither gauge nor variable redundancy, but a non-dynamical auxiliary direction.
-The physical spin-1 mode is
-\[
-   X_k = \frac{-2\omega_k + 3\delta_k}{\sqrt{13}},
-\]
-The finite generalised eigenvalue obtained after Schur elimination of the
-second-class auxiliary direction is $\lambda_\phys\simeq -0.4183<0$, with
-positive kinetic norm.  Thus the physical spin-1 triplet is tachyonic but
-non-ghost.  A mixed-Hessian computation confirms that the corrected spin-1 mode
-fully decouples from the spin-2, radial, and torsion sectors at quadratic order.
-
-Taking all results together, the model is understood as a unified geometric
-Landau-EFT on the homogeneous $\Sthree\times\Sone$ geometry, in which the
-homogeneous geometric degrees of freedom are organised along irreducible
-representations and the Pontryagin protection, phase-transition directions,
-physical/auxiliary decomposition, and allowed interaction terms are integrated
-into a single theoretical framework.  This work provides one closed framework for
-the classical minisuperspace geometric sector in EC+NY theory and serves as a
-foundation for future extensions including quantisation.
+We organize spatially homogeneous deformations of $S^3\times S^1$ in Einstein--Cartan theory with constant complete Nieh--Yan coupling into spin-0, spin-1 and spin-2 representations. A closed static potential determines radius--torsion couplings, a conditional radius minimum, positive twist stiffness and volume-preserving shape dependence. The spin-2 sector has a continuous bifurcation of constrained static minima at $\epsilon_c=1/\sqrt2-1$, a square-root amplitude law and a second-derivative jump; minimizing the static potential over shape and twist at fixed scalars selects the round, zero-twist geometry. We also derive the exact joint action for periodic circle-dependent scalar, shape and twist profiles. Its scalar and vector restrictions recover the radius derivative term and the positive amplitude-quartic twist term $|\omega\times\omega'|^2$, while the zero-twist shape restriction has a positive tracefree derivative term. The derivative quadratic form separates the sectors at a constant round, zero-twist reference. Nonlinear derivative cross terms and a shift coupling connect them. An explicit smooth periodic shape--twist family makes the joint Euclidean action unbounded below even at fixed scalar controls. Static minima and the global circle functional thus have distinct variational properties. Curvature identities, boundary currents and reproducible data complete the model description.
 \end{abstract}
-
-%------------------------------------------------------------------------------
-% Main text
-%------------------------------------------------------------------------------
-\input{sections/sec1}   % Introduction
-\input{sections/sec2}   % Setup and Geometric Framework
-\input{sections/sec3}   % Pontryagin Protection Structure
-\input{sections/sec4}   % Spin-2 Sector
-\input{sections/sec5}   % Spin-1 Sector
-\input{sections/sec6}   % Unified Geometric Landau EFT
-\input{sections/sec7}   % Physical Interpretation and Outlook
-\input{sections/sec8}   % Conclusion
-
-%------------------------------------------------------------------------------
-% Acknowledgments
-%------------------------------------------------------------------------------
+\setcounter{tocdepth}{1}
+\begingroup\small\setlength{\cftbeforesecskip}{2pt}
+\tableofcontents
+\endgroup
+\clearpage
+\input{sections/sec1}
+\input{sections/sec2}
+\input{sections/sec3}
+\input{sections/sec4}
+\input{sections/sec5}
+\input{sections/sec6}
+\input{sections/sec7}
+\input{sections/sec8}
+\Needspace{19\baselineskip}
 \section*{Acknowledgments}
-
 The author acknowledges the use of the following AI tools during manuscript
 preparation: Claude Opus~4.6 (Anthropic; accessed 2026-03),
 Gemini~3.1 Pro (Google; accessed 2026-03), Grok 4.2 (xAI; accessed 2026-03),
@@ -210,102 +54,57 @@ auxiliary code (scripts and pseudocode) that was subsequently tested and
 validated by the author, and proposing candidate consistency checks and
 alternative derivations to be independently verified by the author.
 
-The AI tools did not determine the scientific claims of this work and were not
-used to generate or modify research data or evidentiary figures.  The author
+The AI tools did not determine the scientific claims of this work; numerical
+results and figures were produced by deterministic calculations of the stated
+formulas, rather than by generative image synthesis.  The author
 takes full responsibility for the content and for any remaining errors.
+
+For this revision, Codex (OpenAI; accessed 2026-11) also assisted with
+computational and plotting code, bilingual presentation, and symbolic and
+numerical checks.
 
 This work was developed within the informal collaborative project
 \textbf{DPPU} (\textbf{D}onut-like topology, \textbf{P}lanck-scale
 compactness, \textbf{P}recession dynamics, \textbf{U}niverse).
 
-%------------------------------------------------------------------------------
-% Availability and Contact
-%------------------------------------------------------------------------------
-\section*{Availability and Contact}
-
-\paragraph{Code and Data Availability}
-The code and supplemental data associated with this work are available at:
-
-\begin{itemize}
-  \item Zenodo: \texttt{10.5281/zenodo.19144481}
-  \item GitHub: \texttt{https://github.com/Muacca/DPPUv2-paper03}
-\end{itemize}
-
-They are released under the MIT License.
-
-\paragraph{Citation}
-If you use these materials, please cite the associated manuscript and Zenodo record:
-
-\begin{quote}
-\small
-Muacca, ``Unified Geometric Landau EFT of Homogeneous\\
-$\Sthree\times\Sone$ Minisuperspace in Einstein--Cartan + Nieh--Yan Theory.''
-\end{quote}
-
-\paragraph{Contact}
-For questions, bug reports, or collaboration inquiries:
-
-\begin{itemize}
-  \item Email: \texttt{muacca@dmwp.jp}
-  \item GitHub Issues: \texttt{https://github.com/Muacca/DPPUv2-paper03/issues}
-\end{itemize}
-
-%------------------------------------------------------------------------------
-% Appendices
-%------------------------------------------------------------------------------
 \appendix
-\input{appendices/appA}  % Conventions and Computational Pipeline
-\input{appendices/appB}  % Detailed Proof of the Pontryagin Protection Theorem
-\input{appendices/appC}  % Full Shear Tensor Basis and Embedding
-\input{appendices/appD}  % Mass Splitting Formulae in the Spin-2 Sector
-\input{appendices/appE}  % Spin-1 Sector: H, G, and Generalised Eigenvalue Analysis
-\input{appendices/appF}  % Cross-Hessian Checks and Quadratic Decoupling
-\input{appendices/appG}  % Landau-EFT Selection Rules and Forbidden Terms
-\input{appendices/appH}  % Numerical Tables and Supplemental Data
-\input{appendices/appI}  % Reduction-order Artifact in the Spin-1 Sector
-
-%------------------------------------------------------------------------------
-% References
-%------------------------------------------------------------------------------
-\bibliographystyle{unsrt}
-
-\begin{thebibliography}{99}
-
+\input{appendices/appA}
+\input{appendices/appB}
+\input{appendices/appC}
+\input{appendices/appD}
+\input{appendices/appE}
+\input{appendices/appF}
+\input{appendices/appG}
+\input{appendices/appH}
+\input{appendices/appI}
+\input{appendices/appJ}
+\Needspace{18\baselineskip}
+\begin{thebibliography}{9}
 \bibitem{paper1}
-Muacca,
-``Topology-Dependent Phase Classification of Effective Potentials
-in Einstein--Cartan + Nieh--Yan Minisuperspace,''
-Zenodo.\ \texttt{10.5281/zenodo.18213677} (2026).
-
+Muacca, ``Geometry-Dependent Classification of Reduced Potentials in
+Einstein--Cartan Gravity,'' Zenodo, \url{https://doi.org/10.5281/zenodo.18213677} (2026).
 \bibitem{paper2}
-Muacca,
-``Structural Robustness of Isotropic $S^3$ Vacua in Einstein--Cartan
-Minisuperspace via Chiral Equilibrium and Weyl Stability,''
-Zenodo.\ \texttt{10.5281/zenodo.18815498} (2026).
-
+Muacca, ``Curvature Identities and Restricted Potential Bounds in
+Einstein--Cartan--Nieh--Yan Minisuperspace with Irreducible EC-Weyl Corrections,''
+Zenodo, \url{https://doi.org/10.5281/zenodo.18815498} (2026).
 \bibitem{Hehl1976}
-F.~W.~Hehl, P.~von der Heyde, G.~D.~Kerlick, and J.~M.~Nester,
+F. W. Hehl, P. von der Heyde, G. D. Kerlick and J. M. Nester,
 ``General relativity with spin and torsion: Foundations and prospects,''
-Rev.\ Mod.\ Phys.\ \textbf{48}, 393--416 (1976).
-
+Rev. Mod. Phys. \textbf{48}, 393--416 (1976).
 \bibitem{NiehYan1982}
-H.~T.~Nieh and M.~L.~Yan,
-``An identity in Riemann--Cartan geometry,''
-J.\ Math.\ Phys.\ \textbf{23}, 373--374 (1982).
-
+H. T. Nieh and M. L. Yan, ``An identity in Riemann--Cartan geometry,''
+J. Math. Phys. \textbf{23}, 373--374 (1982).
 \bibitem{Chandia1997}
-O.~Chandia and J.~Zanelli,
-``Topological invariants, instantons, and the chiral anomaly on spaces
-with torsion,''
-Phys.\ Rev.\ D \textbf{55}, 7580--7585 (1997).
-
-\bibitem{Woodard2015}
-R.~P.~Woodard,
-``Ostrogradsky's theorem on Hamiltonian instability,''
-Scholarpedia \textbf{10}(8), 32243 (2015).
-
+O. Chandia and J. Zanelli, ``Topological invariants, instantons, and the chiral
+anomaly on spaces with torsion,'' Phys. Rev. D \textbf{55}, 7580--7585 (1997).
+\bibitem{ADM}
+R. Arnowitt, S. Deser and C. W. Misner,
+\emph{The Dynamics of General Relativity}, in \emph{Gravitation: An Introduction
+to Current Research}, ed. L. Witten (Wiley, 1962), pp. 227--265;
+\url{https://arxiv.org/abs/gr-qc/0405109}.
+\bibitem{GHP1978}
+G. W. Gibbons, S. W. Hawking and M. J. Perry,
+``Path integrals and the indefiniteness of the gravitational action,''
+Nucl. Phys. B \textbf{138}, 141--150 (1978).
 \end{thebibliography}
-
-%==============================================================================
 \end{document}
-%==============================================================================

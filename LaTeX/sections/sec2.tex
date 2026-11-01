@@ -1,155 +1,89 @@
-%==============================================================================
-% Section 2: Setup and Geometric Framework
-%==============================================================================
-\section{Setup and Geometric Framework}
-\label{sec:setup}
+\section{Model and irreducible geometric variables}
 
-This section collects the degrees of freedom, action, and geometric conventions.
-We adopt the final basis as the canonical description throughout.
+\label{sec:2}
 
-\subsection{Effective Potential}
+\subsection{Coframe and action}
 
-The effective potential in the homogeneous minisuperspace reduction is
-\begin{equation}
-  \Veff = -\!\left(\frac{R}{2\kappa^2} + \theta_\NY N\right)\Vol,
-  \qquad
-  \Vol = 2\pi^2 L r^3,
+Take spatial indices $i,j,k=0,1,2$, circle index $3$ and orientation $\epsilon^{0123}=+1$. The circle coordinate has period one. The left-invariant forms obey $d\sigma^i=2\epsilon_{ijk}\sigma^j\wedge\sigma^k$, with the spatial pair summed. For $r,L>0$ and a real matrix $M$ of determinant one, define
+
+\begin{equation}\tag{M1}\label{eq:M1}
+\begin{aligned}
+e^i&=rM^i{}_j\sigma^j,& e^3&=L(dy+\omega_i\sigma^i),\\
+e'^a&=O^a{}_b e^b,\quad O\in SO(4),&
+g&=\delta_{ab}e'^a e'^b,\qquad
+\frac{d\mathcal V_4}{dy}=\frac{\pi^2Lr^3}{4}.
+\end{aligned}
 \end{equation}
-where $R$ is the Ricci scalar computed from the Einstein--Cartan connection
-\cite{Hehl1976}, $N$ is the Nieh--Yan density \cite{NiehYan1982}, $r$ is the
-$\Sthree$ radius, and $L$ is the $\Sone$ scale.  In subsequent isotropic-point
-evaluations we normalise $L=1$, at which the equilibrium radius is $r_0=3$.
 
-The Pontryagin density is defined by
-\begin{equation}
-  P = \innerprod{R}{\star R}
-    = \frac{1}{2}\,\varepsilon^{abcd} R_{abef} R_{cd}{}^{ef}.
+The spatially integrated four-volume density in (M1) integrates to $\pi^2Lr^3/4$ for constant $r,L$. The physical round radius is $r/2$. The three mixing parameters are $\delta_i=\tan\chi_i$ in $O=O_{03}(\chi_0)O_{13}(\chi_1)O_{23}(\chi_2)$. They rotate the coframe without changing the metric. Geometric torsion is specified in the resulting frame by
+
+\begin{equation}\tag{M2}\label{eq:M2}
+\begin{aligned}
+T_{ijk}&=\frac{2\eta}{r}\epsilon_{ijk},\\
+T^{(V)}_{abc}&=\frac13(\delta_{ac}V_b-\delta_{ab}V_c),
+\qquad V_b=V\delta_{b3},\\
+\mathcal S&=-\int\mathrm{vol}_4
+\left(\frac{R}{2\kappa^2}+\theta N\right),\qquad
+N\,\mathrm{vol}_4=d(e'^a\wedge T_a).
+\end{aligned}
 \end{equation}
-The central subject of this paper is the organisation of $\Veff$ and $P$ in the
-final basis of homogeneous geometric freedoms.
 
-\subsection{Homogeneous Ansatz and Spatial Frame}
+The axial term is zero if any index is 3. AX means $V=0$, VT means $\eta=0$, and MX allows both. The coupling $\theta$ is constant, and no curvature-squared term is included. The connection is metric compatible and determined by this coframe and geometric torsion. Appendix A states its components; Appendix I gives the sign map to the code accompanying Papers01/02. Prescribing torsion components in the rotated frame is distinct from simultaneously rotating all fields as a gauge transformation.
 
-The spatial 3-frame is written using left-invariant 1-forms $\sigma^i$ as
-\begin{equation}
-  e^i = r\, M^i{}_j\, \sigma^j,
+Our sign convention extends the reduced-potential convention $U=-S$ of Papers01/02: on the common EC plus complete-NY model, $\mathcal S=-S_{\mathrm{01,FULL}}=-S_{\mathrm{02}}|_{\alpha=0}$. Thus $\mathcal S=U$ on constant profiles. All lower-bound statements below concern $U$ or $\mathcal S$ with this sign.
+
+\subsection{The common static potential}
+
+For constant $M,\omega,O,r,L,\eta,V$, set $S=MM^{\mathsf T}$. Cartan contraction gives the static action $U$, with $F$ collecting its shape dependence:
+
+\begin{equation}\tag{M3}\label{eq:M3}
+\begin{aligned}
+U&=\mathcal K\left[F(S)+\frac{3\eta^2}{4}
++\frac{V^2r^2}{12}+\frac{L^2}{r^2}\lVert M\omega\rVert^2\right],\\
+F(S)&=2\mathrm{tr}(S^2)-[\mathrm{tr}(S)]^2,\qquad
+\mathcal K=\frac{\pi^2Lr}{\kappa^2}>0.
+\end{aligned}
 \end{equation}
-where $M^i{}_j = (\exp h)^i{}_j$ with $h = \sum_A q_A T_A$ the full shear
-tensor (see \S\ref{sec:setup:spin2}).  Full shear deformations are embedded as
-constant frame deformations.  The complete coframe---including the twist
-$\omega_k$ and spin-1 mixing $\delta_k$ definitions---is given in
-Appendix~\ref{app:B}.
 
-Under a constant frame deformation the structure constants transform as
-\begin{equation}
-  C'^i{}_{jk} = M^i{}_a\,(M^{-1})^b{}_j\,(M^{-1})^c{}_k\, C^a{}_{bc},
+Complete NY vanishes pointwise on this constant family, as proved in Section 6. The scalar action is independent of the mixing rotation: the torsion norms are invariant and their divergence vanishes. The coframe is global on $S^3\times S^1$, so for smooth periodic circle variations the integral of complete NY also vanishes, although its local density can be nonzero.
+
+\subsection{Representation and variation families}
+
+The scalar variables are $(r,L,\eta,V)$. Twist $\omega_i$ and the three mixing coordinates transform as spatial vectors near the round frame. A volume-preserving shape can be parametrized by $M=e^h$, with $h$ symmetric and traceless; its five normalized components form spin-2. At an axial reference shape we use $M=M_0e^h$ instead. Appendix C lists the basis. At the round point, rotation invariance separates different irreducible representations in the static quadratic expansion; scalar variables may still mix with one another.
+
+Static extrema concern (M3) with designated coordinates varied at fixed controls. For the circle functional all coordinates may be smooth periodic functions of $y$, with $r,L>0$ and $\det M=1$. The scalar restriction sets $M=I,\omega=0$; the vector restriction fixes $r,L,\eta,V$ and sets $M=I$. Both follow from the joint action below. We keep their fixed data explicit when stating stationary or minimizing properties.
+
+\subsection{The joint circle action}
+
+Let $J=Lr^3$. The induced three-metric, lapse and shift in the invariant spatial basis are
+
+\begin{equation}\tag{M4}\label{eq:M4}
+\gamma=r^2M^{\mathsf T}M+L^2\omega\omega^{\mathsf T},
+\qquad \mathcal N^2=\frac{J^2}{\det\gamma},
+\qquad \beta=L^2\gamma^{-1}\omega.
 \end{equation}
-and the homogeneous Maurer--Cartan system is preserved.
 
-\subsection{Spin-2 Quintet: Full Shear Basis}
-\label{sec:setup:spin2}
+Define $[\beta]_\times v=\beta\times v$. The normalization of the spatial structure constants gives
 
-The traceless symmetric tensor $h_{ij}$ is expanded as
-\begin{equation}
-  h_{ij} = \sum_{A=1}^5 q_A\,(T_A)_{ij},
-  \qquad
-  \tr(T_A T_B) = \delta_{AB}.
+\begin{equation}\tag{M5}\label{eq:M5}
+\begin{aligned}
+\Omega_\beta&=4[\beta]_\times,&
+\ell=\mathcal L_\beta\gamma&=\gamma\Omega_\beta-\Omega_\beta\gamma,\\
+X&=\gamma^{-1}\gamma',&
+Y&=\gamma^{-1}\ell,\qquad \mathrm{tr}Y=0.
+\end{aligned}
 \end{equation}
-The adopted basis matrices are
-\begin{equation}
-  T_1 = \frac{1}{\sqrt{6}}
-  \begin{pmatrix}1&0&0\\0&1&0\\0&0&-2\end{pmatrix},
-  \qquad
-  T_2 = \frac{1}{\sqrt{2}}
-  \begin{pmatrix}1&0&0\\0&-1&0\\0&0&0\end{pmatrix},
+
+A prime denotes $d/dy$. The Lie derivative $\ell$ is generally nonzero for anisotropic shape. After integrating the total derivatives around the circle, the exact action is
+
+\begin{equation}\tag{M6}\label{eq:M6}
+\begin{aligned}
+\mathcal S_{\mathrm{joint}}
+&=\int_0^1dy\,[U+\mathcal L_{\partial}],\\
+\mathcal L_{\partial}
+&=\frac{\pi^2J}{32\kappa^2\mathcal N^2}
+\left[\mathrm{tr}(X^2)-(\mathrm{tr}X)^2-2\mathrm{tr}(XY)\right].
+\end{aligned}
 \end{equation}
-\begin{equation}
-  T_3 = \frac{1}{\sqrt{2}}
-  \begin{pmatrix}0&1&0\\1&0&0\\0&0&0\end{pmatrix},
-  \quad
-  T_4 = \frac{1}{\sqrt{2}}
-  \begin{pmatrix}0&0&1\\0&0&0\\1&0&0\end{pmatrix},
-  \quad
-  T_5 = \frac{1}{\sqrt{2}}
-  \begin{pmatrix}0&0&0\\0&0&1\\0&1&0\end{pmatrix}.
-\end{equation}
-The fundamental invariants in this basis are
-\begin{equation}
-  I_2 = \tr(h^2) = \sum_{A=1}^5 q_A^2,
-  \qquad
-  I_3 = h_{ij}\omega_i\omega_j,
-  \qquad
-  I_4 = \tr(h^3),
-  \qquad
-  W_2 = \omega_i\omega_i.
-\end{equation}
-An exact check confirms that the component expansion $I_3 = q_A F_A(\omega)$
-holds under the adopted $T_A$ conventions.
 
-\subsection{Spin-1 Variables and Torsion Modes}
-
-The raw geometric variables of the spin-1 sector are the twist $\omega_i$ and
-the mixing $\delta_i$.  The raw basis is not, however, the final physical basis.
-The generalised eigenvalue analysis of \S\ref{sec:spin1} decomposes the raw
-variables into the physical propagating triplet $X_k$ and the non-dynamical
-auxiliary $Y_k$.  Explicit expressions and derivations are given in
-\S\ref{sec:spin1}.
-
-For the torsion scalars we distinguish three modes:
-\begin{itemize}
-  \item AX mode: $(\eta\neq 0,\ V=0)$,
-  \item VT mode: $(\eta=0,\ V\neq 0)$,
-  \item MX mode: $(\eta\neq 0,\ V\neq 0)$.
-\end{itemize}
-This distinction is essential for the Pontryagin structure.
-
-\subsection{Representation-Theoretic Organisation}
-
-The degrees of freedom are organised by $SO(3)$ irreducible representations as
-follows.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{llrl}
-\toprule
-Sector & Variable & DOF & Representation \\
-\midrule
-Radial  & $r$               & 1 & spin-0 \\
-Shear   & $q_A$             & 5 & spin-2 \\
-Raw spin-1 & $(\omega_i,\delta_i)$ & 6 & spin-1 $\oplus$ spin-1 \\
-Physical spin-1 & $X_k$     & 3 & spin-1 \\
-Auxiliary spin-1 & $Y_k$    & 3 & spin-1 \\
-Torsion & $(\eta, V)$       & 2 & spin-0 \\
-\bottomrule
-\end{tabular}
-\caption{$SO(3)$ irreducible decomposition of the homogeneous geometric degrees
-  of freedom.  The raw spin-1 variables $(\omega_i,\delta_i)$ are an intermediate
-  description; the final physical dictionary uses $X_k$ and $Y_k$, established
-  in \S\ref{sec:spin1}.}
-\label{tab:mode_dict0}
-\end{table}
-
-In particular, $\varepsilon$ and $s$ are ultimately understood as particular
-projections of $q_A$ and are not treated as standalone irreducible variables.
-The physical/auxiliary classification of the spin-1 sector is established by the
-generalised eigenvalue analysis of \S\ref{sec:spin1}, and the definitive mode
-dictionary is presented in \S\ref{sec:eft}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{figures/fig02_final_mode_classification.png}
-  \caption{$SO(3)$ irreducible decomposition of the homogeneous $\Sthree\times\Sone$
-           geometric degrees of freedom and the final mode classification.  The
-           raw spin-1 variables are decomposed into the physical triplet $X_k$
-           ($\lambda_\phys\simeq -0.4183<0$, tachyonic but non-ghost) and the
-           non-dynamical auxiliary $Y_k$ via the Schur-reduced generalised
-           eigenvalue analysis of \S\ref{sec:spin1}.}
-  \label{fig:mode_class}
-\end{figure}
-
-\subsection{Scope}
-
-This paper addresses the homogeneous minisuperspace geometric sector.
-Consequently, local inhomogeneous modes, boundary conditions, and full
-field-theoretic gauge fixing are outside the scope of the present work and are
-deferred to future investigations (see \S\ref{sec:discussion}).
+Here $U$ is the static expression (M3) evaluated at the instantaneous coordinates. Its shift-dependent static contribution is already included, so no extra $Y^2$ term is added to (M6). The first two trace terms form the velocity quadratic form; the last is linear in velocities. Torsion derivatives and mixing rotations contribute only total derivatives, displayed in Appendix J. The constant complete NY coupling therefore does not enter the periodic bulk action. Formula (M6) holds at finite amplitude within this spatially homogeneous Euclidean family; it is not a fourth-order truncation.

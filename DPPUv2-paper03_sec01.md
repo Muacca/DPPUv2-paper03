@@ -1,157 +1,19 @@
-# Unified Geometric Landau EFT of Homogeneous $S^3 \times S^1$ Minisuperspace in Einstein-Cartan + Nieh-Yan Theory
-一様 $S^3 \times S^1$ minisuperspace の統一幾何学的 Landau-EFT
+# Einstein–Cartan–Nieh–Yan理論における S³×S¹ のspin-0・spin-1・spin-2変形
 
-## Abstract
+Muacca。v3、初版2026-03-21、改訂2026-11-01。
 
-本論文では、Einstein-Cartan （EC）重力に Nieh-Yan （NY）項を加えた理論の homogeneous $S^3\times S^1$ minisuperspace 還元を再構成し、その一様幾何セクターが有限自由度の幾何学的 Landau 有効理論として統一的に記述できることを示す。目的は、Pontryagin 保護構造、spin-2 shear 変形、spin-1 twist-mixing 系を、spin-0 / spin-2 / spin-1 の既約モードに沿って最終的に整理し直すことである。
+## 要旨
 
-まず、Pontryagin 密度 $P=\langle R,\star R\rangle$ に対して、AX および VT torsion mode では $P\equiv0$ が厳密に成立し、MX mode のみが $P\neq0$ を担うことを示す。とくに MX mode では
+一定係数の完全Nieh–Yan項を持つEinstein–Cartan理論の $S^3\times S^1$ 上の空間的一様変形を、spin-0・spin-1・spin-2表現に整理する。静的ポテンシャルの閉形式から半径–torsion結合、条件付き半径極小、正のtwist剛性、体積保存shape依存性を求める。spin-2では $\epsilon_c=1/\sqrt2-1$ で制限された静的極小が連続分岐し、平方根則と二次微分の跳びを得る。スカラー固定でshapeとtwistを静的に最小化すると、round・twistゼロが選ばれる。さらにスカラー・shape・twistが円方向へ周期的に変化する場合のexactな一般作用を導く。スカラー・ベクトル制限は半径微分項と正の振幅四次twist項 $\lVert\omega\times\omega'\rVert^2$ を回収し、twistゼロのshape制限には正のtracefree微分項が現れる。一定round・twistゼロの参照点では微分二次形式がセクターごとに分離するが、非線形微分交叉項とshift結合がそれらを結ぶ。明示的な滑らかな周期shape–twist族により、スカラー固定でも一般Euclidean作用が下に有界でないことを示す。静的極小と円方向作用汎関数の大域的性質を区別し、曲率恒等式・境界current・再現可能なデータとともにモデルを記述する。
 
-$$
-P_0=\frac{2V\eta\,(V^2r^2+9\eta^2-36)}{9r^3}
-$$
+# 1. 序論
 
-が等方点での生成源となり、Pontryagin 非零は twist 自身ではなく torsion 混合 $V\eta$ に起因する。
+一様幾何は、重力作用の大きさ・形状・torsionへの依存性を明示的に調べるための有限個の変数を与える。Einstein–Cartan（EC）理論ではcoframeと計量整合接続により、これらの要素を分けて変化させられる [3]。完全Nieh–Yan（NY）項はtorsionと曲率を同じ微分形式恒等式に結び付ける [4]。 $S^3\times S^1$ では空間回転により、幾何変数をスカラー・ベクトル・対称traceless tensorに整理できる。
 
-次に、full shear tensor を traceless symmetric tensor $h_{ij}$ として導入し、その 5 成分を spin-2 五重項 $q_A$ として整理する。等方点では Schur の補題により spin-2 Hessian は
+Paper01は一様幾何族に沿う半径極値を分類し、Paper02は既約EC-Weyl補正を含む曲率恒等式とshapeの下限を与えた [1,2]。本論では曲率二乗係数を零としたECモデルを用い、spin-0・spin-1・spin-2の幾何学的セクターを展開する。ここでspinは変形の空間 $SO(3)$ 表現を指す。変数と相互作用をこの表現で整理し、物理的伝播の判定は動力学・拘束解析と区別する。
 
-$$
-H_{AB}=\mu_q^2\,\delta_{AB},\qquad \mu_q^2=48\pi^2
-$$
+三つのセクターを軸に、静的ポテンシャルと円方向に依存するexact作用を整理する。spin-0では条件付き半径極小、半径–torsion結合、半径微分項を得る。spin-1では正の静的twist costと、スカラー固定・round形状での $\lVert\omega\times\omega'\rVert^2$ に比例する有限振幅の微分項を得る。spin-2では制限された静的極小の連続分岐、振幅の平方根則、二次微分の跳びを求める。スカラー固定で一定の体積保存shapeとtwistを静的に最小化すると、round・twistゼロが選ばれる。円方向変分では、twistゼロ・半径固定の制限で非負のshape微分項が現れる。
 
-に五重縮退する。squash 背景では $SO(3)\to SO(2)$ の分裂が起こり、正の $\varepsilon$ 側では $m=0$ singlet が first soft mode となって $\varepsilon_{c+}=0.48324$ に達する一方、負の $\varepsilon$ 側では $m=\pm2$ sector が $\varepsilon_{c-}=-0.29309\pm0.00019$ で $s\neq0$ 相への 2 次相転移を起こす。
+一般の円方向作用は、微分交叉項と空間shiftを通じてこれらの結果を結ぶ。round・twistゼロの参照点では微分二次形式がセクターごとに分離する。非線形の交叉項は各セクターを結合させ、明示的な周期shape–twist族により、スカラー固定でも連成Euclidean作用が下に有界でないことが分かる。静的shape極小と円方向作用汎関数の極小は異なる変分問題である。第2節で一般作用、第3–5節で各セクター、第6節で相互作用と連成族、第7節でPaper01/02との関係を示す。
 
-さらに、spin-1 セクターでは raw 変数 $(\omega_i,\delta_i)$ の Hessian と field-space metric を一般化固有値問題
-
-$$
-Hv=\lambda Gv
-$$
-
-として解析する。field-space metric は rank-deficient であり、null direction
-
-$$
-Y_k\propto\left(1,\frac{2L}{r_0}\right)
-$$
-
-は gauge でも variable redundancy でもなく、non-dynamical auxiliary 方向として解釈される。physical spin-1 mode は
-
-$$
-X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}}
-$$
-
-で与えられる。second-class auxiliary $Y_k$ を Schur 消去した有限一般化固有値は $\lambda_{\rm phys}\simeq -0.4183<0$ であり、対応する kinetic norm は正である。したがって physical spin-1 triplet は非ゴースト・タキオン的である。一方、mixed Hessian 計算により、この corrected spin-1 mode は二次レベルで spin-2、radial、torsion 各 sector と完全に decouple する。
-
-以上を総合すると、本モデルは homogeneous $S^3\times S^1$ 幾何を舞台とする統一的な geometric Landau-EFT として理解できる。ここでは一様幾何自由度が既約表現に沿って整理され、Pontryagin 保護、相転移方向、physical/auxiliary 分解、および許容される相互作用項が一つの理論枠組みに統合される。本論は、EC+NY における古典的 minisuperspace 幾何セクターの一つの閉じた枠組みを与え、量子化等、今後の拡張の基盤とすることができる。
-
----
-
-## 1. Introduction
-
-### 1.1 背景
-
-paper01 では、Einstein-Cartan + Nieh-Yan minisuperspace の有効ポテンシャルを用いて、 $S^3\times S^1$、 $T^3\times S^1$、 $Nil^3\times S^1$ を共通の枠組みで比較し、等方的 $S^3\times S^1$ 真空の優位性が明らかになった [1]。paper02 では、その等方真空に対して Weyl 拡張と Pontryagin 構造を加え、位相的保護と力学的頑健性の両面から真空の安定性が整理された [2]。
-
-残っていた課題は、一様幾何自由度全体を既約表現に沿って統一的に整理することであった。具体的には、
-
-1. Pontryagin 密度がどの sector で真に生成されるのか。
-2. squash / shear 変形を単なる補助的座標ではなく完全な spin-2 多重項として扱えるのか。
-3. twist と mixing の 6 成分を、physical mode と non-dynamical auxiliary mode に一意に分解できるのか。
-4. それらを最終的に一つの有効理論として束ねられるのか。
-
-本論文は、この 4 点を一つの completed homogeneous geometric sector としてまとめ直すことを目的とする。
-
-### 1.2 本論文の視点
-
-本論で採用する基底を、まず明示する。幾何自由度は最終的に、以下のように再編成される。
-
-- spin-0: radial mode $r$ と torsion scalars $(\eta,V)$
-- spin-2: traceless symmetric quintet $q_A$
-- spin-1: physical triplet $X_k$ と auxiliary triplet $Y_k$
-
-paper02 で導入した単一 squash 変数 $\varepsilon$ や、本論で追加導入する単一 shear 変数 $s$ は、最終的には spin-2 五重項の一部として理解される [1,2]。
-
-### 1.3 主要結果
-
-本論の主要結果は以下の 5 点に集約される。
-
-1. **Pontryagin 保護定理**: AX / VT mode では $P\equiv0$ が厳密に成立し、MX mode のみが $P\neq0$ を担う。
-2. **spin-2 完備化**: full shear tensor は spin-2 五重項として完備され、等方点では $\mu_q^2=48\pi^2$ に五重縮退する。
-3. **相図の最終整理**: 正側では $m=0$ singlet が $\varepsilon_{c+}=0.48324$ で softening し、負側では $\varepsilon_{c-}=-0.29309\pm0.00019$ で $s\neq0$ 相への 2 次相転移が起こる。
-4. **spin-1 physical/auxiliary 分解**: $Y_k$ は gauge でも redundancy でもなく non-dynamical auxiliary であり、 $X_k=(-2\omega_k+3\delta_k)/\sqrt{13}$ が唯一の propagating spin-1 basis を与える。
-5. **統一 Landau-EFT**: final basis では二次 sector が block-diagonal 化され、許容 cubic coupling と禁制項が表現論的に整理される。
-
-### 1.4 本論文の構成
-
-本論文の構成は次の通りである。
-
-- §2 では作用、homogeneous ansatz、最終採用変数を定義する。
-- §3 では Pontryagin 保護定理と MX 例外を示す。
-- §4 では full shear quintet、SO(2) 分裂、相転移構造を論じる。
-- §5 では spin-1 セクターを generalized eigenvalue problem として再構成し、physical / auxiliary 分解を確立する。
-- §6 では最終 Landau-EFT と辞書表をまとめる。
-- §7 では 一様幾何自由度で完結したことと、今後に持ち越される課題を整理する。
-- §8 は結論である。
-- Appendix A-I には、計算パイプライン、証明、mass splitting 公式、spin-1 Schur 消去、cross-Hessian 詳細、不変量基底、数値表、および reduction-order artifact 診断を収める。
-
-**Fig. 1** Logical structure of this paper and connections between sections.
-
-```mermaid
-flowchart LR
-    subgraph P3["§3 Pontryagin Protection"]
-        AX["AX → P≡0<br/>(Plücker cancellation)"]
-        VT["VT → P≡0<br/>(Pfaffian cancellation)"]
-        MX["MX → P≠0<br/>(Vη mixing)"]
-    end
-    subgraph P4["§4 spin-2 completion"]
-        Schur["Isotropic pt.<br/>μq²=48π²<br/>5-fold degen."]
-        Split["SO(3)→SO(2)<br/>splitting"]
-        Phase["ε_c± phase trans.<br/>(s≠0 phase)"]
-        Schur --> Split --> Phase
-    end
-    subgraph P45["§5 spin-1 decomp."]
-        X["X_k physical<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
-        Y["Y_k auxiliary<br/>non-dynamical"]
-    end
-    EFT["§6 Unified<br/>Geometric<br/>Landau-EFT"]
-
-    P3 --> EFT
-    P4 --> EFT
-    P45 --> EFT
-
-    classDef default fill:none,stroke:black
-    class P3,P4,P45,EFT default
-```
-
----
-
-## 本文
-
-- [§2. Setup and Geometric Framework](DPPUv2-paper03_sec02.md)
-- [§3. Pontryagin Protection Structure](DPPUv2-paper03_sec03.md)
-- [§4. Spin-2 Sector](DPPUv2-paper03_sec04.md)
-- [§5. Spin-1 Sector](DPPUv2-paper03_sec05.md)
-- [§6. Unified Geometric Landau EFT](DPPUv2-paper03_sec06.md)
-- [§7. Physical Interpretation and Outlook](DPPUv2-paper03_sec07.md)
-- [§8. Conclusion](DPPUv2-paper03_sec08.md)
-
-## 付録
-
-- [Appendix A. Conventions and Computational Pipeline](DPPUv2-paper03_appA.md)
-- [Appendix B. Detailed Proof of the Pontryagin Protection Theorem](DPPUv2-paper03_appB.md)
-- [Appendix C. Full Shear Tensor Basis and Embedding of $(\varepsilon,s,\phi)$](DPPUv2-paper03_appC.md)
-- [Appendix D. Mass Splitting Formulae in the Spin-2 Sector](DPPUv2-paper03_appD.md)
-- [Appendix E. Spin-1 Sector: Schur Reduction and Finite Generalized Eigenvalue](DPPUv2-paper03_appE.md)
-- [Appendix F. Cross-Hessian Checks and Quadratic Decoupling](DPPUv2-paper03_appF.md)
-- [Appendix G. Landau-EFT Selection Rules and Forbidden Terms](DPPUv2-paper03_appG.md)
-- [Appendix H. Numerical Tables and Supplemental Data](DPPUv2-paper03_appH.md)
-- [Appendix I. Reduction-order Artifact in the Spin-1 Sector](DPPUv2-paper03_appI.md)
-
-
-## 参考文献
-
-1. Muacca, "Topology-Dependent Phase Classification of Effective Potentials in Einstein–Cartan + Nieh–Yan Minisuperspace," Zenodo. 10.5281/zenodo.18213677 (2026).
-2. Muacca, "Structural Robustness of Isotropic S³ Vacua in Einstein-Cartan Minisuperspace via Chiral Equilibrium and Weyl Stability," Zenodo. 10.5281/zenodo.18815498 (2026).
-3. F. W. Hehl, P. von der Heyde, G. D. Kerlick, and J. M. Nester, "General relativity with spin and torsion: Foundations and prospects," Rev. Mod. Phys. **48**, 393–416 (1976).
-4. H. T. Nieh and M. L. Yan, "An identity in Riemann–Cartan geometry," J. Math. Phys. **23**, 373–374 (1982).
-5. O. Chandia and J. Zanelli, "Topological invariants, instantons, and the chiral anomaly on spaces with torsion," Phys. Rev. D **55**, 7580–7585 (1997).
-6. R. P. Woodard,“Ostrogradsky's theorem on Hamiltonian instability,” Scholarpedia, 10(8), 32243 (2015).
+[次の節・付録](DPPUv2-paper03_sec02.md)

@@ -1,210 +1,126 @@
-%==============================================================================
-% Section 6: Unified Geometric Landau EFT
-%==============================================================================
-\section{Unified Geometric Landau EFT}
-\label{sec:eft}
+\section{Interactions, coupled profiles and curvature identities}
 
-This section consolidates the results of \S\S\ref{sec:pont}--\ref{sec:spin1}
-into a single final effective theory.  The key point is that in the final basis
-the quadratic sector is block-diagonally organised and the allowed interaction
-terms are described transparently by the invariant basis and representation-
-theoretic selection rules.
+\label{sec:6}
 
-\subsection{Raw Quadratic Data}
+\subsection{Interactions between irreducible sectors}
 
-In the raw basis the effective potential is
-\begin{equation}
+For $M=e^h$, define $I_2=\mathrm{tr}(h^2)$ and $I_3=\mathrm{tr}(h^3)$. Cayley--Hamilton gives $\mathrm{tr}(h^4)=I_2^2/2$. Expanding the exact potential yields
+
+\begin{equation}\tag{I1}\label{eq:I1}
 \begin{aligned}
-  \Veff &= V_0
-    + \tfrac{1}{2}\mu_q^2\,\tr(h^2)
-    + \tfrac{1}{2}\mu_\omega^2|\omega|^2
-    + \tfrac{1}{2}\mu_\delta^2|\delta|^2
-    + m_{\omega\delta}\,\omega\cdot\delta \\
-    &\quad + c_\omega\,h_{ij}\omega_i\omega_j
-    + c_\delta\,h_{ij}\delta_i\delta_j
-    + O(4),
+F(e^{2h})&=-3+4I_2+\frac{40}{3}I_3+\frac{14}{3}I_2^2+O(h^5),\\
+\lVert e^h\omega\rVert^2&=\omega^2+
+2\omega^{\mathsf T}h\omega+2\omega^{\mathsf T}h^2\omega
++O(h^3\omega^2).
 \end{aligned}
 \end{equation}
-where
-\begin{equation}
-  \mu_q^2 = 48\pi^2,
-  \quad
-  \mu_\omega^2 = 52.6379,
-  \quad
-  \mu_\delta^2 = 3789.9295,
-  \quad
-  m_{\omega\delta} = -631.6544,
-\end{equation}
-\begin{equation}
-  c_\omega = 105.28,
-  \qquad
-  c_\delta = 1894.96,
-  \qquad
-  c_{\omega\delta} = 0 \quad\text{(at the isotropic point)}.
-\end{equation}
-The raw geometric description is necessary for tracing the geometrical origins but
-is redundant as an organiser of physical degrees of freedom.  The final basis is
-derived via the physical/auxiliary decomposition of \S\ref{sec:spin1}.
 
-\subsection{Final Quadratic EFT}
-\label{sec:eft:quad}
+The first line is multiplied by $\mathcal K$, and the second by $\mathcal K L^2/r^2$. It supplies the tensor self-interactions and tensor--twist couplings in the same normalization as the separate sectors. A cubic tensor invariant is generally present: the even radial doublet potential is a property of its specified slice, not an $h\mapsto-h$ symmetry of the full model. Representation theory identifies allowed invariants, while the explicit action determines their coefficients. Appendix G gives the expansion and its relation to the quadratic blocks.
 
-In the final basis the quadratic sector decomposes conceptually as
-\begin{equation}
-  \mathcal{L}_\mathrm{quad}
-  = \mathcal{L}_r
-  + \mathcal{L}_{q_A}
-  + \mathcal{L}_X
-  + \mathcal{L}_Y
-  + \mathcal{L}_{\eta,V},
-\end{equation}
-with
-\begin{equation}
-  \mathcal{L}_{q_A} = -\frac{1}{2}\mu_q^2 \sum_{A=1}^5 q_A^2,
-  \qquad
-  \mathcal{L}_X = \frac{1}{2}\dot{X}^T G_{XX} \dot{X}
-    - \frac{1}{2} X^T H_\mathrm{eff} X,
-  \qquad
-  \mathcal{L}_Y = -\frac{1}{2} Y^T H_\mathrm{null} Y.
-\end{equation}
-
-The block-diagonal split of $\mathcal{L}_X$ and $\mathcal{L}_Y$ results from
-eliminating the non-dynamical auxiliary $Y_k$ of \S\ref{sec:spin1} through its
-algebraic equation of motion $Y=-(H_{XY}/H_\mathrm{null})X$ (completing the
-square).  The kinetic term separates trivially because $G\,Y_k=0$ implies
-$G_{XY}=0$; the only coupling is the potential cross term
-$H_{XY}=H_\mathrm{cross}\neq0$, which is absorbed by the shift
-$Y_k\to Y_k+(H_{XY}/H_\mathrm{null})X_k$,
-\begin{equation}
-  \tfrac12 X^T H_{XX} X + X^T H_{XY} Y + \tfrac12 Y^T H_\mathrm{null} Y
-  = \tfrac12 X^T H_\mathrm{eff} X + \tfrac12 Y^T H_\mathrm{null} Y,
-  \qquad
-  H_\mathrm{eff} = H_{XX} - \frac{H_{XY}^2}{H_\mathrm{null}}
-\end{equation}
-(see \S\ref{sec:spin1} and Appendix~\ref{app:E}).  Hence the $H_\mathrm{eff}$ in
-$\mathcal{L}_X$ already contains the X--Y cross-term contribution, and the $Y$ in
-$\mathcal{L}_Y$ denotes the shifted auxiliary; this differs from a decomposition
-that drops the cross term.
-
-Since all 21 mixed Hessian components between $X_k$ and $(q_A,r,\eta)$ vanish,
-quadratic decoupling of the spin-1 sector is an exact statement in the final
-basis.  The spin-1 block itself, however, has
-$\lambda_\phys\simeq -0.4183<0$ after Schur elimination and is therefore
-tachyonic but non-ghost.  All 10 spin-2--torsion cross-Hessian components also
-vanish at the isotropic point, and the radial--$V$ cross-Hessian is zero as well.
-However, the radial--$\eta$ cross-Hessian is non-zero ($\approx 118.4$), so the
-scalar/torsion subsector forms a coupled $(r,\eta)$ block with $V$ remaining
-independent.  Thus local stability can be discussed independently for the
-spin-2 and spin-1 blocks, but the spin-1 block is unstable and the scalar/torsion
-subsector must be treated as the coupled $(r,\eta)$ system.  The natural block
-decomposition at quadratic order is
-\begin{equation}
-  (q_A)\;\oplus\;(X_k)\;\oplus\;(Y_k)\;\oplus\;
-  \bigl[(r,\eta)\;\text{block}\;\oplus\;(V)\bigr].
-\end{equation}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.4\linewidth]{figures/fig13_final_quadratic_sector.png}
-  \caption{Quadratic block organisation of the final sector.  The spin-1 sector
-           fully decouples; the spin-2 sector decouples from torsion; the
-           scalar/torsion subsector contains a coupled $(r,\eta)$ block.}
-  \label{fig:quadratic_block}
-\end{figure}
-
-\subsection{Invariant Basis and Selection Rules}
-
-The low-order scalars of the Landau-EFT are organised by the invariant basis
-\begin{equation}
-  I_2 = \tr(h^2),
-  \qquad
-  I_3 = h_{ij}\omega_i\omega_j,
-  \qquad
-  I_4 = \tr(h^3),
-  \qquad
-  W_2 = \omega_i\omega_i.
-\end{equation}
-An exact check confirms $I_3 = q_A F_A(\omega)$ in the final $T_A$ basis.  At
-quartic order the natural helper invariants are $I_2^2$, $I_2 W_2$, $W_2^2$.
-
-This organisation implies:
-\begin{itemize}
-  \item Representative allowed cubic terms are $h_{ij}\omega_i\omega_j$ and
-        $h_{ij}\delta_i\delta_j$.
-  \item Quadratic cross-terms in $X_k$ vanish in the final basis.
-  \item Known forbidden terms $H_\mathrm{sym}$ and $K_\mathrm{sym}$ are excluded
-        by the representation-theoretic selection rule.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.75\textwidth]{figures/fig14_EFT_connection_structure.png}
-  \caption{Connection structure of low-order invariants in the Landau-EFT.
-           Solid arrows indicate allowed terms; dashed arrows indicate terms
-           forbidden by selection rules.}
-  \label{fig:EFT_conn}
-\end{figure}
-
-\subsection{Final Mode Dictionary}
-\label{sec:eft:dict}
-
-We recapitulate the mode dictionary adopted in this paper.
-
-\begin{table}[H]
+\begin{figure}[htbp]
 \centering
-\begin{tabularx}{\textwidth}{l l l X}
-\toprule
-Variable & Final classification & Role & Comment \\
-\midrule
-$r$   & spin-0 & isotropic radius & equilibrium $r_0=3$ \\
-$q_A$ & spin-2 & full shear quintet & $\mu_q^2=48\pi^2$ \\
-$X_k$ & spin-1 physical  & propagating mixed mode & quadratic decoupled; tachyonic, non-ghost \\
-$Y_k$ & spin-1 auxiliary & non-propagating auxiliary & not gauge \\
-$\eta$ & spin-0 torsion & AX parameter & input/control \\
-$V$   & spin-0 torsion & VT parameter & input/control \\
-\bottomrule
-\end{tabularx}
-\caption{Final mode dictionary.  The raw geometric variables $(\omega_i,\delta_i)$
-         are an intermediate description; they are translated to $X_k$ and $Y_k$
-         in the final physical dictionary.}
-\label{tab:mode_dict}
-\end{table}
-
-The block decomposition of the quadratic sector is as given in \S\ref{sec:eft:quad}:
-the spin-1 and spin-2 sectors decouple, while the scalar/torsion subsector
-retains the coupled $(r,\eta)$ block identified there.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{figures/fig15_assignment_raw2final.png}
-  \caption{Overall transformation from raw geometric variables to the final EFT
-           basis.  Arrows indicate the assignment of each variable.}
-  \label{fig:raw2final}
+\includegraphics[width=0.93\linewidth]{figures/v3/fig08_expansion.pdf}
+\caption{Exact shape-potential difference along $h=q_1T_1$ and its invariant expansion through fourth order, at fixed $r=3$, $L=\kappa=\eta=V=1$.}\label{fig:fig08_expansion}
 \end{figure}
 
-\subsection{Interpretation as a Geometric Landau EFT}
+\subsection{Derivative cross terms}
 
-From the above results the model can be understood not merely as a description of
-a numerical potential in the gravitational minisuperspace, but as a finite-
-degree-of-freedom \emph{geometric Landau-EFT}:
-\begin{enumerate}
-  \item Order-parameter-like geometric degrees of freedom are organised by
-        irreducible representations.
-  \item The quadratic sector is block-organised into representation-theoretic
-        blocks.  The spin-1 sector fully decouples; the scalar/torsion side has
-        the refined block structure~--- a coupled $(r,\eta)$ block and an
-        independent $V$ direction.
-  \item Allowed interactions are described by the invariant basis and
-        representation-theoretic selection rules.
-\end{enumerate}
-This section thus translates the behaviour of the geometric degrees of freedom in
-the $\Sthree\times\Sone$ topology of the minisuperspace reduction into a unified
-theoretical language.
+The joint action preserves quadratic separation at a constant round, zero-twist reference. Counting every perturbation and its derivative as first order, representative cross-sector cubic terms are
 
-The cross-Hessian analysis of \S\ref{sec:eft:quad} shows that this block
-organisation is exact at quadratic order (see also Appendix~\ref{app:H:numerical}
-for the full numerical tables).  In addition, the torsion block $H^{(\eta,V)}$ at
-the isotropic point is diagonal and doubly degenerate with positive eigenvalues
-($\approx 355.3$), while the coupled $(r,\eta)$ $2\times 2$ block becomes
-saddle-point-type (indefinite) in the AX mode, reflecting the flat-direction
-nature of $r$, yielding $\lambda_\mathrm{min}<0$.
+\begin{equation}\tag{X1}\label{eq:X1}
+\begin{aligned}
+\mathcal L_{\mathrm{cross}}^{(3)}
+={}&-\frac{\pi^2L_0}{2\kappa^2}\delta r'\,\omega^{\mathsf T}\omega'
++\frac{\pi^2L_0r_0}{4\kappa^2}\omega'^{\mathsf T}h'\omega\\
+&-\frac{\pi^2L_0r_0}{\kappa^2}
+\mathrm{tr}\!\left[h'\left(h[\omega]_\times-[\omega]_\times h\right)\right].
+\end{aligned}
+\end{equation}
+
+These terms include two velocity cross terms and the leading shift coupling. Expanding scalar-dependent coefficients produces further vertices, all contained in (M6). For finite-amplitude examples set $M=\mathrm{diag}(e^s,e^{-s},1)$ and $\omega=(w,0,0)$. With $\mathsf G_{ab}=\partial^2\mathcal L_\partial/\partial x_a'\partial x_b'$, direct differentiation gives
+
+\begin{equation}\tag{X2}\label{eq:X2}
+\begin{aligned}
+\mathsf G_{rw}&=-\frac{\pi^2Lw}{2\kappa^2e^{2s}},&
+\mathsf G_{sw}&=\frac{\pi^2Lrw}{4\kappa^2e^{2s}},&
+\mathsf G_{rs}&=\frac{\pi^2Lw^2}{4\kappa^2e^{2s}},\\
+\mathsf G_{rL}&=-\frac{\pi^2w^2}{2\kappa^2e^{2s}},&
+\mathsf G_{sL}&=\frac{\pi^2rw^2}{4\kappa^2e^{2s}}.
+\end{aligned}
+\end{equation}
+
+The cross terms are nonzero at nonzero twist. A velocity Hessian alone does not include the velocity-linear term (V6), which must also be retained in the Euler equations. Appendix J gives the general velocity rank and the distinction from a physical degree-of-freedom count.
+
+\subsection{A coupled periodic family and absence of a lower bound}
+
+Keep $r,L,\eta,V$ fixed in the diagonal family above. The derivative density has the exact completed-square form
+
+\begin{equation}\tag{X3}\label{eq:X3}
+\begin{aligned}
+\mathcal L_{\partial}
+&=\frac{\pi^2r^3}{4\kappa^2L}(s')^2
++\frac{\pi^2Lr}{4\kappa^2e^{2s}}s'ww'\\
+&=\frac{\pi^2r^3}{4\kappa^2L}
+\left(s'+\frac{L^2ww'}{2r^2e^{2s}}\right)^2
+-\frac{\pi^2L^3w^2(w')^2}{16\kappa^2r e^{4s}}.
+\end{aligned}
+\end{equation}
+
+At fixed shape this one-axis twist has zero derivative cost. Allowing the shape to follow the twist produces the negative second term. Choose the smooth periodic, nondegenerate family
+
+\begin{equation}\tag{X4}\label{eq:X4}
+\begin{aligned}
+w_n(y)&=A\cos(2\pi n y),\quad
+e^{2s_n}=1-\frac{L^2w_n^2}{2r^2},
+\quad 0<A<\frac{\sqrt2r}{L},\quad n=1,2,\ldots,\\
+\mathcal S_n&=\overline U_A-n^2C_A,\qquad
+C_A=\frac{\pi^2L^3}{16\kappa^2r}
+\int_0^1\frac{w_1^2(w_1')^2}{[1-L^2w_1^2/(2r^2)]^2}\,dy>0.
+\end{aligned}
+\end{equation}
+
+The relation for $s_n$ makes the square in (X3) vanish. Since each profile repeats the same path $n$ times, the static average $\overline U_A=\int_0^1U(r,L,\eta,V,M_n,\omega_n)\,dy$ is independent of $n$, while the derivative contribution scales as $-n^2$. Hence $\mathcal S_n\to-\infty$. The simultaneous-profile Euclidean action is unbounded below even at fixed scalar controls, in the model with no higher-derivative term or frequency cutoff. This unboundedness concerns the Euclidean action on the specified smooth periodic profiles before imposing the constraints.
+
+The negative contribution has a geometric origin. With $\widetilde X=X-\tfrac13(\mathrm{tr}X)I$, the velocity quadratic form in (M6) is $\mathrm{tr}(\widetilde X^2)-\tfrac23(\mathrm{tr}X)^2$, where $\mathrm{tr}X=(\ln\det\gamma)'$ measures the change of the induced spatial volume. Fixing $r$ and $L$ does not fix this volume: along (X4), $\det\gamma=r^6(1+L^2w_n^2e^{-2s_n}/r^2)$ varies with the twist, and the trace term dominates wherever $w_nw_n'\ne0$. The negative radial term in (S4) has the same trace origin. The sequence thus realizes, at fixed scalar controls and through the shape--twist coupling, the conformal-mode indefiniteness of the Euclidean gravitational action \cite{GHP1978}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.97\linewidth]{figures/v3/fig09_coupled.pdf}
+\caption{Left: velocity cross coefficients (X2) at $r=3$, $L=\kappa=1$, $s=0$. Right: action contributions relative to the round static configuration for (X4), with $A=0.5$ and $\eta=V=1$. The static contribution is independent of frequency, while the coupled derivative contribution decreases as $-n^2$.}
+\label{fig:fig09_coupled}
+\end{figure}
+
+For these parameters the round static action is $-44.4132198049$. The joint action is $-44.0662455826$ at $n=1$, $-45.0308924809$ at $n=4$ and $-48.1177625553$ at $n=8$. Thus the static global shape bound of Section 5 and the absence of a lower bound for the circle functional coexist: they minimize different objects over different families.
+
+\subsection{Complete NY and form-index Pontryagin}
+
+Use the full EC curvature, with no pair-exchange symmetry assumed. The densities are
+
+\begin{equation}\tag{I2}\label{eq:I2}
+\begin{aligned}
+N&=\frac14\epsilon^{abcd}T^e{}_{ab}T_{ecd}
+-\frac12\epsilon^{abcd}R_{abcd},\\
+P&=\frac14\epsilon^{cdef}R_{abcd}R_{abef},\qquad
+P\,\mathrm{vol}_4=\sum_{a,b}R_{ab}\wedge R_{ab},\\
+B&=\sum_{c<d}\left(R_{01cd}R_{23cd}-R_{02cd}R_{13cd}
++R_{03cd}R_{12cd}\right).
+\end{aligned}
+\end{equation}
+
+For any constant connection on an oriented four-dimensional unimodular Lie algebra, every left-invariant three-form is closed. Write such a form as $\iota_X\mathrm{vol}$; its exterior derivative is $\mathcal L_X\mathrm{vol}$, which vanishes by unimodularity. Both the NY three-form and the connection Chern--Simons three-form, whose exterior derivatives give the two invariants on Riemann--Cartan spaces \cite{Chandia1997}, are left invariant. Therefore
+
+\begin{equation}\tag{I3}\label{eq:I3}
+\begin{aligned}
+N\,\mathrm{vol}_4&=d(e^a\wedge T_a)=0,\\
+P\,\mathrm{vol}_4&=-d\,\mathrm{tr}
+\left(\Gamma\wedge d\Gamma+\frac23\Gamma\wedge\Gamma\wedge\Gamma\right)=0.
+\end{aligned}
+\end{equation}
+
+Here $\Gamma$ in the second line denotes the matrix-valued connection one-form. The theorem includes AX, VT and MX and arbitrary constant coframe deformations of $S^3\times S^1$. It is a local algebraic statement; compactness supplies the integration domain. The internal-dual quantity $B$ is a different contraction and may be nonzero. Appendix B gives its independent normalization and a nonconstant example for which $P\ne0$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/v3/fig10_curvature.pdf}
+\caption{Internal-dual $B$ and standard form-index $P$ on the round MX family with $\eta=V=1$. The standard density vanishes analytically; its plotted values show floating-point residuals.}\label{fig:fig10_curvature}
+\end{figure}

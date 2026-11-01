@@ -1,77 +1,49 @@
-# DPPUv2 paper03: Unified Geometric Landau EFT of Homogeneous S³×S¹ Minisuperspace in Einstein-Cartan + Nieh-Yan Theory
+# Spin-0, Spin-1 and Spin-2 Deformations of S³×S¹ in Einstein–Cartan–Nieh–Yan Theory
 
-[10.5281/zenodo.19144481](https://doi.org/10.5281/zenodo.19144481)
+Muacca. First release: v1, 2026-03-21. Previous revision: v2, 2026-06-20.
+Current revision: **v3, 2026-11-01**.
 
-[日本語 README](README_ja.md)
+The paper organizes static potentials and periodic circle actions by spatial
+spin-0, spin-1 and spin-2 representations. It derives scalar couplings, a
+conditional radius minimum, positive restricted twist and shape derivative
+terms, and a continuous bifurcation of constrained static shape minima.
+At fixed scalar controls, minimizing the static potential over constant
+volume-preserving shapes and twist selects the round, zero-twist geometry.
 
-![spin-2 splitting](LaTeX/figures/fig07_spin2_splitting.png "spin-2 splitting")
+An exact joint circle action exhibits nonlinear derivative cross terms and
+shift couplings. A smooth coupled shape-twist family makes this Euclidean
+functional unbounded below even at fixed scalar controls. The static minimum
+and the circle functional therefore have distinct variational properties.
+The model has alpha=0 and constant complete Nieh-Yan coupling.
 
+- [English PDF](DPPUv2-paper03.pdf)
+- [English LaTeX](LaTeX/main.tex)
+- [Japanese manuscript](DPPUv2-paper03_sec01.md)
+- [Computation and figure instructions](script/README.md)
+- [Saved data and manifest](data/revised/manifest.json)
+- [Figure notebook](script/DPPUv2_Paper03_Figures_v3.ipynb)
+- [Revision history](CHANGELOG.md)
+- [Japanese README](README_ja.md)
 
-## Paper Contents
+Install `script/requirements.txt`, then run from `script`:
 
-- [Official PDF (English, built from LaTeX)](DPPUv2-paper03.pdf)
-- [Draft in Japanese Markdown](DPPUv2-paper03_sec01.md)
+    python -B -m paper_results render --output-dir ../rendered
+    python -B -m paper_results recompute --output-dir ../recomputed-data
+    python -B -m paper_results render --data-dir ../recomputed-data --output-dir ../recomputed-figures
 
-## Directory Structure
+Use new output directories. The first command only renders supplied data;
+recalculation is explicit. The notebook defaults to saved-data rendering.
+The saved-data viewer is described in the computation instructions.
+The code supplement consists of paper_results, the figure notebook and the saved-data viewer.
+[Conventions](script/docs/CONVENTIONS.md) and an [implementation guide](script/docs/IMPLEMENTATION.md) are included.
 
-- `LaTeX/` — LaTeX manuscript and figures
-  - `main.tex` — Main file
-  - `sections/` — TeX files for each section
-  - `appendices/` — TeX files for appendices
-  - `figures/` — Figures
-- `script/` — Data processing and visualization scripts
-  - For script details, see [script/README](script/README.md)
+The associated archive is [Zenodo](https://doi.org/10.5281/zenodo.19144481).
+The supplied datasets are described in [their manifest](data/revised/manifest.json).
+Earlier archival versions may use different definitions.
+Related work: [Paper01](https://github.com/Muacca/DPPUv2-paper01) and
+[Paper02](https://github.com/Muacca/DPPUv2-paper02).
+Code and data use the [MIT License](LICENSE.txt).
+Contact: muacca@dmwp.jp or [Issues](https://github.com/Muacca/DPPUv2-paper03/issues).
 
-## Building the LaTeX PDF
-
-### Basic Build Command
-
-Navigate to the LaTeX directory and run pdflatex.
-**At least two compilation passes are required** to resolve cross-references (`\ref`, `\label`, etc.) correctly.
-
-- **First pass**: writes label information to the `.aux` file
-- **Second pass**: reads and resolves references from the `.aux` file
-
-If references appear as `??`, run the compilation once more.
-
-```bash
-cd LaTeX
-pdflatex -interaction=nonstopmode main.tex
-pdflatex -interaction=nonstopmode main.tex
-```
-
-### Output Files
-
-A successful build produces:
-
-- `main.pdf` — Final PDF file
-- `main.aux` — Auxiliary file (cross-reference data)
-- `main.log` — Compilation log
-- `main.out` — hyperref outline information
-
-### Troubleshooting
-
-#### On Error
-
-Check the log file:
-```bash
-grep -i "error\|warning" main.log | tail -20
-```
-
-#### Clean Build
-
-Delete all auxiliary files and rebuild from scratch:
-```bash
-cd LaTeX
-rm -f *.aux *.log *.out *.synctex.gz *.fdb_latexmk *.fls
-pdflatex -interaction=nonstopmode main.tex
-pdflatex -interaction=nonstopmode main.tex
-```
-
-## Author
-
-Muacca
-
-## License
-
-See the LICENSE file in the repository root.
+The joint circle-action derivation is Appendix J of the [PDF](DPPUv2-paper03.pdf)
+([LaTeX](LaTeX/appendices/appJ.tex); [Japanese](DPPUv2-paper03_appJ.md)).

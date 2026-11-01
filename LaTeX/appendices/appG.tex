@@ -1,91 +1,16 @@
-%==============================================================================
-% Appendix G: Landau-EFT Selection Rules and Forbidden Terms
-%==============================================================================
-\section{Landau-EFT Selection Rules and Forbidden Terms}
+\section{Invariant expansion}
+
 \label{app:G}
 
-This appendix briefly summarises the final invariant basis adopted in paper~III
-and the selection rules on it.
+For a traceless symmetric 3 by 3 matrix, Cayley--Hamilton gives $h^3-I_2h/2-I_3I/3=0$. Multiplication by $h$ and tracing yields $\mathrm{tr}(h^4)=I_2^2/2$. Expanding the exponentials,
 
-\subsection{Final Invariant Basis}
-
-The low-order invariants adopted are
-\begin{equation}
-  I_2 = \tr(h^2),
-  \quad
-  I_3 = h_{ij}\omega_i\omega_j,
-  \quad
-  I_4 = \tr(h^3),
-  \quad
-  W_2 = \omega_i\omega_i.
-\end{equation}
-At quartic order the auxiliary invariants
-\begin{equation}
-  I_2^2, \qquad I_2 W_2, \qquad W_2^2
-\end{equation}
-are employed.
-
-\subsection{Explicit Form of $I_3$}
-
-In the final $T_A$ conventions,
-\begin{equation}
+\begin{equation}\tag{G1}\label{eq:G1}
 \begin{aligned}
-  I_3 =\;
-  &\frac{q_1}{\sqrt{6}}\!\left(\omega_1^2+\omega_2^2-2\omega_3^2\right)
-  + \frac{q_2}{\sqrt{2}}\!\left(\omega_1^2-\omega_2^2\right)
-  + \sqrt{2}\,q_3\omega_1\omega_2 \\
-  &+ \sqrt{2}\,q_4\omega_1\omega_3
-  + \sqrt{2}\,q_5\omega_2\omega_3.
+\mathrm{tr}(e^{2h})&=3+2I_2+\frac43I_3+\frac13I_2^2+O(h^5),\\
+\mathrm{tr}(e^{4h})&=3+8I_2+\frac{32}{3}I_3+\frac{16}{3}I_2^2+O(h^5).
 \end{aligned}
 \end{equation}
-It is confirmed exactly that this gives $I_3 = q_A F_A(\omega)$.
 
-\subsection{Allowed and Forbidden Structures}
+Taking twice the second expression minus the square of the first gives (I1). Since $h$ is symmetric, $|e^h\omega|^2=\omega^{\mathsf T}e^{2h}\omega$, proving the twist--tensor terms as well. The scalar coefficients in these expansions depend on $r,L,\eta,V$ through (M3); expanding those coefficients adds higher-order scalar couplings.
 
-In the final basis the spin-2 $\times$ spin-1 cubic coupling is determined by
-the Clebsch--Gordan decomposition
-\begin{equation}
-  \text{spin-2} \otimes \text{spin-1} \otimes \text{spin-1}.
-\end{equation}
-Since $\omega_i\omega_j$ and $\delta_i\delta_j$ are symmetric products of
-commuting variables,
-\begin{equation}
-  \Sym^2(\text{spin-1}) = \text{spin-0} \oplus \text{spin-2},
-\end{equation}
-and no antisymmetric spin-1 component appears.  Therefore the independent cubic
-couplings that produce a scalar by contracting with the spin-2 tensor $h_{ij}$
-reduce to their spin-2 projections:
-\begin{equation}
-  h_{ij}\omega_i\omega_j,
-  \qquad
-  h_{ij}\delta_i\delta_j.
-\end{equation}
-
-In the language of the final basis:
-\begin{itemize}
-  \item $h_{ij}\omega_i\omega_j$ and $h_{ij}\delta_i\delta_j$ are representative
-        allowed cubic terms.
-  \item Quadratic cross-terms in $X_k$ vanish in the final basis.
-  \item Known forbidden terms $H_\mathrm{sym}$ and $K_\mathrm{sym}$ are excluded
-        because they cannot be reduced to a symmetric-rank-2 spin-2 projection;
-        they do not satisfy the requisite condition and are therefore
-        not adopted as independent invariants in the final EFT.
-\end{itemize}
-
-\subsection{Boundary of the Claim}
-
-What this appendix claims is the low-order invariant organisation for the final
-basis adopted in this paper.  The following are \emph{not} claimed:
-\begin{itemize}
-  \item Complete generation of arbitrary non-invariant polynomials.
-  \item Unique classification of all nonlinear couplings.
-\end{itemize}
-This paper uses the label ``unified Landau-EFT'' with this limitation explicitly
-stated.
-
-\subsection{Computational Verification}
-
-\begin{itemize}
-  \item Invariant generation and exact assertion pass:
-        \texttt{paper03/eft\_invariant\_generation.py}
-\end{itemize}
+Rotation invariance would allow $h_{ij}u_iv_j$ for two independent vectors $u,v$. Whether such an invariant occurs is decided by the actual action and the meaning of its variables. Here the mixing coordinates parametrize a coframe rotation and drop out of the scalar action. Their absence from (I1) is consequently an action-specific result. The derivative invariant $Q$ in Section 4 belongs to the separately specified circle-dependent vector family.

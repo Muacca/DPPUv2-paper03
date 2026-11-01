@@ -1,92 +1,40 @@
-## Appendix F. Cross-Hessian Checks and Quadratic Decoupling
+# 付録F. スカラー微分と二次の表現block
 
-本付録では、physical spin-1 mode $X_k$ が二次レベルで他 sector と decouple することを示す。
+$x=(r,L,\eta,V)$ として式(S1)を微分すると、
 
-### F.1 Setup
-
-physical basis は
+式(F1)：
 
 $$
-X_k=\frac{-2\omega_k+3\delta_k}{\sqrt{13}}
+\nabla U_0=\frac{\pi^2}{\kappa^2}
+\begin{pmatrix}
+L(3V^2r^2+9\eta^2-36)/12\\
+r(V^2r^2+9\eta^2-36)/12\\
+3Lr\eta/2\\ Lr^3V/6
+\end{pmatrix}.
 $$
 
-である。各 mixed Hessian は中央差分
+式(F2)：
 
 $$
-\frac{\partial^2 V_{\rm eff}}{\partial p\,\partial X_k}
-\approx
-\frac{V(p_0+h,+X_k)-V(p_0+h,-X_k)-V(p_0-h,+X_k)+V(p_0-h,-X_k)}{4h^2}
+H=\frac{\pi^2}{\kappa^2}
+\begin{pmatrix}
+LV^2r/2 &(3V^2r^2+9\eta^2-36)/12&3L\eta/2&LVr^2/2\\
+(3V^2r^2+9\eta^2-36)/12&0&3r\eta/2&Vr^3/6\\
+3L\eta/2&3r\eta/2&3Lr/2&0\\
+LVr^2/2&Vr^3/6&0&Lr^3/6
+\end{pmatrix}.
 $$
 
-で評価した。
+MX点 $(r,L,\eta,V,\kappa)=(3,1,1,1,1)$ の勾配は $\pi^2(0,-9/2,9/2,9/2)$ 、AX点 $(3,1,1,0,1)$ では $\pi^2(-9/4,-27/4,9/2,0)$ である。これらの行列は非零の勾配と併せて解釈する。特にAXの $(r,\eta)$ 行列式は負であるが、その点は全スカラーポテンシャルの停留鞍点ではない。このような点でのHessianの通常固有値は選んだ座標に依存し、粒子質量ではない。
 
-### F.2 spin-1 x spin-2
+$M=I,\omega=0$ では、式(M3)のshape一次微分は全てのスカラー座標について零である。これを各スカラーで再微分すると、scalar–shape交差項が全て零と分かる。twist項は $\omega$ について偶かつ二次なので、その一次微分もこの点で全てのscalarとshapeに対して零である。mixingは静的scalar作用に入らない。従って既約な二次構成は直接、
 
-$$
-M_{Ai}^{(qX)}=
-\left.\frac{\partial^2V_{\rm eff}}{\partial q_A\partial X_i}\right|_{\rm iso}=0
-$$
-
-が全 15 成分で成立した。
-
-| variable | $X_0$ | $X_1$ | $X_2$ |
-|---|---:|---:|---:|
-| $\varepsilon$ | 0.0000 | 0.0000 | 0.0000 |
-| $s$ | 0.0000 | 0.0000 | 0.0000 |
-| $q_3$ | 0.0000 | 0.0000 | 0.0000 |
-| $q_4$ | 0.0000 | 0.0000 | 0.0000 |
-| $q_5$ | 0.0000 | 0.0000 | 0.0000 |
-
-### F.3 spin-1 x radial and torsion
-
-radial と torsion についても
+式(F3)：
 
 $$
-M_i^{(rX)}=0,
-\qquad
-M_i^{(\eta X)}=0
+(r,L,\eta,V)\ \oplus\ (\omega_i,\delta_i)\ \oplus\ (q_A),
 $$
 
-が成立した。
+となる。第一block内のスカラー混合は残り、第二blockは式(V1)、第三blockは $8\mathcal K I_5$ である。これは静的二次形式の整理であり、各変数の独立な運動項を仮定しない。式(S4)のbulkスカラー速度Hessianは $\mathrm{diag}(-3\pi^2r/(2\kappa^2L),0,0,0)$ であり、座標ごとの役割の違いと整合する。
 
-| sector | $X_0$ | $X_1$ | $X_2$ |
-|---|---:|---:|---:|
-| $r$ | 0.0000 | 0.0000 | 0.0000 |
-| $\eta$ | 0.0000 | 0.0000 | 0.0000 |
-
-### F.4 Step-size stability
-
-step size を変えてもゼロ判定は不変であった。
-
-| $h$ | max abs value over all 21 components |
-|---:|---:|
-| $10^{-1}$ | 0.0 |
-| $10^{-2}$ | 0.0 |
-| $10^{-3}$ | 0.0 |
-| $5\times10^{-4}$ | 0.0 |
-| $10^{-4}$ | 0.0 |
-
-### F.5 Evenness under $X_k\to -X_k$
-
-代表的な非零背景でも
-
-$$
-V(p,+X_k)-V(p,-X_k)=0
-$$
-
-が数値的に成立した。したがって、少なくとも現実装では $V_{\rm eff}$ は $X_k$ の符号反転に対して偶関数として振る舞い、その結果として cross-Hessian が消えている。
-
-### F.6 Scope boundary
-
-この結果が主張するのは、final basis における **quadratic decoupling** までである。ここから直ちに、非線形 order や任意背景での完全 decoupling までを主張するわけではない。本論ではこの scope を明示したうえで §6 の block-diagonal EFT を述べる。
-
-### F.7 Computational verification
-
-本付録の cross-Hessian 評価は次のスクリプトで確認されている。
-
-- **全 21 成分の差分評価（step size 安定性・偶性確認を含む）**:
-  - `paper03/spin1_cross_hessian.py`
-- **homogeneous consistency**（antisymmetry・Jacobi pass; AppC.4 と連携）:
-  - `paper03/homogeneous_consistency.py`
-- **不変量基底の exact check**（AppG と連携）:
-  - `paper03/eft_invariant_generation.py`
+[前の節・付録](DPPUv2-paper03_appE.md) / [次の節・付録](DPPUv2-paper03_appG.md) / [第1節](DPPUv2-paper03_sec01.md)

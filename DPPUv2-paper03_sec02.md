@@ -1,162 +1,101 @@
-## 2. Setup and Geometric Framework
+# 2. モデルと既約な幾何変数
 
-本節では、自由度、作用、幾何学的記法をまとめる。なお、最終的に採用する基底を標準形として用いる。
+## coframeと作用
 
-### 2.1 Effective potential
+空間添字を $i,j,k=0,1,2$ 、円方向を $3$ 、向きを $\epsilon^{0123}=+1$ とする。円座標の周期は1、左不変形式は $d\sigma^i=2\epsilon_{ijk}\sigma^j\wedge\sigma^k$ を満たし、空間添字対は総和する。 $r,L>0$ 、実行列 $\det M=1$ に対して次を定義する。
 
-一様 minisuperspace 還元における有効ポテンシャルは
-
-$$
-V_{\rm eff}
-= -\left(\frac{R}{2\kappa^2}+\theta_{\rm NY}N\right)\,{\rm Vol},
-\qquad
-{\rm Vol}=2\pi^2Lr^3
-$$
-
-で定義する。ここで $R$ は Einstein-Cartan 接続から計算される Ricci scalar [3]、 $N$ は Nieh-Yan 密度 [4]、 $r$ は $S^3$ 半径、 $L$ は $S^1$ 方向のスケールである。以後の等方点評価では $L=1$ に規格化し、そのときの平衡半径は $r_0=3$ である。
-
-Pontryagin 密度は
+式(M1)：
 
 $$
-P=\langle R,\star R\rangle = \frac12\,\varepsilon^{abcd}R_{abef}R_{cd}{}^{ef}
+\begin{aligned}
+e^i&=rM^i{}_j\sigma^j,& e^3&=L(dy+\omega_i\sigma^i),\\
+e'^a&=O^a{}_b e^b,\quad O\in SO(4),&
+g&=\delta_{ab}e'^a e'^b,\qquad
+\frac{d\mathcal V_4}{dy}=\frac{\pi^2Lr^3}{4}.
+\end{aligned}
 $$
 
-で定義する [5]。本論の主題は、 $V_{\rm eff}$ と $P$ を一様幾何自由度の最終基底で整理することである。
+式(M1)の空間積分済み四次元体積密度は、r,Lが一定なら $\pi^2Lr^3/4$ に積分される。round球面の幾何学的半径は $r/2$ である。三つのmixing変数を $\delta_i=\tan\chi_i$ 、 $O=O_{03}(\chi_0)O_{13}(\chi_1)O_{23}(\chi_2)$ と定義する。Oはmetricを変えないcoframe回転である。幾何学的torsionは回転後のframeで次のように指定する。
 
-### 2.2 Homogeneous ansatz and spatial frame
-
-空間 3-フレームは左不変 1-形式 $\sigma^i$ を用いて
+式(M2)：
 
 $$
-e^i=r\,M^{i}{}_j\,\sigma^j
+\begin{aligned}
+T_{ijk}&=\frac{2\eta}{r}\epsilon_{ijk},\\
+T^{(V)}_{abc}&=\frac13(\delta_{ac}V_b-\delta_{ab}V_c),
+\qquad V_b=V\delta_{b3},\\
+\mathcal S&=-\int\mathrm{vol}_4
+\left(\frac{R}{2\kappa^2}+\theta N\right),\qquad
+N\thinspace \mathrm{vol}_4=d(e'^a\wedge T_a).
+\end{aligned}
 $$
 
-と書く。ここで $M^i{}_j=(\exp h)^i{}_j$（ $h=\sum_A q_A T_A$: full shear tensor, §2.3）であり、full shear 変形はこの一定 frame 変形として埋め込まれる。時間方向を含む完全なコフレーム（twist $\omega_k$ および spin-1 mixing $\delta_k$ の定義を含む）は App B.2.1 にまとめる。
+axial項は添字に3を含むとき零とする。AXは $V=0$ 、VTは $\eta=0$ 、MXは両者を許す。 $\theta$ は定数とし、曲率二乗項は加えない。計量整合接続はcoframeとこの幾何学的torsionから定まる。成分式は付録A、Paper01/02の付属コードとの符号対応は付録Iに示す。回転後のframeでtorsion成分を指定する処方と、全場を同時に回すgauge変換を区別する。
 
-一定 frame 変形の下で構造定数は
+本論の符号はPaper01/02の縮約ポテンシャル $U=-S$ の規約を円方向作用へ拡張する。共通のECと完全NYのモデルでは $\mathcal S=-S_{\mathrm{01,FULL}}=-S_{\mathrm{02}}|_{\alpha=0}$ であり、一定profileでは $\mathcal S=U$ となる。以下の下限に関する主張は、この符号の $U$ または $\mathcal S$ について述べる。
 
-$$
-C'^{i}{}_{jk} = M^{i}{}_a (M^{-1})^b{}_j (M^{-1})^c{}_k C^a{}_{bc}
-$$
+## 共通の静的ポテンシャル
 
-と変換し、homogeneous Maurer-Cartan 系は保たれる。
+$M,\omega,O,r,L,\eta,V$ が一定の場合、 $S=MM^{\mathsf T}$ と置く。Cartan縮約により静的作用Uを得る。shape依存性をFにまとめると、
 
-### 2.3 Spin-2 quintet: full shear basis
-
-traceless symmetric tensor $h_{ij}$ を
+式(M3)：
 
 $$
-h_{ij}=\sum_{A=1}^5 q_A (T_A)_{ij},
-\qquad
-{\rm Tr}(T_AT_B)=\delta_{AB}
+\begin{aligned}
+U&=\mathcal K\left[F(S)+\frac{3\eta^2}{4}
++\frac{V^2r^2}{12}+\frac{L^2}{r^2}\lVert M\omega\rVert^2\right],\\
+F(S)&=2\mathrm{tr}(S^2)-[\mathrm{tr}(S)]^2,\qquad
+\mathcal K=\frac{\pi^2Lr}{\kappa^2}>0.
+\end{aligned}
 $$
 
-と展開する。最終採用基底は
+完全NYはこの一定場族では点ごとに零であり、第6節で証明する。torsion normは回転不変で、その発散項は零となるため、scalar作用はmixing回転に依存しない。coframeは $S^3\times S^1$ 上で大域的に定義されるので、滑らかな周期的円方向変分でも完全NYの積分は零となる。その場合の局所密度は非零でもよい。
+
+## 表現と変分族
+
+スカラー変数は $(r,L,\eta,V)$ である。twist $\omega_i$ と三つのmixing座標はround frame近傍で空間ベクトルとして変換する。体積保存shapeは対称tracelessなhによる $M=e^h$ で表せ、正規化した五成分がspin-2をなす。軸対称参照shapeでは $M=M_0e^h$ を使う。基底は付録Cに示す。round点の静的二次展開では異なる既約表現が回転対称性によって分離する一方、スカラー同士の混合は許される。
+
+静的極値は式(M3)について、制御変数を固定し、指定した座標を変化させた結果である。円方向作用汎関数では、 $r,L>0$ 、 $\det M=1$ のもとで全座標を滑らかな周期関数とする。スカラー制限では $M=I,\omega=0$ 、ベクトル制限では $r,L,\eta,V$ を固定して $M=I$ とする。いずれも以下の一般作用から得られる。停留・最小化の性質を述べる際は、固定する変数を明示する。
+
+## 同時円方向変分の一般作用
+
+$J=Lr^3$ と置く。空間の不変基底での誘導三計量・lapse・shiftは
+
+式(M4)：
 
 $$
-T_1=\frac{1}{\sqrt6}
-\begin{pmatrix}
-1&0&0\\
-0&1&0\\
-0&0&-2
-\end{pmatrix},
-\quad
-T_2=\frac{1}{\sqrt2}
-\begin{pmatrix}
-1&0&0\\
-0&-1&0\\
-0&0&0
-\end{pmatrix},
+\gamma=r^2M^{\mathsf T}M+L^2\omega\omega^{\mathsf T},
+\qquad \mathcal N^2=\frac{J^2}{\det\gamma},
+\qquad \beta=L^2\gamma^{-1}\omega.
 $$
 
-$$
-T_3=\frac{1}{\sqrt2}
-\begin{pmatrix}
-0&1&0\\
-1&0&0\\
-0&0&0
-\end{pmatrix},
-\quad
-T_4=\frac{1}{\sqrt2}
-\begin{pmatrix}
-0&0&1\\
-0&0&0\\
-1&0&0
-\end{pmatrix},
-\quad
-T_5=\frac{1}{\sqrt2}
-\begin{pmatrix}
-0&0&0\\
-0&0&1\\
-0&1&0
-\end{pmatrix}
-$$
+$[\beta]_\times v=\beta\times v$ と定義する。空間構造定数の規格化から、
 
-である。
-
-この基底に対する基本不変量は
+式(M5)：
 
 $$
-I_2={\rm tr}(h^2)=\sum_{A=1}^5 q_A^2,
-\qquad
-I_3=h_{ij}\omega_i\omega_j,
-\qquad
-I_4={\rm tr}(h^3),
-\qquad
-W_2=\omega_i\omega_i
+\begin{aligned}
+\Omega_\beta&=4[\beta]_\times,&
+\ell=\mathcal L_\beta\gamma&=\gamma\Omega_\beta-\Omega_\beta\gamma,\\
+X&=\gamma^{-1}\gamma',&
+Y&=\gamma^{-1}\ell,\qquad \mathrm{tr}Y=0.
+\end{aligned}
 $$
 
-である。厳密チェックにより、 $I_3=q_A F_A(\omega)$ の成分展開は最終 $T_A$ 規約の下で exact に成立する。
+primeは $d/dy$ を表す。非等方shapeではLie微分 $\ell$ は一般に零でない。全微分を円上で積分すると、exact作用は
 
-### 2.4 Spin-1 variables and torsion modes
+式(M6)：
 
-spin-1 セクターの raw 幾何変数は twist $\omega_i$ と mixing $\delta_i$ である。ただし raw basis は最終的な physical basis ではない。一般化固有値解析（§5）により、raw 変数は physical propagating triplet $X_k$ と non-dynamical auxiliary $Y_k$ に分解される。各基底の明示的な式および導出は §5 を参照のこと。
+$$
+\begin{aligned}
+\mathcal S_{\mathrm{joint}}
+&=\int_0^1dy\thinspace [U+\mathcal L_{\partial}],\\
+\mathcal L_{\partial}
+&=\frac{\pi^2J}{32\kappa^2\mathcal N^2}
+\left[\mathrm{tr}(X^2)-(\mathrm{tr}X)^2-2\mathrm{tr}(XY)\right].
+\end{aligned}
+$$
 
-torsion scalar については、最終的に
+Uは各yでの座標を代入した静的式(M3)である。shiftに依存する静的寄与は既にUに含まれるため、式(M6)へ $Y^2$ 項をさらに加えない。最初の二つのtrace項が速度二次形式、最後が速度に一次の項である。torsion微分とmixing回転は付録Jに示す全微分にまとまり、一定係数の完全NYは周期bulk作用に残らない。式(M6)は空間的に一様なこのEuclidean族の有限振幅で成立し、四次までの打切りではない。
 
-- AX mode: $(\eta\neq0,\;V=0)$
-- VT mode: $(\eta=0,\;V\neq0)$
-- MX mode: $(\eta\neq0,\;V\neq0)$
-
-の 3 つを区別する。Pontryagin 構造に関しては、この区別が本質的である。
-
-### 2.5 Representation-theoretic organisation
-
-以上の自由度は $SO(3)$ 表現に沿って次のように整理される。
-
-| sector | variable | DOF | representation |
-|---|---|---:|---|
-| radial | $r$ | 1 | spin-0 |
-| shear | $q_A$ | 5 | spin-2 |
-| raw twist/mixing | $(\omega_i,\delta_i)$ | 6 | spin-1 $\oplus$ spin-1 |
-| physical spin-1 | $X_k$ | 3 | spin-1 |
-| auxiliary spin-1 | $Y_k$ | 3 | spin-1 |
-| torsion | $(\eta,V)$ | 2 | spin-0 |
-
-この表が、本論全体で用いる mode dictionary の出発点である。とくに $\varepsilon$ や $s$ は最終的には $q_A$ の一部として読み替えられ、単独の既約変数としては扱わない。spin-1 の physical / auxiliary 判定は §5 の generalized eigenvalue 解析で確立し、確定版の辞書は §6.4 にまとめる。
-
-**Fig. 2** SO(3) irreducible decomposition of homogeneous geometric DOF and final mode classification.
-
-```mermaid
-graph TD
-    DOF["Homogeneous S³×S¹ geometric DOF"]
-
-    DOF --> S0["spin-0"]
-    DOF --> S2["spin-2"]
-    DOF --> S1["spin-1"]
-
-    S0 --> r["r (radial)<br/>equil. r₀=3"]
-    S0 --> tors["η, V (torsion)"]
-
-    S2 --> qA["q_A  (A=1..5)<br/>full shear quintet<br/>μq²=48π²"]
-
-    S1 --> raw["raw: ω_k, δ_k"]
-    raw -->|"Schur / gen. eigenvalue<br/>(§5)"| Xk["X_k  physical mode<br/>λ_phys≈−0.4183<0<br/>(tachyonic, non-ghost)"]
-    raw -->|"null mode<br/>(§5)"| Yk["Y_k  auxiliary mode<br/>non-dynamical"]
-    
-    classDef default fill:none,stroke:black
-```
-
-### 2.6 Scope
-
-本論が扱うのは homogeneous minisuperspace の一様幾何 sector である。したがって、局所的な非一様モード、境界条件、full field-theoretic な gauge fixing は本論の対象外である。§7 で述べるように、これらは今後の課題である。
+[前の節・付録](DPPUv2-paper03_sec01.md) / [次の節・付録](DPPUv2-paper03_sec03.md) / [第1節](DPPUv2-paper03_sec01.md)
