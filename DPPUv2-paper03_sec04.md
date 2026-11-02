@@ -9,7 +9,8 @@
 $$
 H_{\omega\delta}=
 \begin{pmatrix}
-2\pi^2L^3/(\kappa^2r)&0\\0&0
+2\pi^2L^3/(\kappa^2r)&0\\
+0&0
 \end{pmatrix}.
 $$
 

@@ -1,6 +1,6 @@
 # 付録A. Cartan接続とスカラー円方向作用
 
-$de^a=\tfrac12C^a{}_{bc}e^b\wedge e^c$ 、 $\Gamma^a{}_b=\Gamma^a{}_{bc}e^c$ とする。計量整合性と指定した幾何学的torsionから、
+$de^a=\tfrac12C^a{}_{bc}e^b\wedge e^c$ 、 $`\Gamma^a{}_b=\Gamma^a{}_{bc}e^c`$ とする。計量整合性と指定した幾何学的torsionから、
 
 式(A1)：
 
@@ -15,7 +15,7 @@ R^a{}_{bcd}&=e_c(\Gamma^a{}_{bd})-e_d(\Gamma^a{}_{bc})
 \end{aligned}
 $$
 
-代入により $C^a{}_{bc}+\Gamma^a{}_{cb}-\Gamma^a{}_{bc}=T^a{}_{bc}$ を確認できる。 $\bar e=(\sigma^0,\sigma^1,\sigma^2,dy)$ 、 $e=A(y)\bar e$ に対する完全な外微分は
+代入により $`C^a{}_{bc}+\Gamma^a{}_{cb}-\Gamma^a{}_{bc}=T^a{}_{bc}`$ を確認できる。 $\bar e=(\sigma^0,\sigma^1,\sigma^2,dy)$ 、 $e=A(y)\bar e$ に対する完全な外微分は
 
 式(A2)：
 
@@ -30,7 +30,7 @@ e_c(\Gamma^a{}_{bd})&=(A^{-1})^3{}_c\partial_y\Gamma^a{}_{bd}.
 \end{aligned}
 $$
 
-$A=O\left(\begin{smallmatrix}rM&0\\L\omega^{\mathsf T}&L\end{smallmatrix}\right)$ が一定なら、これらは一定coframeの代数に帰着する。 $S=MM^{\mathsf T}$ によるscalar縮約は
+$`A=O\left(\begin{smallmatrix}rM&0\\L\omega^{\mathsf T}&L\end{smallmatrix}\right)`$ が一定なら、これらは一定coframeの代数に帰着する。 $S=MM^{\mathsf T}$ によるscalar縮約は
 
 式(A3)：
 

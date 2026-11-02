@@ -9,7 +9,8 @@ $$
 \begin{pmatrix}
 L(3V^2r^2+9\eta^2-36)/12\\
 r(V^2r^2+9\eta^2-36)/12\\
-3Lr\eta/2\\ Lr^3V/6
+3Lr\eta/2\\
+Lr^3V/6
 \end{pmatrix}.
 $$
 
