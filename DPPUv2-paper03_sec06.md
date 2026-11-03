@@ -78,7 +78,7 @@ $$
 \begin{aligned}
 w_n(y)&=A\cos(2\pi n y),\quad
 e^{2s_n}=1-\frac{L^2w_n^2}{2r^2},
-\quad 0<A<\frac{\sqrt2r}{L},\quad n=1,2,\ldots,\\
+\quad 0\lt A\lt \frac{\sqrt2r}{L},\quad n=1,2,\ldots,\\
 \mathcal S_n&=\overline U_A-n^2C_A,\qquad
 C_A=\frac{\pi^2L^3}{16\kappa^2r}
 \int_0^1\frac{w_1^2(w_1')^2}{[1-L^2w_1^2/(2r^2)]^2}\thinspace dy>0.
